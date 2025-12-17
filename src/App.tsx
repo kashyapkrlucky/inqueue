@@ -1,53 +1,74 @@
-import { lazy, Suspense, type ReactNode } from 'react';
-import { createBrowserRouter, RouterProvider } from 'react-router-dom';
-import Loader from './components/layout/Loader';
-import { ProtectedRoute } from './components/layout/ProtectedRoute';
-import { ErrorBoundary } from './components/layout/ErrorBoundary';
+import { lazy, Suspense, type ReactNode } from "react";
+import { createBrowserRouter, RouterProvider } from "react-router-dom";
+import Loader from "./components/layout/Loader";
+import { ProtectedRoute } from "./components/layout/ProtectedRoute";
+import { ErrorBoundary } from "./components/layout/ErrorBoundary";
+import AppLayout from "./components/layout/AppLayout";
 
 // Lazy-loaded Pages
-const Home = lazy(() => import('./pages/Home'));
-const Login = lazy(() => import('./pages/Login'));
-const Signup = lazy(() => import('./pages/Signup'));
-const Settings = lazy(() => import('./pages/Settings'));
-const NotFound = lazy(() => import('./pages/NotFound'));
+const Home = lazy(() => import("./pages/Home"));
+const Login = lazy(() => import("./pages/Login"));
+const Signup = lazy(() => import("./pages/Signup"));
+const Notes = lazy(() => import("./pages/Notes"));
+const Tasks = lazy(() => import("./pages/Tasks"));
+const Settings = lazy(() => import("./pages/Settings"));
+const NotFound = lazy(() => import("./pages/NotFound"));
 
 // Type for our route configuration
 interface RouteConfig {
   path: string;
   element: ReactNode;
+  children?: RouteConfig[];
   protected?: boolean;
   guestOnly?: boolean;
 }
 
 // Route configuration
+// Update the route configuration in App.tsx
 const routeConfig: RouteConfig[] = [
   {
-    path: '/',
-    element: <Home />,
+    path: "/",
+    element: <AppLayout />,
+    children: [
+      {
+        path: "/",
+        element: <Home />,
+      },
+      {
+        path: "/tasks",
+        element: <Tasks />,
+        protected: true,
+      },
+      {
+        path: "/notes",
+        element: <Notes />,
+        protected: true,
+      },
+      {
+        path: "/settings",
+        element: <Settings />,
+        protected: true,
+      },
+    ],
   },
   {
-    path: '/login',
+    path: "/login",
     element: <Login />,
     guestOnly: true,
   },
   {
-    path: '/signup',
+    path: "/signup",
     element: <Signup />,
     guestOnly: true,
   },
   {
-    path: '/settings',
-    element: <Settings />,
-    protected: true,
-  },
-  {
-    path: '*',
+    path: "*",
     element: <NotFound />,
   },
 ];
 
-// Create route elements with proper error boundaries and suspense
 const createRouteElement = (route: RouteConfig) => {
+  // Create the element with Suspense and ErrorBoundary
   const element = (
     <Suspense fallback={<Loader />}>
       <ErrorBoundary>
@@ -56,6 +77,7 @@ const createRouteElement = (route: RouteConfig) => {
     </Suspense>
   );
 
+  // If the route is protected, wrap it with ProtectedRoute
   if (route.protected) {
     return <ProtectedRoute>{element}</ProtectedRoute>;
   }
@@ -63,11 +85,24 @@ const createRouteElement = (route: RouteConfig) => {
   return element;
 };
 
-// Create routes from config
-const routes = routeConfig.map((route) => ({
-  path: route.path,
-  element: createRouteElement(route),
-}));
+// Create route elements with proper error boundaries and suspense
+// Create routes from config with proper nesting
+const routes = routeConfig.map(route => {
+  if (route.children) {
+    return {
+      ...route,
+      element: createRouteElement(route),
+      children: route.children.map(child => ({
+        ...child,
+        element: createRouteElement(child)
+      }))
+    };
+  }
+  return {
+    ...route,
+    element: createRouteElement(route)
+  };
+});
 
 const router = createBrowserRouter(routes);
 

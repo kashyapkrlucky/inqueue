@@ -1,7 +1,7 @@
-import { useState, useRef, useEffect, useCallback } from "react";
+import { useState, useRef, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { Search, Bell, User, ChevronDown, LogOut, Settings } from "lucide-react";
-import { useAuthStore } from "@/store/useAuthStore";
+import { ChevronDown, LogOut, Settings } from "lucide-react";
+import { useAuthStore } from "../../store/useAuthStore";
 
 export const Header = () => {
   const [isProfileOpen, setIsProfileOpen] = useState(false);
@@ -26,12 +26,6 @@ export const Header = () => {
     };
   }, []);
 
-  const [searchQuery, setSearchQuery] = useState("");
-
-  const handleSearchChange = useCallback((value: string) => {
-    setSearchQuery(value);
-  }, []);
-
   const handleLogout = async () => {
     await logout();
     navigate('/login');
@@ -41,30 +35,12 @@ export const Header = () => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between h-16 items-center">
           <Link to="/" className="flex-shrink-0 flex items-center">
-            <h1 className="text-xl font-bold text-indigo-600">BuzzFeed</h1>
+            <h1 className="text-xl font-bold text-indigo-600">InQueue</h1>
           </Link>
 
-          {/* Search Bar */}
-          <div className="flex-1 max-w-2xl mx-4">
-            <div className="relative">
-              <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                <Search className="h-5 w-5 text-gray-400" />
-              </div>
-              <input
-                type="text"
-                className="block w-full pl-10 pr-3 py-2 border border-gray-300 rounded-full bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
-                placeholder="Search posts, #hashtags, @users..."
-                value={searchQuery}
-                onChange={(e) => handleSearchChange(e.target.value)}
-              />
-            </div>
-          </div>
 
           {/* Navigation */}
           <nav className="flex items-center space-x-2">
-            <button className="p-2 rounded-full hover:bg-gray-100">
-              <Bell className="h-6 w-6 text-gray-600" />
-            </button>
             <div className="relative ml-2" ref={dropdownRef}>
               <button
                 className="flex items-center space-x-2 p-1 rounded-full hover:bg-gray-100"
@@ -90,13 +66,6 @@ export const Header = () => {
                     <p className="text-xs text-gray-500">@{user?.userName || "homersimpson"}</p>
                   </div>
                   <div className="py-1">
-                    <Link
-                      to={`/profile/${user?.userName || "homersimpson"}`}
-                      className="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-                    >
-                      <User className="h-4 w-4 mr-3 text-gray-500" />
-                      Profile
-                    </Link>
                     <Link
                       to="/settings"
                       className="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
