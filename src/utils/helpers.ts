@@ -1,19 +1,21 @@
-import { formatDistance } from 'date-fns'
+import { formatDistance } from "date-fns";
 
-export const formatDate = (date: string) => {
-    const d = new Date(date);
-    return d.toDateString();
-}
+export const formatDate = (date: Date) => {
+  return new Intl.DateTimeFormat("en-US", {
+    month: "short",
+    day: "numeric",
+    year: "numeric",
+  }).format(date);
+};
 
 export const monthYearOnly = (date: string) => {
-    const d = new Date(date);
-    return d.toLocaleString('default', { month: 'short', year: 'numeric' });
-}
+  const d = new Date(date);
+  return d.toLocaleString("default", { month: "short", year: "numeric" });
+};
 
 export const formatRelativeTime = (date: string) => {
-    return formatDistance(new Date(date), new Date(), { addSuffix: true });
-}
-
+  return formatDistance(new Date(date), new Date(), { addSuffix: true });
+};
 
 export const TOKEN_KEY = "auth_token";
 

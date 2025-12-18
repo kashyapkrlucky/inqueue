@@ -65,15 +65,19 @@ export interface INote {
  */
 export interface ITask {
   /** Unique identifier for the task */
-  _id: string;
+  _id?: string;
   /** ID of the user who created the task */
-  user: IUser;
+  user?: string;
   /** The task description */
   content: string;
   /** Status of the task (e.g., completed or not) */
-  status?: "pending" | "completed";
+  status?: string;
+  /** Priority of the task (e.g., low, medium, high) */
+  priority?: string;
+  /** Due date for the task */
+  dueDate?: Date;
   /** When the task was created */
-  createdAt?: Date;
+  createdAt: Date;
   /** When the task was last updated */
   updatedAt?: Date;
 }
