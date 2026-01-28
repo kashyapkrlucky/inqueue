@@ -2,7 +2,7 @@ import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { UserIcon, MailIcon, LockIcon } from "lucide-react";
 import { useAuthStore } from "../store/useAuthStore";
-import Input from "@/components/ui/Input";
+import Input from "../components/ui/Input";
 
 export default function Signup() {
   const [formData, setFormData] = useState({
@@ -58,7 +58,7 @@ export default function Signup() {
     <div className="min-h-screen bg-gray-50 flex flex-col justify-center py-12 sm:px-6 lg:px-8">
       <div className="sm:mx-auto sm:w-full sm:max-w-md">
         <div className="flex justify-center">
-          <h1 className="text-3xl font-bold text-indigo-600">BuzzFeed</h1>
+          <h1 className="text-3xl font-bold text-indigo-600">InQueue</h1>
         </div>
         <h2 className="mt-6 text-center text-3xl font-extrabold text-gray-900">
           Create your account

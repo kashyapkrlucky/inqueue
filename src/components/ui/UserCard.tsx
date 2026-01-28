@@ -1,7 +1,7 @@
-import { type User } from "@/types/index";
+import { type IUser } from "../../types/index.types";
 import { Link } from "react-router-dom";
 
-export default function UserCard({ user }: { user: User }) {
+export default function UserCard({ user }: { user: IUser }) {
   return (
     <figure className="flex gap-4">
       <img

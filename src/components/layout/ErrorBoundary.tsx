@@ -1,7 +1,7 @@
 import React from 'react';
-import { Alert, AlertDescription, AlertTitle } from '@/components/ui/Alert';
+import { Alert, AlertDescription, AlertTitle } from '../ui/Alert';
 import { AlertCircle } from 'lucide-react';
-import { Button } from '@/components/ui/Button';
+import { Button } from '../ui/Button';
 
 interface ErrorBoundaryProps {
   children: React.ReactNode;

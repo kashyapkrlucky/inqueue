@@ -1,5 +1,5 @@
 import { create } from "zustand";
-import type { INote } from "../interfaces/index.types";
+import type { INote } from "../types/index.types";
 import axios from "../lib/axios";
 
 interface NoteState {

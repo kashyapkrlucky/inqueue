@@ -13,12 +13,9 @@ import {
   AlertTriangle,
 } from "lucide-react";
 import { useTaskStore } from "../store/useTaskStore";
-import type { ITask } from "../interfaces/index.types";
-import { formatDate } from "../utils/helpers";
+import type { ITask, ITaskStatus, ITaskPriority } from "../types/index.types";
+import { formatDate, newId } from "../utils/helpers";
 import useAuthStore from "../store/useAuthStore";
-
-type TaskStatus = "todo" | "inProgress" | "done";
-type TaskPriority = "low" | "medium" | "high";
 
 const statusConfig = {
   todo: {
@@ -28,7 +25,7 @@ const statusConfig = {
     textColor: "text-gray-700",
     borderColor: "border-gray-200",
   },
-  inProgress: {
+  in_progress: {
     label: "In Progress",
     icon: Clock,
     bgColor: "bg-blue-50",
@@ -42,13 +39,16 @@ const statusConfig = {
     textColor: "text-green-700",
     borderColor: "border-green-200",
   },
-} as const satisfies Record<TaskStatus, {
-  label: string;
-  icon: typeof Circle;
-  bgColor: string;
-  textColor: string;
-  borderColor: string;
-}>;
+} as const satisfies Record<
+  ITaskStatus,
+  {
+    label: string;
+    icon: typeof Circle;
+    bgColor: string;
+    textColor: string;
+    borderColor: string;
+  }
+>;
 
 const priorityConfig = {
   low: {
@@ -63,25 +63,25 @@ const priorityConfig = {
     label: "High",
     color: "bg-red-500",
   },
-} as const satisfies Record<TaskPriority, { label: string; color: string }>;
+} as const satisfies Record<ITaskPriority, { label: string; color: string }>;
 
-const getTaskStatus = (status: ITask["status"]): TaskStatus => {
-  if (status === "todo" || status === "inProgress" || status === "done") {
+const getTaskStatus = (status: ITask["status"]): ITaskStatus => {
+  if (status === "todo" || status === "in_progress" || status === "done") {
     return status;
   }
   return "todo";
 };
 
-const getTaskPriority = (priority: ITask["priority"]): TaskPriority => {
+const getTaskPriority = (priority: ITask["priority"]): ITaskPriority => {
   if (priority === "low" || priority === "medium" || priority === "high") {
     return priority;
   }
   return "medium";
 };
 
-const nextStatus = (status: TaskStatus): TaskStatus => {
-  if (status === "todo") return "inProgress";
-  if (status === "inProgress") return "done";
+const nextStatus = (status: ITaskStatus): ITaskStatus => {
+  if (status === "todo") return "in_progress";
+  if (status === "in_progress") return "done";
   return "todo";
 };
 
@@ -110,7 +110,7 @@ export const TaskCreate = ({ task }: { task: ITask }) => {
         </span>
         <select
           value={status}
-          onChange={(e) => setStatus(e.target.value)}
+          onChange={(e) => setStatus(e.target.value as ITaskStatus)}
           className="border border-gray-200 rounded px-2 py-1 text-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent"
           onClick={(e) => e.stopPropagation()}
         >
@@ -128,7 +128,7 @@ export const TaskCreate = ({ task }: { task: ITask }) => {
         </span>
         <select
           value={priority}
-          onChange={(e) => setPriority(e.target.value)}
+          onChange={(e) => setPriority(e.target.value as ITaskPriority)}
           className="border border-gray-200 rounded px-2 py-1 text-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent"
           onClick={(e) => e.stopPropagation()}
         >
@@ -152,7 +152,7 @@ export const TaskCard = ({
   expanded: boolean;
   onToggleExpanded: () => void;
 }) => {
-  const { updateTask, deleteTask, loading } = useTaskStore();
+  const { updateTask, deleteTask, loading, getTasks } = useTaskStore();
   const [draftContent, setDraftContent] = useState(task.content ?? "");
 
   const status = getTaskStatus(task.status);
@@ -160,7 +160,10 @@ export const TaskCard = ({
   const StatusIcon = statusConfig[status].icon;
 
   const createdAt = useMemo(() => {
-    const d = task.createdAt instanceof Date ? task.createdAt : new Date(task.createdAt);
+    const d =
+      task.createdAt instanceof Date
+        ? task.createdAt
+        : new Date(task.createdAt);
     return d;
   }, [task.createdAt]);
 
@@ -171,21 +174,21 @@ export const TaskCard = ({
 
   const canMutate = Boolean(task._id);
 
-  const commitUpdate = async (partial: Partial<ITask>) => {
+  const commitUpdate = async (id: string, partial: Partial<ITask>) => {
     if (!canMutate) return;
-    await updateTask({ ...task, ...partial } as ITask);
+    await updateTask(id, { ...task, ...partial } as ITask);
   };
 
   const onToggleStatus = async () => {
     if (!canMutate) return;
-    await commitUpdate({ status: nextStatus(status) });
+    await commitUpdate(task._id, { status: nextStatus(status) });
   };
 
   const onCommitContent = async () => {
     const trimmed = draftContent.trim();
     if (trimmed === (task.content ?? "").trim()) return;
     if (!canMutate) return;
-    await commitUpdate({ content: trimmed });
+    await commitUpdate(task._id, { content: trimmed });
   };
 
   const onContentKeyDown = async (e: KeyboardEvent<HTMLInputElement>) => {
@@ -198,6 +201,7 @@ export const TaskCard = ({
   const onDelete = async () => {
     if (!task._id) return;
     await deleteTask(task._id);
+    getTasks();
   };
 
   const handleToggleExpanded = () => {
@@ -218,13 +222,17 @@ export const TaskCard = ({
             className={`mt-0.5 inline-flex h-9 w-9 items-center justify-center rounded-xl border transition-colors ${
               status === "done"
                 ? "border-green-200 bg-green-50 text-green-700"
-                : status === "inProgress"
+                : status === "in_progress"
                   ? "border-blue-200 bg-blue-50 text-blue-700"
                   : "border-gray-200 bg-gray-50 text-gray-700"
             } ${!canMutate ? "opacity-60 cursor-not-allowed" : "hover:bg-white"}`}
             aria-label="Toggle status"
           >
-            {loading ? <Loader2 className="h-4 w-4 animate-spin" /> : <StatusIcon className="h-4 w-4" />}
+            {loading ? (
+              <Loader2 className="h-4 w-4 animate-spin" />
+            ) : (
+              <StatusIcon className="h-4 w-4" />
+            )}
           </button>
 
           <div className="min-w-0 flex-1">
@@ -238,13 +246,17 @@ export const TaskCard = ({
                 className="inline-flex items-center gap-2 rounded-full bg-gray-50 px-2.5 py-1 text-xs font-semibold text-gray-700"
                 title={`Priority: ${priorityConfig[priority].label}`}
               >
-                <span className={`h-2 w-2 rounded-full ${priorityConfig[priority].color}`} />
+                <span
+                  className={`h-2 w-2 rounded-full ${priorityConfig[priority].color}`}
+                />
                 {priorityConfig[priority].label}
               </span>
             </div>
 
             <div className="mt-2">
-              <p className={`truncate text-sm font-semibold ${status === "done" ? "text-gray-400 line-through" : "text-gray-900"}`}>
+              <p
+                className={`truncate text-sm font-semibold ${status === "done" ? "text-gray-400 line-through" : "text-gray-900"}`}
+              >
                 {task.content?.trim() ? task.content : "Untitled task"}
               </p>
               <div className="mt-1 flex flex-wrap items-center gap-x-4 gap-y-1 text-xs text-gray-500">
@@ -318,7 +330,11 @@ export const TaskCard = ({
                 </label>
                 <select
                   value={status}
-                  onChange={(e) => commitUpdate({ status: e.target.value as TaskStatus })}
+                  onChange={(e) =>
+                    commitUpdate(task?._id, {
+                      status: e.target.value as ITaskStatus,
+                    })
+                  }
                   disabled={!canMutate || loading}
                   onClick={(e) => e.stopPropagation()}
                   className="mt-1 h-11 w-full rounded-xl border border-gray-200 bg-white px-3 text-sm text-gray-900 outline-none transition focus:border-gray-900 focus:ring-2 focus:ring-gray-900/10 disabled:cursor-not-allowed disabled:bg-gray-50"
@@ -338,7 +354,9 @@ export const TaskCard = ({
                 <select
                   value={priority}
                   onChange={(e) =>
-                    commitUpdate({ priority: e.target.value as TaskPriority })
+                    commitUpdate(task?._id, {
+                      priority: e.target.value as ITaskPriority,
+                    })
                   }
                   disabled={!canMutate || loading}
                   onClick={(e) => e.stopPropagation()}
@@ -364,11 +382,14 @@ export default function Tasks() {
   const { user } = useAuthStore();
   const [expandedTask, setExpandedTask] = useState<string | null>(null);
   const [query, setQuery] = useState("");
-  const [statusFilter, setStatusFilter] = useState<TaskStatus | "all">("all");
-  const [priorityFilter, setPriorityFilter] = useState<TaskPriority | "all">("all");
+  const [statusFilter, setStatusFilter] = useState<ITaskStatus | "all">("all");
+  const [priorityFilter, setPriorityFilter] = useState<ITaskPriority | "all">(
+    "all",
+  );
 
   const onAddTask = () => {
     const newTask: ITask = {
+      _id: newId(),
       content: "",
       status: "todo",
       priority: "medium",
@@ -383,7 +404,10 @@ export default function Tasks() {
   }, [getTasks]);
 
   const stats = useMemo(() => {
-    const base = { todo: 0, inProgress: 0, done: 0 } as Record<TaskStatus, number>;
+    const base = { todo: 0, in_progress: 0, done: 0 } as Record<
+      ITaskStatus,
+      number
+    >;
     for (const t of tasks) {
       base[getTaskStatus(t.status)] += 1;
     }
@@ -430,7 +454,8 @@ export default function Tasks() {
                 My Tasks
               </h1>
               <p className="mt-1 text-sm text-gray-500">
-                Track what matters. Update status, priority, and details in one place.
+                Track what matters. Update status, priority, and details in one
+                place.
               </p>
             </div>
 
@@ -465,7 +490,9 @@ export default function Tasks() {
                 <p className="text-xs font-semibold uppercase tracking-wide text-gray-500">
                   To Do
                 </p>
-                <p className="mt-1 text-2xl font-bold text-gray-900">{stats.todo}</p>
+                <p className="mt-1 text-2xl font-bold text-gray-900">
+                  {stats.todo}
+                </p>
               </div>
               <div className="inline-flex h-10 w-10 items-center justify-center rounded-2xl bg-gray-50 text-gray-700">
                 <Circle className="h-5 w-5" />
@@ -479,7 +506,7 @@ export default function Tasks() {
                   In Progress
                 </p>
                 <p className="mt-1 text-2xl font-bold text-gray-900">
-                  {stats.inProgress}
+                  {stats.in_progress}
                 </p>
               </div>
               <div className="inline-flex h-10 w-10 items-center justify-center rounded-2xl bg-blue-50 text-blue-700">
@@ -493,7 +520,9 @@ export default function Tasks() {
                 <p className="text-xs font-semibold uppercase tracking-wide text-gray-500">
                   Done
                 </p>
-                <p className="mt-1 text-2xl font-bold text-gray-900">{stats.done}</p>
+                <p className="mt-1 text-2xl font-bold text-gray-900">
+                  {stats.done}
+                </p>
               </div>
               <div className="inline-flex h-10 w-10 items-center justify-center rounded-2xl bg-green-50 text-green-700">
                 <CheckCircle2 className="h-5 w-5" />
@@ -525,7 +554,9 @@ export default function Tasks() {
               </label>
               <select
                 value={statusFilter}
-                onChange={(e) => setStatusFilter(e.target.value as TaskStatus | "all")}
+                onChange={(e) =>
+                  setStatusFilter(e.target.value as ITaskStatus | "all")
+                }
                 className="mt-1 h-11 w-full rounded-xl border border-gray-200 bg-white px-3 text-sm text-gray-900 outline-none transition focus:border-gray-900 focus:ring-2 focus:ring-gray-900/10"
               >
                 <option value="all">All</option>
@@ -544,7 +575,7 @@ export default function Tasks() {
               <select
                 value={priorityFilter}
                 onChange={(e) =>
-                  setPriorityFilter(e.target.value as TaskPriority | "all")
+                  setPriorityFilter(e.target.value as ITaskPriority | "all")
                 }
                 className="mt-1 h-11 w-full rounded-xl border border-gray-200 bg-white px-3 text-sm text-gray-900 outline-none transition focus:border-gray-900 focus:ring-2 focus:ring-gray-900/10"
               >
@@ -592,7 +623,7 @@ export default function Tasks() {
                   <li
                     key={key}
                     className={`transition-all ${
-                      isExpanded ? "ring-2 ring-gray-900/10 rounded-2xl" : "" 
+                      isExpanded ? "ring-2 ring-gray-900/10 rounded-2xl" : ""
                     }`}
                     onClick={() => {
                       if (!task._id) return;

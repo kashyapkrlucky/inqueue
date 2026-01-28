@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom'; 
 import { useAuthStore } from '../store/useAuthStore';
 import { LockIcon, MailIcon } from 'lucide-react';
-import Input from '@/components/ui/Input';
+import Input from '../components/ui/Input';
 
 export default function Login() {
   const [email, setEmail] = useState('homer@example.com');

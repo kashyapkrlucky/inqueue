@@ -13,13 +13,13 @@ import {
 import { useTaskStore } from "../store/useTaskStore";
 import { useNoteStore } from "../store/useNoteStore";
 import { formatDate } from "../utils/helpers";
-import type { ITask, INote } from "../interfaces/index.types";
+import type { ITask, INote } from "../types/index.types";
 
-type TaskStatus = "todo" | "inProgress" | "done";
+type TaskStatus = "todo" | "in_progress" | "done";
 type TaskPriority = "low" | "medium" | "high";
 
 const getTaskStatus = (status: ITask["status"]): TaskStatus => {
-  if (status === "todo" || status === "inProgress" || status === "done") return status;
+  if (status === "todo" || status === "in_progress" || status === "done") return status;
   return "todo";
 };
 
@@ -64,7 +64,7 @@ const Home = () => {
     const base = {
       total: tasks.length,
       todo: 0,
-      inProgress: 0,
+      in_progress: 0,
       done: 0,
       low: 0,
       medium: 0,
@@ -74,7 +74,7 @@ const Home = () => {
     const mutable = { ...base } as {
       total: number;
       todo: number;
-      inProgress: number;
+      in_progress: number;
       done: number;
       low: number;
       medium: number;
@@ -138,7 +138,7 @@ const Home = () => {
   const taskStatusChart = useMemo(() => {
     const total = Math.max(1, taskStats.total);
     const todoPct = clamp((taskStats.todo / total) * 100, 0, 100);
-    const inProgressPct = clamp((taskStats.inProgress / total) * 100, 0, 100);
+    const inProgressPct = clamp((taskStats.in_progress / total) * 100, 0, 100);
     const donePct = clamp((taskStats.done / total) * 100, 0, 100);
     return { todoPct, inProgressPct, donePct };
   }, [taskStats]);
@@ -276,7 +276,7 @@ const Home = () => {
                 <div className="flex items-center gap-2 text-gray-600">
                   <span className="h-2 w-2 rounded-full bg-blue-500" />
                   In progress
-                  <span className="ml-auto font-semibold text-gray-900">{taskStats.inProgress}</span>
+                  <span className="ml-auto font-semibold text-gray-900">{taskStats.in_progress}</span>
                 </div>
                 <div className="flex items-center gap-2 text-gray-600">
                   <span className="h-2 w-2 rounded-full bg-green-500" />
@@ -430,12 +430,12 @@ const Home = () => {
                                   className={`inline-flex items-center rounded-full px-2 py-0.5 font-semibold ${
                                     status === "done"
                                       ? "bg-green-50 text-green-700"
-                                      : status === "inProgress"
+                                      : status === "in_progress"
                                         ? "bg-blue-50 text-blue-700"
                                         : "bg-gray-50 text-gray-700"
                                   }`}
                                 >
-                                  {status === "inProgress" ? "In progress" : status}
+                                  {status === "in_progress" ? "In progress" : status}
                                 </span>
                                 <span className="inline-flex items-center gap-1">
                                   <Calendar className="h-3.5 w-3.5" />

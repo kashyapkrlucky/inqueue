@@ -60,20 +60,23 @@ export interface INote {
   updatedAt?: Date;
 }
 
+export type ITaskStatus = "todo" | "in_progress" | "done";
+export type ITaskPriority = "low" | "medium" | "high";
+
 /**
  * Represents a task or to-do item
  */
 export interface ITask {
   /** Unique identifier for the task */
-  _id?: string;
+  _id: string;
   /** ID of the user who created the task */
   user?: string;
   /** The task description */
   content: string;
   /** Status of the task (e.g., completed or not) */
-  status?: string;
+  status?: ITaskStatus;
   /** Priority of the task (e.g., low, medium, high) */
-  priority?: string;
+  priority?: ITaskPriority;
   /** Due date for the task */
   dueDate?: Date;
   /** When the task was created */
@@ -81,3 +84,11 @@ export interface ITask {
   /** When the task was last updated */
   updatedAt?: Date;
 }
+
+export type NewTask = {
+  content: string;
+  priority?: ITaskPriority;
+  dueDate?: Date;
+};
+
+export type TaskUpdate = Partial<Omit<ITask, '_id' | 'createdAt'>>; // updatedAt managed by repo

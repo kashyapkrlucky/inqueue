@@ -1,7 +1,7 @@
 import { create } from "zustand";
 import axios from "../lib/axios";
 import { getStoredToken, setStoredToken, TOKEN_KEY } from "../utils/helpers";
-import type { IUser } from "../interfaces/index.types";
+import type { IUser } from "../types/index.types";
 
 export interface AuthState {
   user: IUser | null;

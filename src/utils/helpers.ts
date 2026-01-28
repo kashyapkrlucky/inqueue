@@ -1,5 +1,11 @@
 import { formatDistance } from "date-fns";
 
+export const TOKEN_KEY = "auth_token";
+
+export const STORAGE_KEYS = {
+  tasks: "tasks",
+};
+
 export const formatDate = (date: Date) => {
   return new Intl.DateTimeFormat("en-US", {
     month: "short",
@@ -17,7 +23,6 @@ export const formatRelativeTime = (date: string) => {
   return formatDistance(new Date(date), new Date(), { addSuffix: true });
 };
 
-export const TOKEN_KEY = "auth_token";
 
 // Helper functions for token management
 export const getStoredToken = (key: string): string | null => {
@@ -42,3 +47,10 @@ export const setStoredToken = (
     }
   }
 };
+
+export function newId() {
+  if (typeof crypto !== 'undefined' && 'randomUUID' in crypto) {
+    return (crypto as Crypto).randomUUID();
+  }
+  return Math.random().toString(36).slice(2) + Date.now().toString(36);
+}

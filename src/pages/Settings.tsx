@@ -13,7 +13,7 @@ import {
   User,
 } from "lucide-react";
 import useAuthStore from "../store/useAuthStore";
-import type { IUser } from "../interfaces/index.types";
+import type { IUser } from "../types/index.types";
 
 function SettingsForm({
   initial,
