@@ -70,7 +70,7 @@ export interface ITask {
   /** Unique identifier for the task */
   _id: string;
   /** ID of the user who created the task */
-  user?: string;
+  user: string;
   /** The task description */
   content: string;
   /** Status of the task (e.g., completed or not) */
@@ -87,8 +87,12 @@ export interface ITask {
 
 export type NewTask = {
   content: string;
+  status?: ITaskStatus;
   priority?: ITaskPriority;
   dueDate?: Date;
 };
 
 export type TaskUpdate = Partial<Omit<ITask, '_id' | 'createdAt'>>; // updatedAt managed by repo
+
+
+

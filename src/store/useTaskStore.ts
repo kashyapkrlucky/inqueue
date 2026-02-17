@@ -1,7 +1,7 @@
 import { create } from "zustand";
 import type { ITask, ITaskPriority, ITaskStatus } from "../types/index.types";
 import axios from "../lib/axios";
-import { TaskRepository } from "../repository/TaskRepository";
+// import { TaskRepository } from "../repository/TaskRepository";
 
 export type TaskFilter = {
   query: string;
@@ -14,8 +14,8 @@ interface TaskState {
   error: string | null;
   setTasks: (task: ITask) => void;
   getTasks: () => Promise<void>;
-  addTask: (task: ITask) => Promise<void>;
-  updateTask: (taskId: string, task: ITask) => Promise<void>;
+  addTask: (task: Partial<ITask>) => Promise<void>;
+  updateTask: (taskId: string, task: Partial<ITask>) => Promise<void>;
   deleteTask: (taskId: string) => Promise<void>;
 }
 
@@ -30,30 +30,34 @@ export const useTaskStore = create<TaskState>((set) => ({
         tasks: [...state.tasks, task],
       };
     });
-    TaskRepository.create(task);
+    // TaskRepository.create(task);
   },
   getTasks: async () => {
     try {
       set({ loading: true });
-      const { data } = await axios.get("/tasks");
-      set({ tasks: data.data });
+      const {
+        data: { data },
+      } = await axios.get("/tasks");
+      set({ tasks: data });
     } catch (error) {
       set({
         error:
           error instanceof Error ? error.message : "An unknown error occurred",
       });
-      const tasks = await TaskRepository.list();
-      set({ tasks });
+      // const tasks = await TaskRepository.list();
+      // set({ tasks });
     } finally {
       set({ loading: false });
     }
   },
-  addTask: async (task: ITask) => {
+  addTask: async (task: Partial<ITask>) => {
     try {
       set({ loading: true });
-      const { data } = await axios.post("/tasks", task);
-      set({ tasks: data.data });
-      TaskRepository.create(task);
+      const {
+        data: { data },
+      } = await axios.post("/tasks", task);
+      set((state) => ({ tasks: [data, ...state.tasks] }));
+      // TaskRepository.create(task as ITask);
     } catch (error) {
       set({
         error:
@@ -63,20 +67,21 @@ export const useTaskStore = create<TaskState>((set) => ({
       set({ loading: false });
     }
   },
-  updateTask: async (taskId: string, task: ITask) => {
+  updateTask: async (taskId: string, task: Partial<ITask>) => {
     try {
       console.log("Updating task:", taskId, task);
       set({ loading: true });
-      TaskRepository.update(taskId, task);
-      const { data } = await axios.put("/tasks", task);
-      set({ tasks: data.data });
+      await axios.patch<Partial<ITask>>(`/tasks/${taskId}`, task);
+      set((state) => ({
+        tasks: state.tasks.map((t) =>
+          t._id === taskId ? { ...t, ...task } : t,
+        ),
+      }));
     } catch (error) {
       set({
         error:
           error instanceof Error ? error.message : "An unknown error occurred",
       });
-      const tasks = await TaskRepository.list();
-      set({ tasks });
     } finally {
       set({ loading: false });
     }
@@ -84,7 +89,7 @@ export const useTaskStore = create<TaskState>((set) => ({
   deleteTask: async (taskId: string) => {
     try {
       set({ loading: true });
-      TaskRepository.remove(taskId);
+      // TaskRepository.remove(taskId);
       const { data } = await axios.delete("/tasks/" + taskId);
       set({ tasks: data.data });
     } catch (error) {
@@ -97,4 +102,3 @@ export const useTaskStore = create<TaskState>((set) => ({
     }
   },
 }));
-

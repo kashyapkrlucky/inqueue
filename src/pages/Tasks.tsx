@@ -14,8 +14,9 @@ import {
 } from "lucide-react";
 import { useTaskStore } from "../store/useTaskStore";
 import type { ITask, ITaskStatus, ITaskPriority } from "../types/index.types";
-import { formatDate, newId } from "../utils/helpers";
-import useAuthStore from "../store/useAuthStore";
+import { formatDate } from "../utils/helpers";
+// import useAuthStore from "../store/useAuthStore";
+import CreateTask from "../components/tasks/CreateTask";
 
 const statusConfig = {
   todo: {
@@ -85,63 +86,63 @@ const nextStatus = (status: ITaskStatus): ITaskStatus => {
   return "todo";
 };
 
-export const TaskCreate = ({ task }: { task: ITask }) => {
-  const [content, setContent] = useState(task?.content);
-  const [status, setStatus] = useState(task?.status);
-  const [priority, setPriority] = useState(task?.priority);
+// export const TaskCreate = ({ task }: { task: ITask }) => {
+//   const [content, setContent] = useState(task?.content);
+//   const [status, setStatus] = useState(task?.status);
+//   const [priority, setPriority] = useState(task?.priority);
 
-  return (
-    <div>
-      <div className="flex flex-col items-start gap-2">
-        <span className="text-gray-500 text-xs font-semibold uppercase mr-2">
-          Priority
-        </span>
-        <input
-          type="text"
-          value={content}
-          onChange={(e) => setContent(e.target.value)}
-          className="w-full flex-1 h-14 p-2 border border-gray-200 rounded-lg outline-none focus:ring-2 focus:ring-black focus:border-transparent transition-all"
-          onClick={(e) => e.stopPropagation()}
-        />
-      </div>
-      <div className="flex flex-col items-start gap-2">
-        <span className="text-gray-500 text-xs font-semibold uppercase mr-2">
-          Status
-        </span>
-        <select
-          value={status}
-          onChange={(e) => setStatus(e.target.value as ITaskStatus)}
-          className="border border-gray-200 rounded px-2 py-1 text-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-          onClick={(e) => e.stopPropagation()}
-        >
-          {Object.entries(statusConfig).map(([key, config]) => (
-            <option key={key} value={key}>
-              {config.label}
-            </option>
-          ))}
-        </select>
-      </div>
+//   return (
+//     <div>
+//       <div className="flex flex-col items-start gap-2">
+//         <span className="text-gray-500 text-xs font-semibold uppercase mr-2">
+//           Priority
+//         </span>
+//         <input
+//           type="text"
+//           value={content}
+//           onChange={(e) => setContent(e.target.value)}
+//           className="w-full flex-1 h-14 p-2 border border-gray-200 rounded-lg outline-none focus:ring-2 focus:ring-black focus:border-transparent transition-all"
+//           onClick={(e) => e.stopPropagation()}
+//         />
+//       </div>
+//       <div className="flex flex-col items-start gap-2">
+//         <span className="text-gray-500 text-xs font-semibold uppercase mr-2">
+//           Status
+//         </span>
+//         <select
+//           value={status}
+//           onChange={(e) => setStatus(e.target.value as ITaskStatus)}
+//           className="border border-gray-200 rounded px-2 py-1 text-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+//           onClick={(e) => e.stopPropagation()}
+//         >
+//           {Object.entries(statusConfig).map(([key, config]) => (
+//             <option key={key} value={key}>
+//               {config.label}
+//             </option>
+//           ))}
+//         </select>
+//       </div>
 
-      <div className="flex flex-col items-start gap-2">
-        <span className="text-gray-500 text-xs font-semibold uppercase mr-2">
-          Priority
-        </span>
-        <select
-          value={priority}
-          onChange={(e) => setPriority(e.target.value as ITaskPriority)}
-          className="border border-gray-200 rounded px-2 py-1 text-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-          onClick={(e) => e.stopPropagation()}
-        >
-          {Object.entries(priorityConfig).map(([key, config]) => (
-            <option key={key} value={key}>
-              {config.label}
-            </option>
-          ))}
-        </select>
-      </div>
-    </div>
-  );
-};
+//       <div className="flex flex-col items-start gap-2">
+//         <span className="text-gray-500 text-xs font-semibold uppercase mr-2">
+//           Priority
+//         </span>
+//         <select
+//           value={priority}
+//           onChange={(e) => setPriority(e.target.value as ITaskPriority)}
+//           className="border border-gray-200 rounded px-2 py-1 text-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+//           onClick={(e) => e.stopPropagation()}
+//         >
+//           {Object.entries(priorityConfig).map(([key, config]) => (
+//             <option key={key} value={key}>
+//               {config.label}
+//             </option>
+//           ))}
+//         </select>
+//       </div>
+//     </div>
+//   );
+// };
 
 export const TaskCard = ({
   task,
@@ -212,7 +213,7 @@ export const TaskCard = ({
   };
 
   return (
-    <div className="group rounded-2xl border border-gray-200 bg-white shadow-sm hover:shadow-md transition-shadow">
+    <div className="group rounded-xl bg-white shadow-xs hover:shadow-sm transition-shadow">
       <div className="p-4 sm:p-5">
         <div className="flex items-start gap-3">
           <button
@@ -251,15 +252,7 @@ export const TaskCard = ({
                 />
                 {priorityConfig[priority].label}
               </span>
-            </div>
-
-            <div className="mt-2">
-              <p
-                className={`truncate text-sm font-semibold ${status === "done" ? "text-gray-400 line-through" : "text-gray-900"}`}
-              >
-                {task.content?.trim() ? task.content : "Untitled task"}
-              </p>
-              <div className="mt-1 flex flex-wrap items-center gap-x-4 gap-y-1 text-xs text-gray-500">
+              <div className="flex flex-wrap items-center gap-x-4 gap-y-1 text-xs text-gray-500">
                 <span className="inline-flex items-center gap-1">
                   <Calendar className="h-3.5 w-3.5" />
                   Created {formatDate(createdAt)}
@@ -272,6 +265,15 @@ export const TaskCard = ({
                 ) : null}
               </div>
             </div>
+
+            <div className="mt-2">
+              <p
+                className={`truncate text-sm font-semibold ${status === "done" ? "text-gray-400 line-through" : "text-gray-900"}`}
+              >
+                {task.content?.trim() ? task.content : "Untitled task"}
+              </p>
+              
+            </div>
           </div>
 
           <div className="flex items-center gap-1">
@@ -281,7 +283,7 @@ export const TaskCard = ({
                 e.stopPropagation();
                 handleToggleExpanded();
               }}
-              className="inline-flex h-9 w-9 items-center justify-center rounded-xl border border-gray-200 text-gray-500 hover:bg-gray-50 hover:text-gray-700 transition-colors"
+              className="inline-flex h-9 w-9 items-center justify-center rounded-xl text-gray-500 hover:bg-gray-50 hover:text-gray-700 transition-colors"
               aria-label={expanded ? "Collapse" : "Expand"}
             >
               {expanded ? (
@@ -297,7 +299,7 @@ export const TaskCard = ({
                 onDelete();
               }}
               disabled={!canMutate || loading}
-              className="inline-flex h-9 w-9 items-center justify-center rounded-xl border border-gray-200 text-gray-500 hover:bg-red-50 hover:text-red-700 hover:border-red-200 transition-colors disabled:opacity-60 disabled:cursor-not-allowed"
+              className="inline-flex h-9 w-9 items-center justify-center rounded-xl text-gray-500 hover:bg-red-50 hover:text-red-700 hover:border-red-200 transition-colors disabled:opacity-60 disabled:cursor-not-allowed"
               aria-label="Delete"
             >
               <Trash2 className="h-4 w-4" />
@@ -378,8 +380,8 @@ export const TaskCard = ({
 };
 
 export default function Tasks() {
-  const { tasks, getTasks, setTasks, loading, error } = useTaskStore();
-  const { user } = useAuthStore();
+  const { tasks, getTasks, loading, error, addTask } = useTaskStore();
+  // const { user } = useAuthStore();
   const [expandedTask, setExpandedTask] = useState<string | null>(null);
   const [query, setQuery] = useState("");
   const [statusFilter, setStatusFilter] = useState<ITaskStatus | "all">("all");
@@ -387,16 +389,22 @@ export default function Tasks() {
     "all",
   );
 
-  const onAddTask = () => {
-    const newTask: ITask = {
-      _id: newId(),
-      content: "",
-      status: "todo",
-      priority: "medium",
-      user: user?._id,
-      createdAt: new Date(),
-    };
-    setTasks(newTask);
+  const [isTaskModalOpen, setIsTaskModalOpen] = useState(false);
+
+  const onAddTask = (task: Partial<ITask>) => {
+    console.log(task);
+    addTask(task);
+    // const newTask: ITask = {
+    //   _id: newId(),
+    //   content: "",
+    //   status: "todo",
+    //   priority: "medium",
+    //   user: user?._id,
+    //   createdAt: new Date(),
+    // };
+    // setTasks(newTask);
+
+
   };
 
   useEffect(() => {
@@ -461,7 +469,7 @@ export default function Tasks() {
 
             <div className="flex items-center gap-2">
               <button
-                onClick={onAddTask}
+                onClick={() => setIsTaskModalOpen(true)}
                 className="inline-flex h-11 items-center justify-center gap-2 rounded-xl bg-gray-900 px-4 text-sm font-semibold text-white shadow-sm transition hover:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-gray-900/20"
               >
                 <Plus className="h-4 w-4" />
@@ -484,7 +492,7 @@ export default function Tasks() {
         ) : null}
 
         <section className="mb-6 grid grid-cols-1 gap-3 sm:grid-cols-3">
-          <div className="rounded-2xl border border-gray-200 bg-white p-4 shadow-sm">
+          <div className="rounded-2xl bg-white p-4 shadow-sm">
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-xs font-semibold uppercase tracking-wide text-gray-500">
@@ -499,7 +507,7 @@ export default function Tasks() {
               </div>
             </div>
           </div>
-          <div className="rounded-2xl border border-gray-200 bg-white p-4 shadow-sm">
+          <div className="rounded-2xl bg-white p-4 shadow-sm">
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-xs font-semibold uppercase tracking-wide text-gray-500">
@@ -514,7 +522,7 @@ export default function Tasks() {
               </div>
             </div>
           </div>
-          <div className="rounded-2xl border border-gray-200 bg-white p-4 shadow-sm">
+          <div className="rounded-2xl bg-white p-4 shadow-sm">
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-xs font-semibold uppercase tracking-wide text-gray-500">
@@ -531,7 +539,7 @@ export default function Tasks() {
           </div>
         </section>
 
-        <section className="mb-6 rounded-2xl border border-gray-200 bg-white p-4 shadow-sm">
+        <section className="mb-6 rounded-2xl bg-white p-4 shadow-sm">
           <div className="grid grid-cols-1 gap-3 sm:grid-cols-12 sm:items-center">
             <div className="sm:col-span-6">
               <label className="block text-xs font-semibold uppercase tracking-wide text-gray-500">
@@ -557,7 +565,7 @@ export default function Tasks() {
                 onChange={(e) =>
                   setStatusFilter(e.target.value as ITaskStatus | "all")
                 }
-                className="mt-1 h-11 w-full rounded-xl border border-gray-200 bg-white px-3 text-sm text-gray-900 outline-none transition focus:border-gray-900 focus:ring-2 focus:ring-gray-900/10"
+                className="mt-1 h-11 w-full rounded-xl bg-white px-3 text-sm text-gray-900 outline-none transition focus:border-gray-900 focus:ring-2 focus:ring-gray-900/10"
               >
                 <option value="all">All</option>
                 {Object.entries(statusConfig).map(([key, config]) => (
@@ -577,7 +585,7 @@ export default function Tasks() {
                 onChange={(e) =>
                   setPriorityFilter(e.target.value as ITaskPriority | "all")
                 }
-                className="mt-1 h-11 w-full rounded-xl border border-gray-200 bg-white px-3 text-sm text-gray-900 outline-none transition focus:border-gray-900 focus:ring-2 focus:ring-gray-900/10"
+                className="mt-1 h-11 w-full rounded-xl bg-white px-3 text-sm text-gray-900 outline-none transition focus:border-gray-900 focus:ring-2 focus:ring-gray-900/10"
               >
                 <option value="all">All</option>
                 {Object.entries(priorityConfig).map(([key, config]) => (
@@ -592,14 +600,14 @@ export default function Tasks() {
 
         <section className="space-y-3">
           {loading ? (
-            <div className="rounded-2xl border border-gray-200 bg-white p-6 text-sm text-gray-500 shadow-sm">
+            <div className="rounded-2xl bg-white p-6 text-sm text-gray-500 shadow-sm">
               <div className="flex items-center gap-2">
                 <Loader2 className="h-4 w-4 animate-spin" />
                 Loading tasks…
               </div>
             </div>
           ) : filteredTasks.length === 0 ? (
-            <div className="rounded-2xl border border-gray-200 bg-white p-10 text-center shadow-sm">
+            <div className="rounded-2xl bg-white p-10 text-center shadow-sm">
               <p className="text-sm font-semibold text-gray-900">
                 No tasks found
               </p>
@@ -607,7 +615,7 @@ export default function Tasks() {
                 Try adjusting filters or create a new task.
               </p>
               <button
-                onClick={onAddTask}
+                onClick={() => setIsTaskModalOpen(true)}
                 className="mt-5 inline-flex h-11 items-center justify-center gap-2 rounded-xl bg-gray-900 px-4 text-sm font-semibold text-white shadow-sm transition hover:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-gray-900/20"
               >
                 <Plus className="h-4 w-4" />
@@ -617,13 +625,13 @@ export default function Tasks() {
           ) : (
             <ul className="space-y-3">
               {filteredTasks.map((task) => {
-                const key = task._id ?? task.createdAt.toString();
+                const key = task._id;
                 const isExpanded = expandedTask === task._id;
                 return (
                   <li
                     key={key}
                     className={`transition-all ${
-                      isExpanded ? "ring-2 ring-gray-900/10 rounded-2xl" : ""
+                      isExpanded ? "ring-2 ring-indigo-600/80 rounded-xl" : ""
                     }`}
                     onClick={() => {
                       if (!task._id) return;
@@ -644,6 +652,9 @@ export default function Tasks() {
             </ul>
           )}
         </section>
+
+
+        {isTaskModalOpen && <CreateTask onAddTask={onAddTask} onClose={() => setIsTaskModalOpen(false)} />}
       </div>
     </div>
   );

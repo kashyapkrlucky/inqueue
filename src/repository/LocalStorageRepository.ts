@@ -15,7 +15,7 @@ function write<T>(storageKey: string, items: T[]) {
   localStorage.setItem(storageKey, JSON.stringify(items));
 }
 
-export class LocalStorageRepository<T extends { _id: string; createdAt?: Date }> implements IRepository<T> {
+export class LocalStorageRepository<T> implements IRepository<T> {
   private storageKey: string;
 
   constructor(storageKey: string) {
@@ -23,18 +23,14 @@ export class LocalStorageRepository<T extends { _id: string; createdAt?: Date }>
   }
 
   async list(): Promise<T[]> {
-    return read<T>(this.storageKey).sort((a, b) => {
-      const aTime = new Date(a.createdAt!).getTime();
-      const bTime = new Date(b.createdAt!).getTime();
-      return bTime - aTime;
-    });
+    return read<T>(this.storageKey)
   }
 
-  async get(id: string): Promise<T | undefined> {
-    return read<T>(this.storageKey).find((item) => item._id === id);
-  }
+  // async get(id: string): Promise<T | undefined> {
+  //   return read<T>(this.storageKey).find((item) => item._id === id);
+  // }
 
-  async create(input: Omit<T, 'createdAt'> & Partial<Pick<T, 'createdAt'>>): Promise<T> {
+  async create(input: T): Promise<T> {
     const now = new Date();
     const item: T = {
       createdAt: now,
@@ -46,21 +42,21 @@ export class LocalStorageRepository<T extends { _id: string; createdAt?: Date }>
     return item;
   }
 
-  async update(id: string, patch: Partial<Omit<T, '_id' | 'createdAt'>>): Promise<T> {
-    const items = read<T>(this.storageKey);
-    const idx = items.findIndex((item) => item._id === id);
+  // async update(id: string, patch: Partial<T>): Promise<T> {
+  //   const items = read<T>(this.storageKey);
+  //   const idx = items.findIndex((item) => item._id === id);
     
-    if (idx === -1) throw new Error("Item not found");
-    const now = new Date();
-    const updated: T = { ...items[idx], ...patch, updatedAt: now } as T;
-    items[idx] = updated;
-    write(this.storageKey, items);
-    return updated;
-  }
+  //   if (idx === -1) throw new Error("Item not found");
+  //   const now = new Date();
+  //   const updated: T = { ...items[idx], ...patch, updatedAt: now } as T;
+  //   items[idx] = updated;
+  //   write(this.storageKey, items);
+  //   return updated;
+  // }
 
-  async remove(id: string): Promise<void> {
-    const items = read<T>(this.storageKey);
-    const next = items.filter((item) => item._id !== id);
-    write(this.storageKey, next);
-  }
+  // async remove(id: string): Promise<void> {
+  //   const items = read<T>(this.storageKey);
+  //   const next = items.filter((item) => item._id !== id);
+  //   write(this.storageKey, next);
+  // }
 }
