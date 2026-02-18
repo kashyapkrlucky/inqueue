@@ -1,4 +1,6 @@
 import { formatDistance } from "date-fns";
+import type { ITask, ITaskPriority, ITaskStatus } from "../types/index.types";
+import { CheckCircle2Icon, CircleIcon, ClockIcon } from "lucide-react";
 
 export const TOKEN_KEY = "auth_token";
 
@@ -54,3 +56,68 @@ export function newId() {
   }
   return Math.random().toString(36).slice(2) + Date.now().toString(36);
 }
+
+
+
+
+export const statusConfig = {
+  todo: {
+    label: "To Do",
+    icon: CircleIcon,
+    bgColor: "bg-gray-50",
+    textColor: "text-gray-700",
+    borderColor: "border-gray-200",
+  },
+  in_progress: {
+    label: "In Progress",
+    icon: ClockIcon,
+    bgColor: "bg-blue-50",
+    textColor: "text-blue-700",
+    borderColor: "border-blue-200",
+  },
+  done: {
+    label: "Done",
+    icon: CheckCircle2Icon,
+    bgColor: "bg-green-50",
+    textColor: "text-green-700",
+    borderColor: "border-green-200",
+  },
+} as const satisfies Record<
+  ITaskStatus,
+  {
+    label: string;
+    icon: typeof CircleIcon;
+    bgColor: string;
+    textColor: string;
+    borderColor: string;
+  }
+>;
+
+export const priorityConfig = {
+  low: {
+    label: "Low",
+    color: "bg-gray-400",
+  },
+  medium: {
+    label: "Medium",
+    color: "bg-blue-500",
+  },
+  high: {
+    label: "High",
+    color: "bg-red-500",
+  },
+} as const satisfies Record<ITaskPriority, { label: string; color: string }>;
+
+export const getTaskStatus = (status: ITask["status"]): ITaskStatus => {
+  if (status === "todo" || status === "in_progress" || status === "done") {
+    return status;
+  }
+  return "todo";
+};
+
+export const getTaskPriority = (priority: ITask["priority"]): ITaskPriority => {
+  if (priority === "low" || priority === "medium" || priority === "high") {
+    return priority;
+  }
+  return "medium";
+};

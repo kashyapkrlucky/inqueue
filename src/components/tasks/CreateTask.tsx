@@ -1,10 +1,11 @@
 import { useState } from "react";
-import { CircleIcon, ClockIcon, CheckCircleIcon } from "lucide-react";
 import type {
   ITaskPriority,
   ITaskStatus,
   ITask,
 } from "../../types/index.types";
+import { priorityConfig, statusConfig } from "../../utils/helpers";
+import { Button } from "../ui/Button";
 
 export default function CreateTask({
   onAddTask,
@@ -13,54 +14,6 @@ export default function CreateTask({
   onAddTask: (task: Partial<ITask>) => void;
   onClose: () => void;
 }) {
-  const statusConfig = {
-    todo: {
-      label: "To Do",
-      icon: CircleIcon,
-      bgColor: "bg-gray-50",
-      textColor: "text-gray-700",
-      borderColor: "border-gray-200",
-    },
-    in_progress: {
-      label: "In Progress",
-      icon: ClockIcon,
-      bgColor: "bg-blue-50",
-      textColor: "text-blue-700",
-      borderColor: "border-blue-200",
-    },
-    done: {
-      label: "Done",
-      icon: CheckCircleIcon,
-      bgColor: "bg-green-50",
-      textColor: "text-green-700",
-      borderColor: "border-green-200",
-    },
-  } as const satisfies Record<
-    ITaskStatus,
-    {
-      label: string;
-      icon: typeof CircleIcon;
-      bgColor: string;
-      textColor: string;
-      borderColor: string;
-    }
-  >;
-
-  const priorityConfig = {
-    low: {
-      label: "Low",
-      color: "bg-gray-400",
-    },
-    medium: {
-      label: "Medium",
-      color: "bg-blue-500",
-    },
-    high: {
-      label: "High",
-      color: "bg-red-500",
-    },
-  } as const satisfies Record<ITaskPriority, { label: string; color: string }>;
-
   const [content, setContent] = useState("");
   const [status, setStatus] = useState("todo");
   const [priority, setPriority] = useState("medium");
@@ -138,15 +91,15 @@ export default function CreateTask({
           </div>
         </section>
         <footer className="flex items-center justify-end gap-2 mt-4">
-          <button type="button" onClick={onClose}>
+          <Button variant="ghost" onClick={onClose}>
             Cancel
-          </button>
-          <button
+          </Button>
+          <Button
             type="submit"
-            className="inline-flex h-11 items-center justify-center gap-2 rounded-xl bg-gray-900 px-4 text-sm font-semibold text-white shadow-sm transition hover:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-gray-900/20"
+            variant="default"
           >
             Create
-          </button>
+          </Button>
         </footer>
       </form>
     </div>

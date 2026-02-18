@@ -5,3 +5,5 @@ export interface IRepository<T> {
   // update(id: string, patch: T): Promise<T>;
   // remove(id: string): Promise<void>;
 }
+
+

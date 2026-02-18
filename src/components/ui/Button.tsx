@@ -1,4 +1,5 @@
 export const Button = ({
+  type = "button",
   children,
   variant,
   className,
@@ -6,6 +7,7 @@ export const Button = ({
   onClick,
   disabled,
 }: {
+  type?: "button" | "submit" | "reset";
   children: React.ReactNode;
   variant?:
     | "default"
@@ -24,7 +26,8 @@ export const Button = ({
 }) => {
   return (
     <button
-      className={`px-5 py-2.5 rounded-xl inline-flex items-center justify-center ${
+      type={type}
+      className={`px-5 py-2.5 rounded-xl inline-flex items-center gap-2 font-semibold justify-center ${
         variant === "destructive"
           ? "bg-red-500 hover:bg-red-600"
           : variant === "warning"
@@ -41,7 +44,7 @@ export const Button = ({
           ? "bg-transparent hover:bg-gray-100"
           : variant === "link"
           ? "bg-transparent hover:bg-gray-100"
-          : "bg-blue-500 hover:bg-blue-600"
+          : "bg-gray-900 hover:bg-gray-800 text-white"
       } ${className} ${size === "sm" ? "text-sm" : size === "lg" ? "text-lg" : ""}`}
       onClick={onClick}
       disabled={disabled}
