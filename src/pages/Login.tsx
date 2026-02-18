@@ -1,8 +1,9 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom'; 
 import { useAuthStore } from '../store/useAuthStore';
 import { LockIcon, MailIcon } from 'lucide-react';
 import Input from '../components/ui/Input';
+import { useAuth } from '../hooks/useAuth';
 
 export default function Login() {
   const [email, setEmail] = useState('homer@example.com');
@@ -10,6 +11,14 @@ export default function Login() {
   const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
   const {login, error} = useAuthStore();
+
+
+    const { isAuthenticated, loading: authLoading } = useAuth();
+    useEffect(() => {
+      if (!authLoading && isAuthenticated) {
+        navigate('/');
+      }
+    }, [isAuthenticated, authLoading, navigate]);
 
   const handleSubmit = async (e: React.FormEvent) => {
       e.preventDefault();

@@ -96,10 +96,10 @@ export default function Sidebar() {
           <div className="absolute left-0 bottom-10 w-56 bg-white rounded-md shadow-lg py-1 border border-gray-100 ring-opacity-5">
             <div className="px-4 py-3 border-b border-gray-100">
               <p className="text-sm font-medium text-gray-700">
-                {user?.name || "Homer Simpson"}
+                {user?.name}
               </p>
               <p className="text-xs text-gray-500">
-                @{user?.userName || "homersimpson"}
+                @{user?.userName}
               </p>
             </div>
             <div className="py-1">

@@ -14,6 +14,8 @@ import { useTaskStore } from "../store/useTaskStore";
 import { useNoteStore } from "../store/useNoteStore";
 import { formatDate } from "../utils/helpers";
 import type { ITask, INote } from "../types/index.types";
+import { useNavigate } from "react-router-dom";
+import { useAuth } from "../hooks/useAuth";
 
 type TaskStatus = "todo" | "in_progress" | "done";
 type TaskPriority = "low" | "medium" | "high";
@@ -57,7 +59,9 @@ const Home = () => {
     void getNotes();
   }, [getTasks, getNotes]);
 
-  const loading = tasksLoading || notesLoading;
+  const { isAuthenticated, user, loading: authLoading } = useAuth();
+
+  const loading = tasksLoading || notesLoading || authLoading;
   const error = tasksError || notesError;
 
   const taskStats = useMemo(() => {
@@ -152,9 +156,17 @@ const Home = () => {
     };
   }, [taskStats]);
 
+  const navigate = useNavigate();
+
   const getNoteTitle = (note: INote) => (note.title?.trim() ? note.title : "Untitled note");
   const getTaskTitle = (task: ITask) => (task.content?.trim() ? task.content : "Untitled task");
-
+  console.log("user", user);
+  console.log("isAuthenticated", isAuthenticated);  
+  useEffect(() => {
+    if (!authLoading && !isAuthenticated) {
+      navigate('/login');
+    }
+  }, [isAuthenticated, authLoading, navigate]);  
   return (
     <div className="min-h-screen bg-gradient-to-b from-gray-50 to-white">
       <main className="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8">
