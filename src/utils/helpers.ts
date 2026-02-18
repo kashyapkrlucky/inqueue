@@ -121,3 +121,14 @@ export const getTaskPriority = (priority: ITask["priority"]): ITaskPriority => {
   }
   return "medium";
 };
+
+export const asDate = (value: unknown): Date | null => {
+  if (!value) return null;
+  if (value instanceof Date) return value;
+  const d = new Date(value as string);
+  if (Number.isNaN(d.getTime())) return null;
+  return d;
+};
+
+export const clamp = (n: number, min: number, max: number) =>
+  Math.min(max, Math.max(min, n));

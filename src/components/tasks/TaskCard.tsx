@@ -138,7 +138,7 @@ export const TaskCard = ({
               <div className="flex flex-wrap items-center gap-x-4 gap-y-1 text-xs text-gray-500">
                 <span className="inline-flex items-center gap-1">
                   <CalendarIcon className="h-3.5 w-3.5" />
-                  Created {formatDate(createdAt)}
+                  {formatDate(createdAt)}
                 </span>
                 {dueDate ? (
                   <span className="inline-flex items-center gap-1">
