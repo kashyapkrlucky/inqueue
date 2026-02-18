@@ -90,8 +90,10 @@ export const useTaskStore = create<TaskState>((set) => ({
     try {
       set({ loading: true });
       // TaskRepository.remove(taskId);
-      const { data } = await axios.delete("/tasks/" + taskId);
-      set({ tasks: data.data });
+      await axios.delete("/tasks/" + taskId);
+      set((state) => ({
+        tasks: state.tasks.filter((t) => t._id !== taskId),
+      }));
     } catch (error) {
       set({
         error:

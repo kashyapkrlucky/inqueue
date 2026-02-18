@@ -36,7 +36,7 @@ export const TaskCard = ({
   expanded: boolean;
   onToggleExpanded: () => void;
 }) => {
-  const { updateTask, deleteTask, loading, getTasks } = useTaskStore();
+  const { updateTask, deleteTask, loading } = useTaskStore();
   const [draftContent, setDraftContent] = useState(task.content ?? "");
 
   const status = getTaskStatus(task.status);
@@ -85,7 +85,7 @@ export const TaskCard = ({
   const onDelete = async () => {
     if (!task._id) return;
     await deleteTask(task._id);
-    getTasks();
+    // getTasks();
   };
 
   const handleToggleExpanded = () => {
