@@ -44,46 +44,51 @@ export function TaskDistributions({
       </div>
 
       <div className="grid grid-cols-2 gap-4">
+        {/* Status Chart */}
         <div className="mt-4">
-          <div className="flex items-center justify-between text-xs font-semibold text-gray-600">
+          <div className="flex items-center justify-between text-sm font-semibold text-gray-600">
             <span>Status</span>
-            <span>{taskStats.total} total</span>
+            {/* <span>{taskStats.total} total</span> */}
           </div>
-          <div className="mt-2 overflow-hidden rounded-full bg-gray-100">
-            <div className="flex h-3 w-full">
+
+          {/* Donut Chart */}
+          <div className="mt-3 flex items-center justify-center">
+            <div className="relative">
+              {/* Donut Chart using conic gradient */}
               <div
-                className="h-full bg-gray-400"
-                style={{ width: `${taskStatusChart.todoPct}%` }}
+                className="h-24 w-24 rounded-full"
+                style={{
+                  background: `conic-gradient(
+                    #9ca3af 0% ${taskStatusChart.todoPct}%,
+                    #6366f1 ${taskStatusChart.todoPct}% ${taskStatusChart.todoPct + taskStatusChart.inProgressPct}%,
+                    #10b981 ${taskStatusChart.todoPct + taskStatusChart.inProgressPct}% 100%
+                  )`
+                }}
               />
-              <div
-                className="h-full bg-indigo-500"
-                style={{ width: `${taskStatusChart.inProgressPct}%` }}
-              />
-              <div
-                className="h-full bg-emerald-500"
-                style={{ width: `${taskStatusChart.donePct}%` }}
-              />
+              {/* Center hole for donut effect */}
+              <div className="absolute inset-0 m-auto h-12 w-12 rounded-full bg-white" />
             </div>
           </div>
 
-          <div className="mt-3 grid grid-cols-3 gap-2 text-xs">
-            <div className="flex items-center gap-2 text-gray-600">
-              <span className="h-2 w-2 rounded-full bg-gray-400" />
-              To do
+          {/* Legend */}
+          <div className="mt-4 space-y-2">
+            <div className="flex items-center gap-2 text-xs">
+              <span className="h-3 w-3 rounded-full bg-gray-400" />
+              <span className="text-gray-600">To do</span>
               <span className="ml-auto font-semibold text-gray-900">
                 {taskStats.todo}
               </span>
             </div>
-            <div className="flex items-center gap-2 text-gray-600">
-              <span className="h-2 w-2 rounded-full bg-indigo-500" />
-              In progress
+            <div className="flex items-center gap-2 text-xs">
+              <span className="h-3 w-3 rounded-full bg-indigo-500" />
+              <span className="text-gray-600">In progress</span>
               <span className="ml-auto font-semibold text-gray-900">
                 {taskStats.in_progress}
               </span>
             </div>
-            <div className="flex items-center gap-2 text-gray-600">
-              <span className="h-2 w-2 rounded-full bg-emerald-500" />
-              Done
+            <div className="flex items-center gap-2 text-xs">
+              <span className="h-3 w-3 rounded-full bg-emerald-500" />
+              <span className="text-gray-600">Done</span>
               <span className="ml-auto font-semibold text-gray-900">
                 {taskStats.done}
               </span>
@@ -92,55 +97,53 @@ export function TaskDistributions({
         </div>
 
         {/* Priority Chart */}
-
         <div className="mt-4">
-          <div className="flex items-center justify-between text-xs font-semibold text-gray-600">
+          <div className="flex items-center justify-between text-sm font-semibold text-gray-600">
             <span>Priority</span>
-            <span></span>
+            {/* <span>{taskStats.low + taskStats.medium + taskStats.high} total</span> */}
           </div>
 
-          <div className="mt-3 space-y-2">
-            <div className="flex items-center gap-3">
-              <div className="w-20 text-xs font-semibold text-gray-600">
-                Low
-              </div>
-              <div className="h-2 flex-1 overflow-hidden rounded-full bg-gray-100">
-                <div
-                  className="h-full bg-red-200"
-                  style={{ width: `${taskPriorityChart.lowPct}%` }}
-                />
-              </div>
-              <div className="w-8 text-right text-xs font-semibold text-gray-900">
+          {/* Donut Chart */}
+          <div className="mt-3 flex items-center justify-center">
+            <div className="relative">
+              {/* Donut Chart using conic gradient */}
+              <div
+                className="h-24 w-24 rounded-full"
+                style={{
+                  background: `conic-gradient(
+                    #fef2f2 0% ${taskPriorityChart.lowPct}%,
+                    #fca5a5 ${taskPriorityChart.lowPct}% ${taskPriorityChart.lowPct + taskPriorityChart.mediumPct}%,
+                    #dc2626 ${taskPriorityChart.lowPct + taskPriorityChart.mediumPct}% 100%
+                  )`
+                }}
+              />
+              {/* Center hole for donut effect */}
+              <div className="absolute inset-0 m-auto h-12 w-12 rounded-full bg-white" />
+            </div>
+          </div>
+
+          {/* Legend */}
+          <div className="mt-4 space-y-2">
+            <div className="flex items-center gap-2 text-xs">
+              <span className="h-3 w-3 rounded-full bg-red-200" />
+              <span className="text-gray-600">Low</span>
+              <span className="ml-auto font-semibold text-gray-900">
                 {taskStats.low}
-              </div>
+              </span>
             </div>
-            <div className="flex items-center gap-3">
-              <div className="w-20 text-xs font-semibold text-gray-600">
-                Medium
-              </div>
-              <div className="h-2 flex-1 overflow-hidden rounded-full bg-gray-100">
-                <div
-                  className="h-full bg-red-400"
-                  style={{ width: `${taskPriorityChart.mediumPct}%` }}
-                />
-              </div>
-              <div className="w-8 text-right text-xs font-semibold text-gray-900">
+            <div className="flex items-center gap-2 text-xs">
+              <span className="h-3 w-3 rounded-full bg-red-400" />
+              <span className="text-gray-600">Medium</span>
+              <span className="ml-auto font-semibold text-gray-900">
                 {taskStats.medium}
-              </div>
+              </span>
             </div>
-            <div className="flex items-center gap-3">
-              <div className="w-20 text-xs font-semibold text-gray-600">
-                High
-              </div>
-              <div className="h-2 flex-1 overflow-hidden rounded-full bg-gray-100">
-                <div
-                  className="h-full bg-red-600"
-                  style={{ width: `${taskPriorityChart.highPct}%` }}
-                />
-              </div>
-              <div className="w-8 text-right text-xs font-semibold text-gray-900">
+            <div className="flex items-center gap-2 text-xs">
+              <span className="h-3 w-3 rounded-full bg-red-600" />
+              <span className="text-gray-600">High</span>
+              <span className="ml-auto font-semibold text-gray-900">
                 {taskStats.high}
-              </div>
+              </span>
             </div>
           </div>
         </div>

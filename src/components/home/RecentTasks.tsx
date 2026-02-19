@@ -1,13 +1,14 @@
 import { ArrowUpRightIcon, CalendarIcon, FileTextIcon } from "lucide-react";
 import { asDate, formatDate, getTaskStatus } from "../../utils/helpers";
 import type { ITask } from "../../types/index.types";
+import { Link } from "react-router-dom";
 
 interface RecentTasksProps {
   tasks: ITask[];
 }
 export function RecentTasks({ tasks }: RecentTasksProps) {
   return (
-    <div className="flex-1 rounded-2xl border border-gray-200 bg-white p-4 shadow-sm">
+    <div className="flex-1 rounded-2xl bg-white p-4 shadow-sm">
       <div className="flex items-start justify-between gap-3">
         <div>
           <h2 className="text-sm font-bold text-gray-900">Recent tasks</h2>
@@ -18,7 +19,7 @@ export function RecentTasks({ tasks }: RecentTasksProps) {
         </div>
       </div>
 
-      <div className="mt-4 space-y-2 overflow-y-auto h-[260px] scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-gray-100">
+      <div className="mt-4 space-y-2 overflow-y-auto h-[240px] scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-gray-100">
         {tasks.length === 0 ? (
           <div className="rounded-xl bg-gray-50 p-4 text-sm text-gray-500">
             No tasks yet.
@@ -55,7 +56,9 @@ export function RecentTasks({ tasks }: RecentTasksProps) {
                       </span>
                     </div>
                   </div>
-                  <ArrowUpRightIcon className="mt-0.5 h-4 w-4 flex-shrink-0 text-gray-400" />
+                  <Link to="/tasks" className="text-indigo-600">
+                    <ArrowUpRightIcon className="h-4 w-4" />
+                  </Link>
                 </div>
               </div>
             );

@@ -109,11 +109,11 @@ const Home = () => {
   }, [taskStats]);
 
   const taskPriorityChart = useMemo(() => {
-    const max = Math.max(1, taskStats.low, taskStats.medium, taskStats.high);
+    const total = Math.max(1, taskStats.low + taskStats.medium + taskStats.high);
     return {
-      lowPct: clamp((taskStats.low / max) * 100, 0, 100),
-      mediumPct: clamp((taskStats.medium / max) * 100, 0, 100),
-      highPct: clamp((taskStats.high / max) * 100, 0, 100),
+      lowPct: clamp((taskStats.low / total) * 100, 0, 100),
+      mediumPct: clamp((taskStats.medium / total) * 100, 0, 100),
+      highPct: clamp((taskStats.high / total) * 100, 0, 100),
     };
   }, [taskStats]);
 
@@ -167,7 +167,7 @@ const Home = () => {
           upcomingTasks={upcomingTasks.length}
         />
 
-        <section className="mb-6 grid grid-cols-1 gap-3 lg:grid-cols-3">
+        <section className="mb-6 grid grid-cols-1 gap-4 lg:grid-cols-3">
           <TaskDistributions
             taskStats={taskStats}
             taskStatusChart={taskStatusChart}
@@ -182,7 +182,7 @@ const Home = () => {
           />
         </section>
 
-        <section className="grid grid-cols-1 gap-3 lg:grid-cols-3">
+        <section className="grid grid-cols-1 gap-4 lg:grid-cols-3">
           <UpcomingTasks upcomingTasks={upcomingTasks} />
           <RecentTasks tasks={tasks} />
           <RecentNotes notes={notes} />
