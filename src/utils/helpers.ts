@@ -16,6 +16,16 @@ export const formatDate = (date: Date) => {
   }).format(date);
 };
 
+export const formatDateWithTime = (date: Date) => {
+  return new Intl.DateTimeFormat("en-US", {
+    month: "short",
+    day: "numeric",
+    year: "numeric",
+    hour: "2-digit",
+    minute: "2-digit",
+  }).format(date);
+};
+
 export const monthYearOnly = (date: string) => {
   const d = new Date(date);
   return d.toLocaleString("default", { month: "short", year: "numeric" });
@@ -24,7 +34,6 @@ export const monthYearOnly = (date: string) => {
 export const formatRelativeTime = (date: string) => {
   return formatDistance(new Date(date), new Date(), { addSuffix: true });
 };
-
 
 // Helper functions for token management
 export const getStoredToken = (key: string): string | null => {
@@ -36,13 +45,13 @@ export const getStoredToken = (key: string): string | null => {
 
 export const setStoredToken = (
   data: object | string | null,
-  key: string = TOKEN_KEY
+  key: string = TOKEN_KEY,
 ): void => {
   if (typeof window !== "undefined") {
     if (data) {
       localStorage.setItem(
         key,
-        typeof data === "string" ? data : JSON.stringify(data)
+        typeof data === "string" ? data : JSON.stringify(data),
       );
     } else {
       localStorage.removeItem(key);
@@ -51,14 +60,11 @@ export const setStoredToken = (
 };
 
 export function newId() {
-  if (typeof crypto !== 'undefined' && 'randomUUID' in crypto) {
+  if (typeof crypto !== "undefined" && "randomUUID" in crypto) {
     return (crypto as Crypto).randomUUID();
   }
   return Math.random().toString(36).slice(2) + Date.now().toString(36);
 }
-
-
-
 
 export const statusConfig = {
   todo: {

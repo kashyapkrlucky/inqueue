@@ -47,7 +47,7 @@ export interface INote {
   /** Unique identifier for the note */
   _id: string;
   /** ID of the user who owns the note */
-  user: IUser;
+  user?: IUser;
   /** Title of the note */
   title: string;
   /** Main content of the note */
@@ -55,9 +55,9 @@ export interface INote {
   /** Optional reference to the parent folder */
   folder?: IFolder;
   /** When the note was created */
-  createdAt?: Date;
+  createdAt?: string;
   /** When the note was last updated */
-  updatedAt?: Date;
+  updatedAt?: string;
 }
 
 export type ITaskStatus = "todo" | "in_progress" | "done";

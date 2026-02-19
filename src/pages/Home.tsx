@@ -2,7 +2,13 @@ import { useEffect, useMemo } from "react";
 import { AlertTriangle, Loader2 } from "lucide-react";
 import { useTaskStore } from "../store/useTaskStore";
 import { useNoteStore } from "../store/useNoteStore";
-import { asDate, clamp, formatDate, getTaskPriority, getTaskStatus } from "../utils/helpers";
+import {
+  asDate,
+  clamp,
+  formatDate,
+  getTaskPriority,
+  getTaskStatus,
+} from "../utils/helpers";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../hooks/useAuth";
 import { TaskStats } from "../components/home/TaskStats";
@@ -114,15 +120,12 @@ const Home = () => {
 
   const navigate = useNavigate();
 
-  // const getNoteTitle = (note: INote) =>
-  //   note.title?.trim() ? note.title : "Untitled note";
-  // const getTaskTitle = (task: ITask) => (task.content?.trim() ? task.content : "Untitled task");
-
   useEffect(() => {
     if (!authLoading && !isAuthenticated) {
       navigate("/login");
     }
   }, [isAuthenticated, authLoading, navigate]);
+
   return (
     <div className="min-h-screen bg-gradient-to-b from-gray-50 to-white">
       <main className="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8">

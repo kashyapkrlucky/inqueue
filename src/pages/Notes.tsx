@@ -1,19 +1,19 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Search, Plus, Trash2, Edit, Save, X, Menu, ChevronRight } from 'lucide-react';
-
-type Note = {
-  id: string;
-  title: string;
-  content: string;
-  lastEdited: Date;
-};
+import type { INote } from '../types/index.types';
+import { useNoteStore } from '../store/useNoteStore';
+import { Button } from '../components/ui/Button';
 
 export default function Notes() {
-  const [notes, setNotes] = useState<Note[]>([]);
-  const [selectedNote, setSelectedNote] = useState<Note | null>(null);
   const [searchTerm, setSearchTerm] = useState('');
   const [isEditing, setIsEditing] = useState(false);
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
+
+  const { getNotes, currentNote, setCurrentNote, notes, insertNote, addNote, updateNote, deleteNote } = useNoteStore();
+  
+  useEffect(() => {
+    getNotes();
+  }, [getNotes]);
   
   const filteredNotes = notes.filter(note => 
     note.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -21,39 +21,25 @@ export default function Notes() {
   );
 
   const createNewNote = () => {
-    const newNote: Note = {
-      id: Date.now().toString(),
+    const newNote: INote = {
+      _id: "TempId",
       title: 'Untitled Note',
       content: '',
-      lastEdited: new Date()
     };
-    setNotes([newNote, ...notes]);
-    setSelectedNote(newNote);
+    insertNote(newNote);
     setIsEditing(true);
   };
 
-  const updateNote = (updatedNote: Note) => {
-    setNotes(notes.map(note => 
-      note.id === updatedNote.id ? { ...updatedNote, lastEdited: new Date() } : note
-    ));
-    setSelectedNote(updatedNote);
-  };
-
-  const deleteNote = (id: string) => {
-    setNotes(notes.filter(note => note.id !== id));
-    if (selectedNote?.id === id) {
-      setSelectedNote(notes.length > 1 ? notes[0] : null);
+  const saveNote = (title: string, content: string) => {
+    if (currentNote?._id === "TempId") {
+      addNote(title, content);
+    } else {
+      updateNote(currentNote!._id, title, content);
     }
   };
 
-  const formatDate = (date: Date) => {
-    return new Intl.DateTimeFormat('en-US', {
-      month: 'short',
-      day: 'numeric',
-      year: 'numeric',
-      hour: '2-digit',
-      minute: '2-digit'
-    }).format(date);
+  const handleDeleteNote = (_id: string) => {
+    deleteNote(_id);
   };
 
   return (
@@ -85,13 +71,13 @@ export default function Notes() {
         <div className="flex-1 overflow-y-auto">
           {filteredNotes.map((note) => (
             <div
-              key={note.id}
+              key={note._id}
               onClick={() => {
-                setSelectedNote(note);
+                setCurrentNote(note);
                 setIsEditing(false);
               }}
               className={`p-4 border-b border-gray-100 cursor-pointer hover:bg-gray-50 ${
-                selectedNote?.id === note.id ? 'bg-blue-50' : ''
+                currentNote?._id === note._id ? 'bg-blue-50' : ''
               }`}
             >
               <div className="flex justify-between items-start">
@@ -101,7 +87,7 @@ export default function Notes() {
                 <button
                   onClick={(e) => {
                     e.stopPropagation();
-                    deleteNote(note.id);
+                    handleDeleteNote(note._id);
                   }}
                   className="text-gray-400 hover:text-red-500 p-1"
                   aria-label="Delete note"
@@ -113,7 +99,7 @@ export default function Notes() {
                 {note.content.substring(0, 60) || 'No content'}
               </p>
               <p className="text-xs text-gray-400 mt-2">
-                {formatDate(note.lastEdited)}
+                {note?.updatedAt}
               </p>
             </div>
           ))}
@@ -137,11 +123,11 @@ export default function Notes() {
             <Menu size={24} />
           </button>
           <h1 className="text-xl font-semibold text-gray-800">
-            {selectedNote ? selectedNote.title : 'Notes'}
+            {currentNote ? currentNote.title : 'Notes'}
           </h1>
         </div>
 
-        {selectedNote ? (
+        {currentNote ? (
           <div className="flex-1 flex flex-col h-full overflow-hidden">
             <div className="p-4 border-b border-gray-200 flex justify-between items-center">
               <div className="flex items-center">
@@ -157,13 +143,13 @@ export default function Notes() {
                 {isEditing ? (
                   <input
                     type="text"
-                    value={selectedNote.title}
-                    onChange={(e) => updateNote({ ...selectedNote, title: e.target.value })}
+                    value={currentNote.title}
+                    onChange={(e) => setCurrentNote({ ...currentNote, title: e.target.value })}
                     className="text-xl font-semibold bg-transparent focus:outline-none focus:ring-2 focus:ring-blue-500 rounded px-2 py-1"
                     placeholder="Note title"
                   />
                 ) : (
-                  <h2 className="text-xl font-semibold">{selectedNote.title}</h2>
+                  <h2 className="text-xl font-semibold">{currentNote.title}</h2>
                 )}
               </div>
               <div className="flex space-x-2">
@@ -171,7 +157,7 @@ export default function Notes() {
                   <>
                     <button
                       onClick={() => {
-                        updateNote(selectedNote);
+                        saveNote(currentNote.title, currentNote.content);
                         setIsEditing(false);
                       }}
                       className="p-2 text-green-600 hover:bg-green-50 rounded-full"
@@ -201,8 +187,8 @@ export default function Notes() {
             <div className="flex-1 p-4 overflow-y-auto">
               {isEditing ? (
                 <textarea
-                  value={selectedNote.content}
-                  onChange={(e) => updateNote({ ...selectedNote, content: e.target.value })}
+                  value={currentNote.content}
+                  onChange={(e) => setCurrentNote({ ...currentNote, content: e.target.value })}
                   className="w-full h-full p-2 focus:outline-none resize-none text-gray-800 leading-relaxed"
                   placeholder="Start writing your note here..."
                   autoFocus
@@ -212,28 +198,26 @@ export default function Notes() {
                   className="whitespace-pre-wrap text-gray-800 leading-relaxed min-h-full"
                   onClick={() => setIsEditing(true)}
                 >
-                  {selectedNote.content || (
+                  {currentNote.content || (
                     <p className="text-gray-400 italic">Empty note. Click to edit.</p>
                   )}
                 </div>
               )}
             </div>
             <div className="p-2 text-xs text-gray-400 text-right border-t border-gray-100">
-              Last edited: {formatDate(selectedNote.lastEdited)}
+              Last edited: {currentNote.updatedAt}
             </div>
           </div>
         ) : (
           <div className="flex-1 flex flex-col items-center justify-center text-center p-8 text-gray-500">
-            <Plus size={48} className="mx-auto mb-4 text-gray-300" />
             <h2 className="text-xl font-medium mb-2">No Note Selected</h2>
             <p className="mb-6">Select a note or create a new one to get started</p>
-            <button
+            <Button
               onClick={createNewNote}
-              className="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors flex items-center mx-auto"
             >
-              <Plus size={16} className="mr-2" />
+              <Plus size={16} />
               New Note
-            </button>
+            </Button>
           </div>
         )}
       </div>
