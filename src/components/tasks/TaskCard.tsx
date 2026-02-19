@@ -120,14 +120,14 @@ export const TaskCard = ({
           </button>
 
           <div className="min-w-0 flex-1">
-            <div className="flex flex-wrap items-center gap-2">
+            <div className="flex flex-wrap items-center gap-4">
               <span
-                className={`inline-flex items-center rounded-full px-2.5 py-1 text-xs font-semibold ${statusConfig[status].bgColor} ${statusConfig[status].textColor}`}
+                className={`inline-flex items-center rounded-full px-2 py-1 text-xs font-semibold ${statusConfig[status].bgColor} ${statusConfig[status].textColor}`}
               >
                 {statusConfig[status].label}
               </span>
               <span
-                className="inline-flex items-center gap-2 rounded-full bg-gray-50 px-2.5 py-1 text-xs font-semibold text-gray-700"
+                className="inline-flex items-center gap-2 rounded-full bg-gray-50 px-2 py-1 text-xs font-semibold text-gray-700"
                 title={`Priority: ${priorityConfig[priority].label}`}
               >
                 <span
