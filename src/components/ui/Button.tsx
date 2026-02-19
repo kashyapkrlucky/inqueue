@@ -27,7 +27,7 @@ export const Button = ({
   return (
     <button
       type={type}
-      className={`px-5 py-2.5 rounded-xl inline-flex items-center gap-2 font-semibold justify-center ${
+      className={`px-5 py-2.5 rounded-xl inline-flex items-center gap-2 font-semibold justify-center disabled:opacity-50 disabled:cursor-not-allowed ${
         variant === "destructive"
           ? "bg-red-500 hover:bg-red-600"
           : variant === "warning"
@@ -44,8 +44,8 @@ export const Button = ({
           ? "bg-transparent hover:bg-gray-100"
           : variant === "link"
           ? "bg-transparent hover:bg-gray-100"
-          : "bg-gray-900 hover:bg-gray-800 text-white"
-      } ${className} ${size === "sm" ? "text-sm" : size === "lg" ? "text-lg" : ""}`}
+          : "bg-gray-900 text-white"
+      } ${className} ${size === "sm" ? "text-sm" : size === "lg" ? "text-lg" : "sm"}`}
       onClick={onClick}
       disabled={disabled}
     >
