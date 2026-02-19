@@ -19,7 +19,7 @@ export function RecentNotes({ notes }: RecentNotesProps) {
         </div>
       </div>
 
-      <div className="mt-4 space-y-2">
+      <div className="mt-4 space-y-2 h-[260px] overflow-y-auto scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-gray-100">
         {notes.length === 0 ? (
           <div className="rounded-xl bg-gray-50 p-4 text-sm text-gray-500">
             No notes yet.

@@ -105,9 +105,9 @@ export const TaskCard = ({
             disabled={!canMutate || loading}
             className={`mt-0.5 inline-flex h-9 w-9 items-center justify-center rounded-xl border transition-colors ${
               status === "done"
-                ? "border-green-200 bg-green-50 text-green-700"
+                ? "border-emerald-200 bg-emerald-50 text-emerald-700"
                 : status === "in_progress"
-                  ? "border-blue-200 bg-blue-50 text-blue-700"
+                  ? "border-indigo-200 bg-indigo-50 text-indigo-700"
                   : "border-gray-200 bg-gray-50 text-gray-700"
             } ${!canMutate ? "opacity-60 cursor-not-allowed" : "hover:bg-white"}`}
             aria-label="Toggle status"

@@ -18,7 +18,7 @@ export function UpcomingTasks({ upcomingTasks }: UpcomingTasksProps) {
           <h2 className="text-sm font-bold text-gray-900">Upcoming</h2>
           <p className="mt-1 text-xs text-gray-500">Tasks with a due date</p>
         </div>
-        <div className="inline-flex h-9 w-9 items-center justify-center rounded-2xl bg-blue-50 text-blue-700">
+        <div className="inline-flex h-9 w-9 items-center justify-center rounded-2xl bg-orange-50 text-orange-700">
           <CalendarIcon className="h-4 w-4" />
         </div>
       </div>

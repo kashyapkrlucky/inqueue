@@ -35,7 +35,7 @@ export default function Avater({ user, className = "" }: { user?: User; classNam
     <div
       className={`relative group w-24 h-24 text-center rounded-full border-4 border-white shadow-lg ${className}`}
     >
-      <div className="absolute -inset-1 bg-gradient-to-r from-blue-500 to-purple-600 rounded-full opacity-60 blur"></div>
+      <div className="absolute -inset-1 bg-gradient-to-r from-indigo-500 to-purple-600 rounded-full opacity-60 blur"></div>
       <div className="relative h-24 w-24 rounded-full border-4 border-white overflow-hidden shadow-lg">
         <img
           src={user?.avatar || list[active].src}

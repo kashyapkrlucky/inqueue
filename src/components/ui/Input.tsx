@@ -32,7 +32,7 @@ export default function Input({
         <input
           id={id}
           type="text"
-          className={`block w-full rounded-lg text-gray-700 dark:text-gray-700 border-gray-300 shadow-xs border-2 focus:outline-none focus:border-blue-500 text-sm py-2 px-3 ${inputClasses}`}
+          className={`block w-full rounded-lg text-gray-700 dark:text-gray-700 border-gray-300 shadow-xs border-2 focus:outline-none focus:border-indigo-500 text-sm py-2 px-3 ${inputClasses}`}
           {...props}
         />
       </div>

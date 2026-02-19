@@ -61,7 +61,7 @@ export default function CreateTask({
             <select
               value={status}
               onChange={(e) => setStatus(e.target.value as ITaskStatus)}
-              className="w-full border border-gray-200 rounded px-2 py-2 text-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              className="w-full border border-gray-200 rounded px-2 py-2 text-sm focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
               onClick={(e) => e.stopPropagation()}
             >
               {Object.entries(statusConfig).map(([key, config]) => (
@@ -79,7 +79,7 @@ export default function CreateTask({
             <select
               value={priority}
               onChange={(e) => setPriority(e.target.value as ITaskPriority)}
-              className="w-full border border-gray-200 rounded px-2 py-2 text-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              className="w-full border border-gray-200 rounded px-2 py-2 text-sm focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
               onClick={(e) => e.stopPropagation()}
             >
               {Object.entries(priorityConfig).map(([key, config]) => (

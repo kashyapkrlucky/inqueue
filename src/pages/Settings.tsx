@@ -187,7 +187,7 @@ function SettingsForm({
                     Change your password to keep your account secure.
                   </p>
                 </div>
-                <div className="inline-flex h-9 w-9 items-center justify-center rounded-2xl bg-blue-50 text-blue-700">
+                <div className="inline-flex h-9 w-9 items-center justify-center rounded-2xl bg-indigo-50 text-indigo-700">
                   <KeyRound className="h-4 w-4" />
                 </div>
               </div>

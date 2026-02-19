@@ -21,7 +21,7 @@ export function TaskStats({ taskStats, notes, upcomingTasks }: TaskStatsProps) {
                 <p className="mt-1 text-2xl font-bold text-gray-900">{taskStats.total}</p>
                 <p className="mt-1 text-xs text-gray-500">Across all statuses</p>
               </div>
-              <div className="inline-flex h-10 w-10 items-center justify-center rounded-2xl bg-gray-50 text-gray-700">
+              <div className="inline-flex h-10 w-10 items-center justify-center rounded-2xl bg-gray-50 text-red-500">
                 <TargetIcon className="h-5 w-5" />
               </div>
             </div>
@@ -36,7 +36,7 @@ export function TaskStats({ taskStats, notes, upcomingTasks }: TaskStatsProps) {
                 <p className="mt-1 text-2xl font-bold text-gray-900">{taskStats.done}</p>
                 <p className="mt-1 text-xs text-gray-500">Completed tasks</p>
               </div>
-              <div className="inline-flex h-10 w-10 items-center justify-center rounded-2xl bg-green-50 text-green-700">
+              <div className="inline-flex h-10 w-10 items-center justify-center rounded-2xl bg-emerald-50 text-emerald-700">
                 <CheckCircle2Icon className="h-5 w-5" />
               </div>
             </div>
@@ -66,7 +66,7 @@ export function TaskStats({ taskStats, notes, upcomingTasks }: TaskStatsProps) {
                 <p className="mt-1 text-2xl font-bold text-gray-900">{upcomingTasks}</p>
                 <p className="mt-1 text-xs text-gray-500">Due soon</p>
               </div>
-              <div className="inline-flex h-10 w-10 items-center justify-center rounded-2xl bg-blue-50 text-blue-700">
+              <div className="inline-flex h-10 w-10 items-center justify-center rounded-2xl bg-orange-50 text-orange-700">
                 <CalendarIcon className="h-5 w-5" />
               </div>
             </div>

@@ -1,5 +1,4 @@
 import { useEffect, useMemo } from "react";
-import { AlertTriangle, Loader2 } from "lucide-react";
 import { useTaskStore } from "../store/useTaskStore";
 import { useNoteStore } from "../store/useNoteStore";
 import {
@@ -22,13 +21,13 @@ const Home = () => {
   const {
     tasks,
     loading: tasksLoading,
-    error: tasksError,
+    // error: tasksError,
     getTasks,
   } = useTaskStore();
   const {
     notes,
     loading: notesLoading,
-    error: notesError,
+    // error: notesError,
     getNotes,
   } = useNoteStore();
 
@@ -40,7 +39,7 @@ const Home = () => {
   const { isAuthenticated, loading: authLoading } = useAuth();
 
   const loading = tasksLoading || notesLoading || authLoading;
-  const error = tasksError || notesError;
+  // const error = tasksError || notesError;
 
   const taskStats = useMemo(() => {
     const base = {
@@ -126,6 +125,13 @@ const Home = () => {
     }
   }, [isAuthenticated, authLoading, navigate]);
 
+  if (loading) {
+    return (
+      <div className="w-screen h-screen flex flex-col items-center justify-center rounded-2xl border border-gray-200 bg-white p-4 text-sm text-gray-500">
+        <p>Syncing tasks and notes…</p>
+      </div>
+    );
+  }
   return (
     <div className="min-h-screen bg-gradient-to-b from-gray-50 to-white">
       <main className="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8">
@@ -143,7 +149,7 @@ const Home = () => {
           </div>
         </div>
 
-        {error ? (
+        {/* {error ? (
           <div className="mb-6 rounded-2xl border border-red-200 bg-red-50 p-4 text-sm text-red-800">
             <div className="flex items-start gap-2">
               <AlertTriangle className="mt-0.5 h-4 w-4" />
@@ -153,7 +159,7 @@ const Home = () => {
               </div>
             </div>
           </div>
-        ) : null}
+        ) : null} */}
 
         <TaskStats
           taskStats={taskStats}
@@ -178,22 +184,8 @@ const Home = () => {
 
         <section className="grid grid-cols-1 gap-3 lg:grid-cols-3">
           <UpcomingTasks upcomingTasks={upcomingTasks} />
-
-          <div className="col-span-2">
-            <div className="flex-1 flex gap-3">
-              <RecentTasks tasks={tasks} />
-              <RecentNotes notes={notes} />
-            </div>
-
-            {loading ? (
-              <div className="mt-3 rounded-2xl border border-gray-200 bg-white p-4 text-sm text-gray-500">
-                <div className="flex items-center gap-2">
-                  <Loader2 className="h-4 w-4 animate-spin" />
-                  Syncing tasks and notes…
-                </div>
-              </div>
-            ) : null}
-          </div>
+          <RecentTasks tasks={tasks} />
+          <RecentNotes notes={notes} />
         </section>
       </main>
     </div>

@@ -77,16 +77,16 @@ export const statusConfig = {
   in_progress: {
     label: "In Progress",
     icon: ClockIcon,
-    bgColor: "bg-blue-50",
-    textColor: "text-blue-700",
-    borderColor: "border-blue-200",
+    bgColor: "bg-indigo-50",
+    textColor: "text-indigo-700",
+    borderColor: "border-indigo-200",
   },
   done: {
     label: "Done",
     icon: CheckCircle2Icon,
-    bgColor: "bg-green-50",
-    textColor: "text-green-700",
-    borderColor: "border-green-200",
+    bgColor: "bg-emerald-50",
+    textColor: "text-emerald-700",
+    borderColor: "border-emerald-200",
   },
 } as const satisfies Record<
   ITaskStatus,
@@ -102,15 +102,15 @@ export const statusConfig = {
 export const priorityConfig = {
   low: {
     label: "Low",
-    color: "bg-gray-400",
+    color: "bg-red-200",
   },
   medium: {
     label: "Medium",
-    color: "bg-blue-500",
+    color: "bg-red-400",
   },
   high: {
     label: "High",
-    color: "bg-red-500",
+    color: "bg-red-600",
   },
 } as const satisfies Record<ITaskPriority, { label: string; color: string }>;
 

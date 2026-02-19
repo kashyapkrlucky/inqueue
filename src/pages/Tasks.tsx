@@ -137,7 +137,7 @@ export default function Tasks() {
                   {stats.in_progress}
                 </p>
               </div>
-              <div className="inline-flex h-10 w-10 items-center justify-center rounded-2xl bg-blue-50 text-blue-700">
+              <div className="inline-flex h-10 w-10 items-center justify-center rounded-2xl bg-indigo-50 text-indigo-700">
                 <Clock className="h-5 w-5" />
               </div>
             </div>
@@ -152,7 +152,7 @@ export default function Tasks() {
                   {stats.done}
                 </p>
               </div>
-              <div className="inline-flex h-10 w-10 items-center justify-center rounded-2xl bg-green-50 text-green-700">
+              <div className="inline-flex h-10 w-10 items-center justify-center rounded-2xl bg-emerald-50 text-emerald-700">
                 <CheckCircle2 className="h-5 w-5" />
               </div>
             </div>

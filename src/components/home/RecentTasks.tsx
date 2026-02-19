@@ -18,7 +18,7 @@ export function RecentTasks({ tasks }: RecentTasksProps) {
         </div>
       </div>
 
-      <div className="mt-4 space-y-2">
+      <div className="mt-4 space-y-2 overflow-y-auto h-[260px] scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-gray-100">
         {tasks.length === 0 ? (
           <div className="rounded-xl bg-gray-50 p-4 text-sm text-gray-500">
             No tasks yet.
@@ -41,9 +41,9 @@ export function RecentTasks({ tasks }: RecentTasksProps) {
                       <span
                         className={`inline-flex items-center rounded-full px-2 py-0.5 font-semibold ${
                           status === "done"
-                            ? "bg-green-50 text-green-700"
+                            ? "bg-emerald-50 text-emerald-700"
                             : status === "in_progress"
-                              ? "bg-blue-50 text-blue-700"
+                              ? "bg-indigo-50 text-indigo-700"
                               : "bg-gray-50 text-gray-700"
                         }`}
                       >

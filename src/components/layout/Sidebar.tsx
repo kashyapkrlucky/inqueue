@@ -66,7 +66,7 @@ export default function Sidebar() {
             className={({ isActive }) =>
               `flex items-center p-2 text-sm font-medium rounded-md ${
                 isActive
-                  ? "bg-blue-50 text-blue-600"
+                  ? "bg-indigo-50 text-indigo-600"
                   : "text-gray-600 hover:bg-gray-50"
               }`
             }
