@@ -17,7 +17,6 @@ import { Button } from "../components/ui/Button";
 
 export default function Tasks() {
   const { tasks, getTasks, loading, error, addTask } = useTaskStore();
-  // const { user } = useAuthStore();
   const [expandedTask, setExpandedTask] = useState<string | null>(null);
   const [query, setQuery] = useState("");
   const [statusFilter, setStatusFilter] = useState<ITaskStatus | "all">("all");
@@ -61,20 +60,6 @@ export default function Tasks() {
   const toggleTaskExpanded = (taskId: string) => {
     setExpandedTask((prev) => (prev === taskId ? null : taskId));
   };
-
-  // const updateTask = (updatedTask: ITask) => {
-  //   console.log(updatedTask);
-
-  // };
-
-  // const updateTaskStatus = (taskId: string, newStatus: string) => {
-  //   console.log(taskId, newStatus);
-
-  // };
-
-  // const toggleTaskExpanded = (taskId: string) => {
-  //   setExpandedTask(expandedTask === taskId ? null : taskId);
-  // };
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-gray-50 to-white">
@@ -185,7 +170,7 @@ export default function Tasks() {
                 onChange={(e) =>
                   setStatusFilter(e.target.value as ITaskStatus | "all")
                 }
-                className="mt-1 h-11 w-full rounded-xl bg-white px-3 text-sm text-gray-900 outline-none transition focus:border-gray-900 focus:ring-2 focus:ring-gray-900/10"
+                className="mt-1 h-11 w-full rounded-xl border border-gray-200 bg-white px-3 text-sm text-gray-900 outline-none transition focus:border-gray-900 focus:ring-2 focus:ring-gray-900/10"
               >
                 <option value="all">All</option>
                 {Object.entries(statusConfig).map(([key, config]) => (
@@ -205,7 +190,7 @@ export default function Tasks() {
                 onChange={(e) =>
                   setPriorityFilter(e.target.value as ITaskPriority | "all")
                 }
-                className="mt-1 h-11 w-full rounded-xl bg-white px-3 text-sm text-gray-900 outline-none transition focus:border-gray-900 focus:ring-2 focus:ring-gray-900/10"
+                className="mt-1 h-11 w-full rounded-xl border border-gray-200 bg-white px-3 text-sm text-gray-900 outline-none transition focus:border-gray-900 focus:ring-2 focus:ring-gray-900/10"
               >
                 <option value="all">All</option>
                 {Object.entries(priorityConfig).map(([key, config]) => (
@@ -249,10 +234,6 @@ export default function Tasks() {
                     className={`transition-all ${
                       isExpanded ? "ring-2 ring-indigo-600/80 rounded-xl" : ""
                     }`}
-                    onClick={() => {
-                      if (!task._id) return;
-                      toggleTaskExpanded(task._id);
-                    }}
                   >
                     <TaskCard
                       task={task}
