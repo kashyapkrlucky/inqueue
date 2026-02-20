@@ -2,128 +2,136 @@ import { useEffect, useMemo } from "react";
 import { useTaskStore } from "../store/useTaskStore";
 import { useNoteStore } from "../store/useNoteStore";
 import {
-  asDate,
+  // asDate,
   clamp,
   formatDate,
-  getTaskPriority,
-  getTaskStatus,
+  // getTaskPriority,
+  // getTaskStatus,
 } from "../utils/helpers";
-import { useNavigate } from "react-router-dom";
-import { useAuth } from "../hooks/useAuth";
+// import { useNavigate } from "react-router-dom";
+// import { useAuth } from "../hooks/useAuth";
 import { TaskStats } from "../components/home/TaskStats";
 import { TaskStatistics } from "../components/home/TaskStatistics";
-import { NotesActivity } from "../components/home/NotesActivity";
+import { TaskActivity } from "../components/home/TaskActivity";
 import { UpcomingTasks } from "../components/home/UpcomingTasks";
 import { RecentTasks } from "../components/home/RecentTasks";
 import { RecentNotes } from "../components/home/RecentNotes";
 
 const Home = () => {
   const {
-    tasks,
+    // tasks,
     loading: tasksLoading,
     // error: tasksError,
-    getTasks,
+    // getTasks,
+    getStats,
+    getRecents,
+    stats,
+    homeData,
   } = useTaskStore();
   const {
-    notes,
     loading: notesLoading,
     // error: notesError,
-    getNotes,
+    // getNotes,
+    stats: noteStats,
+    getStats: getNoteStats,
   } = useNoteStore();
 
   useEffect(() => {
-    void getTasks();
-    void getNotes();
-  }, [getTasks, getNotes]);
+    // void getTasks();
+    // void getNotes();
+    void getStats();
+    void getRecents();
+    void getNoteStats();
+  }, [getStats, getRecents, getNoteStats]);
 
-  const { isAuthenticated, loading: authLoading } = useAuth();
+  // const { isAuthenticated, loading: authLoading } = useAuth();
 
-  const loading = tasksLoading || notesLoading || authLoading;
+  const loading = tasksLoading || notesLoading;
   // const error = tasksError || notesError;
 
-  const taskStats = useMemo(() => {
-    const base = {
-      total: tasks.length,
-      todo: 0,
-      in_progress: 0,
-      done: 0,
-      low: 0,
-      medium: 0,
-      high: 0,
-    } as const;
+  // const taskStats = useMemo(() => {
+  //   const base = {
+  //     total: tasks.length,
+  //     todo: 0,
+  //     in_progress: 0,
+  //     done: 0,
+  //     low: 0,
+  //     medium: 0,
+  //     high: 0,
+  //   } as const;
 
-    const mutable = { ...base } as {
-      total: number;
-      todo: number;
-      in_progress: number;
-      done: number;
-      low: number;
-      medium: number;
-      high: number;
-    };
+  //   const mutable = { ...base } as {
+  //     total: number;
+  //     todo: number;
+  //     in_progress: number;
+  //     done: number;
+  //     low: number;
+  //     medium: number;
+  //     high: number;
+  //   };
 
-    for (const t of tasks) {
-      mutable[getTaskStatus(t.status)] += 1;
-      mutable[getTaskPriority(t.priority)] += 1;
-    }
-    return mutable;
-  }, [tasks]);
+  //   for (const t of tasks) {
+  //     mutable[getTaskStatus(t.status)] += 1;
+  //     mutable[getTaskPriority(t.priority)] += 1;
+  //   }
+  //   return mutable;
+  // }, [tasks]);
 
-  const upcomingTasks = useMemo(() => {
-    const now = new Date();
-    return tasks
-      .map((t) => ({ _id: t._id, task: t, due: asDate(t.dueDate) }))
-      .filter((x) => x.due && x.due.getTime() >= now.getTime())
-      .sort((a, b) => a.due!.getTime() - b.due!.getTime())
-      .slice(0, 6);
-  }, [tasks]);
+  // const upcomingTasks = useMemo(() => {
+  //   const now = new Date();
+  //   return tasks
+  //     .map((t) => ({ _id: t._id, task: t, due: asDate(t.dueDate) }))
+  //     .filter((x) => x.due && x.due.getTime() >= now.getTime())
+  //     .sort((a, b) => a.due!.getTime() - b.due!.getTime())
+  //     .slice(0, 6);
+  // }, [tasks]);
 
-  const notesByMonth = useMemo(() => {
-    const now = new Date();
-    const months: Array<{ key: string; label: string; count: number }> = [];
-    for (let i = 5; i >= 0; i -= 1) {
-      const d = new Date(now.getFullYear(), now.getMonth() - i, 1);
-      const key = `${d.getFullYear()}-${d.getMonth()}`;
-      const label = d.toLocaleString("default", { month: "short" });
-      months.push({ key, label, count: 0 });
-    }
+  // const notesByMonth = useMemo(() => {
+  //   const now = new Date();
+  //   const months: Array<{ key: string; label: string; count: number }> = [];
+  //   for (let i = 5; i >= 0; i -= 1) {
+  //     const d = new Date(now.getFullYear(), now.getMonth() - i, 1);
+  //     const key = `${d.getFullYear()}-${d.getMonth()}`;
+  //     const label = d.toLocaleString("default", { month: "short" });
+  //     months.push({ key, label, count: 0 });
+  //   }
 
-    for (const n of notes) {
-      const created = asDate(n.createdAt);
-      if (!created) continue;
-      const key = `${created.getFullYear()}-${created.getMonth()}`;
-      const idx = months.findIndex((m) => m.key === key);
-      if (idx >= 0) months[idx].count += 1;
-    }
+  //   for (const n of notes) {
+  //     const created = asDate(n.createdAt);
+  //     if (!created) continue;
+  //     const key = `${created.getFullYear()}-${created.getMonth()}`;
+  //     const idx = months.findIndex((m) => m.key === key);
+  //     if (idx >= 0) months[idx].count += 1;
+  //   }
 
-    const max = Math.max(1, ...months.map((m) => m.count));
-    return { months, max };
-  }, [notes]);
+  //   const max = Math.max(1, ...months.map((m) => m.count));
+  //   return { months, max };
+  // }, [notes]);
 
   const taskStatusChart = useMemo(() => {
-    const total = Math.max(1, taskStats.total);
-    const todoPct = clamp((taskStats.todo / total) * 100, 0, 100);
-    const inProgressPct = clamp((taskStats.in_progress / total) * 100, 0, 100);
-    const donePct = clamp((taskStats.done / total) * 100, 0, 100);
+    const total = Math.max(1, stats.total);
+    const todoPct = clamp((stats.todo / total) * 100, 0, 100);
+    const inProgressPct = clamp((stats.in_progress / total) * 100, 0, 100);
+    const donePct = clamp((stats.done / total) * 100, 0, 100);
     return { todoPct, inProgressPct, donePct };
-  }, [taskStats]);
+  }, [stats]);
 
   const taskPriorityChart = useMemo(() => {
-    const total = Math.max(1, taskStats.low + taskStats.medium + taskStats.high);
+    const total = Math.max(1, stats.low + stats.medium + stats.high);
     return {
-      lowPct: clamp((taskStats.low / total) * 100, 0, 100),
-      mediumPct: clamp((taskStats.medium / total) * 100, 0, 100),
-      highPct: clamp((taskStats.high / total) * 100, 0, 100),
+      lowPct: clamp((stats.low / total) * 100, 0, 100),
+      mediumPct: clamp((stats.medium / total) * 100, 0, 100),
+      highPct: clamp((stats.high / total) * 100, 0, 100),
     };
-  }, [taskStats]);
+  }, [stats]);
 
-  const navigate = useNavigate();
+  // const navigate = useNavigate();
 
-  useEffect(() => {
-    if (!authLoading && !isAuthenticated) {
-      navigate("/login");
-    }
-  }, [isAuthenticated, authLoading, navigate]);
+  // useEffect(() => {
+  //   if (!authLoading && !isAuthenticated) {
+  //     navigate("/login");
+  //   }
+  // }, [isAuthenticated, authLoading, navigate]);
 
   if (loading) {
     return (
@@ -162,30 +170,29 @@ const Home = () => {
         ) : null} */}
 
         <TaskStats
-          taskStats={taskStats}
-          notes={notes.length}
-          upcomingTasks={upcomingTasks.length}
+          taskStats={stats}
+          notes={noteStats.total}
+          upcomingTasks={homeData.upcoming.length}
         />
 
         <section className="mb-6 grid grid-cols-1 gap-4 lg:grid-cols-3">
           <TaskStatistics
-            taskStats={taskStats}
+            taskStats={stats}
             taskStatusChart={taskStatusChart}
             taskPriorityChart={taskPriorityChart}
             loading={loading}
           />
 
-          <NotesActivity
-            notesByMonth={notesByMonth}
+          <TaskActivity
+            data={stats.weeklyStats}
             loading={loading}
-            notes={notes}
           />
         </section>
 
         <section className="grid grid-cols-1 gap-4 lg:grid-cols-3">
-          <UpcomingTasks upcomingTasks={upcomingTasks} />
-          <RecentTasks tasks={tasks} />
-          <RecentNotes notes={notes} />
+          <UpcomingTasks upcomingTasks={homeData.upcoming} />
+          <RecentTasks tasks={homeData.recent} />
+          <RecentNotes notes={noteStats.recent} />
         </section>
       </main>
     </div>

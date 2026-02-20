@@ -13,6 +13,8 @@ interface NoteState {
   addNote: (title: string, content: string) => Promise<void>;
   updateNote: (noteId: string, title: string, content: string) => Promise<void>;
   deleteNote: (noteId: string) => Promise<void>;
+  stats: { total: number; recent: INote[] };
+  getStats: () => Promise<void>;
 }
 
 export const useNoteStore = create<NoteState>((set, get) => ({
@@ -20,6 +22,7 @@ export const useNoteStore = create<NoteState>((set, get) => ({
   notes: [],
   error: null,
   currentNote: null,
+  stats: { total: 0, recent: [] },
   setCurrentNote: (note) => set({ currentNote: note }),
   insertNote: (note: INote) => {
     set((state) => ({ notes: [note, ...state.notes] }));
@@ -89,6 +92,22 @@ export const useNoteStore = create<NoteState>((set, get) => ({
       set({ loading: true });
       await axios.delete(`/notes/${noteId}`);
       set((state) => ({ notes: state.notes.filter((n) => n._id !== noteId) }));
+    } catch (error) {
+      set({
+        error:
+          error instanceof Error ? error.message : "An unknown error occurred",
+      });
+    } finally {
+      set({ loading: false });
+    }
+  },
+  getStats: async () => {
+    try {
+      set({ loading: true });
+      const {
+        data: { data },
+      } = await axios.get("/notes/stats");
+      set({ stats: data });
     } catch (error) {
       set({
         error:

@@ -1,59 +1,60 @@
 import { Loader2Icon } from "lucide-react";
-import type { INote } from "../../types/index.types";
 
-interface NotesActivityProps {
-  notesByMonth: {
-    months: Array<{ key: string; label: string; count: number }>;
-    max: number;
+interface TaskActivityProps {
+  data: {
+    [key: string]: number;
   };
   loading: boolean;
-  notes: INote[];
 }
 
-export function NotesActivity({
-  notesByMonth,
+export function TaskActivity({
+  data,
   loading,
-  notes,
-}: NotesActivityProps) {
+}: TaskActivityProps) {
+  // Process data: if array, convert to object {month: count}
+  const processedData = Array.isArray(data)
+    ? data.reduce((acc, item) => {
+        acc[item._id] = item.done;
+        return acc;
+      }, {} as { [key: string]: number })
+    : data;
+
   // Calculate chart dimensions and points
   const chartWidth = 300;
   const chartHeight = 120;
   const padding = 20;
 
   // Calculate points for the chart
-  const points = notesByMonth.months.map((month, index) => {
+  const points = Object.entries(processedData).map(([key, value], index) => {
+    const count = typeof value === 'number' ? value : 0;
     const x =
       padding +
-      (index / (notesByMonth.months.length - 1)) * (chartWidth - 2 * padding);
+      (index / (Object.keys(processedData).length - 1)) * (chartWidth - 2 * padding);
     const y =
       chartHeight -
       padding -
-      (month.count / Math.max(notesByMonth.max, 1)) *
+      (count / Math.max(...Object.values(processedData).map(v => typeof v === 'number' ? v : 0), 1)) *
         (chartHeight - 2 * padding);
-    return { x, y, count: month.count, label: month.label };
+    return { x, y, count, label: key };
   });
 
   // Create area path (filled area under the line)
-  const areaPath = `M${points[0].x},${chartHeight - padding} ${points.map((p) => `L${p.x},${p.y}`).join(" ")} L${points[points.length - 1].x},${chartHeight - padding} Z`;
+  const areaPath = points.length > 0 ? `M${points[0].x || 0},${chartHeight - padding} ${points.map((p) => `L${p.x || 0},${p.y || 0}`).join(" ")} L${points[points.length - 1].x || 0},${chartHeight - padding} Z` : "";
 
   // Create line path
-  const linePath = `M${points.map((p) => `${p.x},${p.y}`).join(" L")}`;
+  const linePath = points.length > 0 ? `M${points.map((p) => `${p.x || 0},${p.y || 0}`).join(" L")}` : "";
 
   return (
     <div className="rounded-2xl bg-white p-5 shadow-sm">
       <div className="flex items-start justify-between gap-3">
         <div>
-          <h2 className="text-sm font-bold text-gray-900">Notes activity</h2>
+          <h2 className="text-sm font-bold text-gray-900">Task activity</h2>
           <p className="mt-1 text-xs text-gray-500">
-            Created per month (last 6)
+            Marked done per day
           </p>
         </div>
-        {loading ? (
+        {loading && (
           <Loader2Icon className="h-4 w-4 animate-spin text-gray-400" />
-        ) : (
-          <span className="text-gray-900 w-5 h-5 flex items-center justify-center bg-gray-100 rounded-full text-xs font-semibold">
-            {notes.length}
-          </span>
         )}
       </div>
 
@@ -107,7 +108,7 @@ export function NotesActivity({
               className="hover:r-6"
               style={{ transition: "r 0.2s" }}
             >
-              <title>{`${point.count} notes in ${point.label}`}</title>
+              <title>{`${point.count} tasks done in ${point.label}`}</title>
             </circle>
           ))}
 

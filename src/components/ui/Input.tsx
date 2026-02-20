@@ -5,25 +5,23 @@ interface InputProps extends InputHTMLAttributes<HTMLInputElement> {
   icon?: React.ReactNode;
   label?: string;
   boxClassName?: string;
-  inputClasses?: string;
 }
 
 export default function Input({
   id,
   label,
-  boxClassName,
-  inputClasses, 
+  boxClassName = "flex flex-col gap-2",
   icon,
   ...props
 }: InputProps) {
   return (
     <div className={boxClassName}>
       {label && (
-        <label htmlFor={id} className="block text-sm font-medium text-gray-700">
+        <label htmlFor={id} className="block text-xs font-semibold uppercase tracking-wide text-gray-500">
           {label}
         </label>
       )}
-      <div className="mt-1 relative">
+      <div className="w-full flex items-center gap-2 rounded-xl border border-gray-200 bg-white focus-within:border-gray-900 focus-within:ring-2 focus-within:ring-gray-900/10">
         {icon && (
           <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
             {icon || null}
@@ -32,7 +30,7 @@ export default function Input({
         <input
           id={id}
           type="text"
-          className={`block w-full rounded-lg text-gray-700 dark:text-gray-700 border-gray-300 shadow-xs border-2 focus:outline-none focus:border-indigo-500 text-sm py-2 px-3 ${inputClasses}`}
+          className={`h-full w-full p-3 bg-transparent text-sm text-gray-900 outline-none placeholder:text-gray-400`}
           {...props}
         />
       </div>

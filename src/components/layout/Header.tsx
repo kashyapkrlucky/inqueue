@@ -2,6 +2,7 @@ import { useState, useRef, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { ChevronDown, LogOut, Settings } from "lucide-react";
 import { useAuthStore } from "../../store/useAuthStore";
+import { APP_NAME } from "../../utils/constants";
 
 export const Header = () => {
   const [isProfileOpen, setIsProfileOpen] = useState(false);
@@ -35,7 +36,7 @@ export const Header = () => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between h-16 items-center">
           <Link to="/" className="flex-shrink-0 flex items-center">
-            <h1 className="text-xl font-bold text-indigo-600">InQueue</h1>
+            <h1 className="text-xl font-bold text-indigo-600">{APP_NAME}</h1>
           </Link>
 
 

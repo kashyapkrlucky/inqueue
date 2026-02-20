@@ -8,6 +8,18 @@ export type TaskFilter = {
   status: "all" | ITaskStatus;
   priority: "all" | ITaskPriority;
 };
+
+interface TaskStats {
+  total: number;
+  todo: number;
+  in_progress: number;
+  done: number;
+  low: number;
+  medium: number;
+  high: number;
+  weeklyStats: { [key: string]: number };
+}
+
 interface TaskState {
   loading: boolean;
   tasks: ITask[];
@@ -17,12 +29,30 @@ interface TaskState {
   addTask: (task: Partial<ITask>) => Promise<void>;
   updateTask: (taskId: string, task: Partial<ITask>) => Promise<void>;
   deleteTask: (taskId: string) => Promise<void>;
+  stats: TaskStats;
+  getStats: () => Promise<void>;
+  homeData: { recent: ITask[]; upcoming: ITask[] };
+  getRecents: () => Promise<void>;
 }
 
 export const useTaskStore = create<TaskState>((set) => ({
   loading: false,
   tasks: [],
   error: null,
+  stats: {
+    total: 0,
+    todo: 0,
+    in_progress: 0,
+    done: 0,
+    low: 0,
+    medium: 0,
+    high: 0,
+    weeklyStats: {},
+  },
+  homeData: {
+    recent: [],
+    upcoming: [],
+  },
   setTasks: (task: ITask) => {
     set((state) => {
       return {
@@ -46,6 +76,38 @@ export const useTaskStore = create<TaskState>((set) => ({
       });
       // const tasks = await TaskRepository.list();
       // set({ tasks });
+    } finally {
+      set({ loading: false });
+    }
+  },
+  getStats: async () => {
+    try {
+      set({ loading: true });
+      const {
+        data: { data },
+      } = await axios.get("/tasks/stats");
+      set({ stats: data });
+    } catch (error) {
+      set({
+        error:
+          error instanceof Error ? error.message : "An unknown error occurred",
+      });
+    } finally {
+      set({ loading: false });
+    }
+  },
+  getRecents: async () => {
+    try {
+      set({ loading: true });
+      const {
+        data: { data },
+      } = await axios.get("/tasks/recent");
+      set({ homeData: data });
+    } catch (error) {
+      set({
+        error:
+          error instanceof Error ? error.message : "An unknown error occurred",
+      });
     } finally {
       set({ loading: false });
     }

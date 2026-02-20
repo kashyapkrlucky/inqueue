@@ -21,6 +21,8 @@ import {
   Trash2Icon,
 } from "lucide-react";
 import Confirm from "../ui/Confirm";
+import Input from "../ui/Input";
+import Select from "../ui/Select";
 
 const nextStatus = (status: ITaskStatus): ITaskStatus => {
   if (status === "todo") return "in_progress";
@@ -144,11 +146,6 @@ export const TaskCard = ({
 
           <div className="flex items-center gap-1">
             <div className="flex flex-wrap items-center gap-4">
-              {/* <span
-                className={`inline-flex items-center rounded-full px-2 py-1 text-xs font-semibold ${statusConfig[status].bgColor} ${statusConfig[status].textColor}`}
-              >
-                {statusConfig[status].label}
-              </span> */}
               <span
                 className="inline-flex items-center gap-2 rounded-full bg-gray-50 px-2 py-1 text-xs font-semibold text-gray-700"
                 title={`Priority: ${priorityConfig[priority].label}`}
@@ -193,67 +190,52 @@ export const TaskCard = ({
         {expanded ? (
           <div className="mt-4 border-t border-gray-100 pt-4">
             <div className="grid grid-cols-1 gap-3 sm:grid-cols-12 sm:items-center">
-              <div className="sm:col-span-7">
-                <label className="block text-xs font-semibold uppercase tracking-wide text-gray-500">
-                  Task
-                </label>
-                <input
-                  type="text"
-                  value={draftContent}
-                  onChange={(e) => setDraftContent(e.target.value)}
-                  onBlur={onCommitContent}
-                  onKeyDown={onContentKeyDown}
-                  disabled={!canMutate || loading}
-                  onClick={(e) => e.stopPropagation()}
-                  className="mt-1 h-11 w-full rounded-xl border border-gray-200 bg-white px-3 text-sm text-gray-900 outline-none transition focus:border-gray-900 focus:ring-2 focus:ring-gray-900/10 disabled:cursor-not-allowed disabled:bg-gray-50"
-                />
-              </div>
-
-              <div className="sm:col-span-3">
-                <label className="block text-xs font-semibold uppercase tracking-wide text-gray-500">
-                  Status
-                </label>
-                <select
-                  value={status}
-                  onChange={(e) =>
-                    commitUpdate(task?._id, {
-                      status: e.target.value as ITaskStatus,
-                    })
-                  }
-                  disabled={!canMutate || loading}
-                  onClick={(e) => e.stopPropagation()}
-                  className="mt-1 h-11 w-full rounded-xl border border-gray-200 bg-white px-3 text-sm text-gray-900 outline-none transition focus:border-gray-900 focus:ring-2 focus:ring-gray-900/10 disabled:cursor-not-allowed disabled:bg-gray-50"
-                >
-                  {Object.entries(statusConfig).map(([key, config]) => (
-                    <option key={key} value={key}>
-                      {config.label}
-                    </option>
-                  ))}
-                </select>
-              </div>
-
-              <div className="sm:col-span-2">
-                <label className="block text-xs font-semibold uppercase tracking-wide text-gray-500">
-                  Priority
-                </label>
-                <select
-                  value={priority}
-                  onChange={(e) =>
-                    commitUpdate(task?._id, {
-                      priority: e.target.value as ITaskPriority,
-                    })
-                  }
-                  disabled={!canMutate || loading}
-                  onClick={(e) => e.stopPropagation()}
-                  className="mt-1 h-11 w-full rounded-xl border border-gray-200 bg-white px-3 text-sm text-gray-900 outline-none transition focus:border-gray-900 focus:ring-2 focus:ring-gray-900/10 disabled:cursor-not-allowed disabled:bg-gray-50"
-                >
-                  {Object.entries(priorityConfig).map(([key, config]) => (
-                    <option key={key} value={key}>
-                      {config.label}
-                    </option>
-                  ))}
-                </select>
-              </div>
+              <Input
+                label="Task"
+                value={draftContent}
+                onChange={(e) => setDraftContent(e.target.value)}
+                onBlur={onCommitContent}
+                onKeyDown={onContentKeyDown}
+                disabled={!canMutate || loading}
+                onClick={(e) => e.stopPropagation()}
+                boxClassName="sm:col-span-7 flex flex-col gap-2"
+              />
+              <Select
+                label="Status"
+                value={status}
+                onChange={(e) =>
+                  commitUpdate(task?._id, {
+                    status: e.target.value as ITaskStatus,
+                  })
+                }
+                disabled={!canMutate || loading}
+                onClick={(e) => e.stopPropagation()}
+                boxClassName="sm:col-span-3 flex flex-col gap-2"
+              >
+                {Object.entries(statusConfig).map(([key, config]) => (
+                  <option key={key} value={key}>
+                    {config.label}
+                  </option>
+                ))}
+              </Select>
+              <Select
+                label="Priority"
+                value={priority}
+                onChange={(e) =>
+                  commitUpdate(task?._id, {
+                    priority: e.target.value as ITaskPriority,
+                  })
+                }
+                disabled={!canMutate || loading}
+                onClick={(e) => e.stopPropagation()}
+                boxClassName="sm:col-span-2 flex flex-col gap-2"
+              >
+                {Object.entries(priorityConfig).map(([key, config]) => (
+                  <option key={key} value={key}>
+                    {config.label}
+                  </option>
+                ))}
+              </Select> 
             </div>
           </div>
         ) : null}

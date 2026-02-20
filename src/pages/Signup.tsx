@@ -1,8 +1,8 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { UserIcon, MailIcon, LockIcon } from "lucide-react";
 import { useAuthStore } from "../store/useAuthStore";
 import Input from "../components/ui/Input";
+import { APP_NAME } from "../utils/constants";
 
 export default function Signup() {
   const [formData, setFormData] = useState({
@@ -58,7 +58,7 @@ export default function Signup() {
     <div className="min-h-screen bg-gray-50 flex flex-col justify-center py-12 sm:px-6 lg:px-8">
       <div className="sm:mx-auto sm:w-full sm:max-w-md">
         <div className="flex justify-center">
-          <h1 className="text-3xl font-bold text-indigo-600">InQueue</h1>
+          <h1 className="text-3xl font-bold text-indigo-600">{APP_NAME}</h1>
         </div>
         <h2 className="mt-6 text-center text-3xl font-extrabold text-gray-900">
           Create your account
@@ -94,8 +94,6 @@ export default function Signup() {
               type="text"
               value={formData.name}
               onChange={handleChange}
-              icon={<UserIcon className="h-5 w-5 text-gray-400" />}
-              inputClasses="pl-10"
               placeholder="John Doe"
             />
             <Input
@@ -105,8 +103,6 @@ export default function Signup() {
               type="email"
               value={formData.email}
               onChange={handleChange}
-              icon={<MailIcon className="h-5 w-5 text-gray-400" />}
-              inputClasses="pl-10"
               placeholder="john@example.com"
             />
             <Input
@@ -116,8 +112,6 @@ export default function Signup() {
               type="password"
               value={formData.password}
               onChange={handleChange}
-              icon={<LockIcon className="h-5 w-5 text-gray-400" />}
-              inputClasses="pl-10"
               placeholder="**********"
             />
             <Input
@@ -127,8 +121,6 @@ export default function Signup() {
               type="password"
               value={formData.confirmPassword}
               onChange={handleChange}
-              icon={<LockIcon className="h-5 w-5 text-gray-400" />}
-              inputClasses="pl-10"
               placeholder="**********"
             />
 

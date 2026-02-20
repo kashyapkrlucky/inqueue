@@ -2,11 +2,7 @@ import { ArrowUpRightIcon, CalendarIcon, ClockIcon } from "lucide-react";
 import { formatDate } from "../../utils/helpers";
 import type { ITask } from "../../types/index.types";
 interface UpcomingTasksProps {
-  upcomingTasks: Array<{
-    _id: string;
-    task: ITask;
-    due: Date | null;
-  }>;
+  upcomingTasks: ITask[];
 }
 const getTaskTitle = (task: ITask) =>
   task.content?.trim() ? task.content : "Untitled task";
@@ -29,9 +25,9 @@ export function UpcomingTasks({ upcomingTasks }: UpcomingTasksProps) {
             No upcoming due tasks.
           </div>
         ) : (
-          upcomingTasks.map(({ task, due }) => (
+          upcomingTasks.map((task) => (
             <div
-              key={task._id ?? `${task.content}-${String(due)}`}
+              key={task._id ?? task.content}
               className="rounded-xl border border-gray-200 p-3 transition hover:bg-gray-50"
             >
               <div className="flex items-start justify-between gap-3">
@@ -41,7 +37,7 @@ export function UpcomingTasks({ upcomingTasks }: UpcomingTasksProps) {
                   </div>
                   <div className="mt-1 flex items-center gap-2 text-xs text-gray-500">
                     <ClockIcon className="h-3.5 w-3.5" />
-                    Due {due ? formatDate(due) : "—"}
+                    Due {task?.dueDate ? formatDate(task?.dueDate) : "—"}
                   </div>
                 </div>
                 <ArrowUpRightIcon className="mt-0.5 h-4 w-4 flex-shrink-0 text-gray-400" />
