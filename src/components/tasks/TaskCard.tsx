@@ -20,6 +20,7 @@ import {
   Loader2Icon,
   Trash2Icon,
 } from "lucide-react";
+import Confirm from "../ui/Confirm";
 
 const nextStatus = (status: ITaskStatus): ITaskStatus => {
   if (status === "todo") return "in_progress";
@@ -38,6 +39,8 @@ export const TaskCard = ({
 }) => {
   const { updateTask, deleteTask, loading } = useTaskStore();
   const [draftContent, setDraftContent] = useState(task.content ?? "");
+
+  const [isDeleteConfirm, setIsDeleteConfirm] = useState(false);
 
   const status = getTaskStatus(task.status);
   const priority = getTaskPriority(task.priority);
@@ -97,13 +100,13 @@ export const TaskCard = ({
 
   return (
     <div className="group rounded-xl bg-white shadow-sm hover:shadow-md transition-shadow">
-      <div className="p-4 sm:p-5">
+      <div className="p-2.5">
         <div className="flex items-start gap-3">
           <button
             type="button"
             onClick={onToggleStatus}
             disabled={!canMutate || loading}
-            className={`mt-0.5 inline-flex h-9 w-9 items-center justify-center rounded-xl border transition-colors ${
+            className={`mt-0.5 inline-flex h-9 w-9 items-center justify-center rounded-xl border transition-colors cursor-pointer ${
               status === "done"
                 ? "border-emerald-200 bg-emerald-50 text-emerald-700"
                 : status === "in_progress"
@@ -119,13 +122,33 @@ export const TaskCard = ({
             )}
           </button>
 
-          <div className="min-w-0 flex-1">
+          <div className="min-w-0 flex-1 flex flex-col gap-1">
+            <p
+              className={`truncate text-sm font-semibold ${status === "done" ? "text-gray-400 line-through" : "text-gray-900"}`}
+            >
+              {task.content?.trim() ? task.content : "Untitled task"}
+            </p>
+            <div className="flex flex-wrap items-center gap-x-4 gap-y-1 text-xs text-gray-500">
+              <span className="inline-flex items-center gap-1">
+                <CalendarIcon className="h-3.5 w-3.5" />
+                {formatDate(createdAt)}
+              </span>
+              {dueDate ? (
+                <span className="inline-flex items-center gap-1">
+                  <ClockIcon className="h-3.5 w-3.5" />
+                  Due {formatDate(dueDate)}
+                </span>
+              ) : null}
+            </div>
+          </div>
+
+          <div className="flex items-center gap-1">
             <div className="flex flex-wrap items-center gap-4">
-              <span
+              {/* <span
                 className={`inline-flex items-center rounded-full px-2 py-1 text-xs font-semibold ${statusConfig[status].bgColor} ${statusConfig[status].textColor}`}
               >
                 {statusConfig[status].label}
-              </span>
+              </span> */}
               <span
                 className="inline-flex items-center gap-2 rounded-full bg-gray-50 px-2 py-1 text-xs font-semibold text-gray-700"
                 title={`Priority: ${priorityConfig[priority].label}`}
@@ -135,30 +158,7 @@ export const TaskCard = ({
                 />
                 {priorityConfig[priority].label}
               </span>
-              <div className="flex flex-wrap items-center gap-x-4 gap-y-1 text-xs text-gray-500">
-                <span className="inline-flex items-center gap-1">
-                  <CalendarIcon className="h-3.5 w-3.5" />
-                  {formatDate(createdAt)}
-                </span>
-                {dueDate ? (
-                  <span className="inline-flex items-center gap-1">
-                    <ClockIcon className="h-3.5 w-3.5" />
-                    Due {formatDate(dueDate)}
-                  </span>
-                ) : null}
-              </div>
             </div>
-
-            <div className="mt-2">
-              <p
-                className={`truncate text-sm font-semibold ${status === "done" ? "text-gray-400 line-through" : "text-gray-900"}`}
-              >
-                {task.content?.trim() ? task.content : "Untitled task"}
-              </p>
-            </div>
-          </div>
-
-          <div className="flex items-center gap-1">
             <button
               type="button"
               onClick={(e) => {
@@ -178,7 +178,8 @@ export const TaskCard = ({
               type="button"
               onClick={(e) => {
                 e.stopPropagation();
-                onDelete();
+                // onDelete();
+                setIsDeleteConfirm(true);
               }}
               disabled={!canMutate || loading}
               className="inline-flex h-9 w-9 items-center justify-center rounded-xl text-gray-500 hover:bg-red-50 hover:text-red-700 hover:border-red-200 transition-colors disabled:opacity-60 disabled:cursor-not-allowed"
@@ -257,6 +258,13 @@ export const TaskCard = ({
           </div>
         ) : null}
       </div>
+      {isDeleteConfirm && (
+        <Confirm
+          text="Are you sure you want to delete this task?"
+          confirmAction={() => onDelete()}
+          closeAction={() => setIsDeleteConfirm(false)}
+        />
+      )}
     </div>
   );
 };

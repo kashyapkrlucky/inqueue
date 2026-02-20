@@ -1,37 +1,37 @@
-import type { InputHTMLAttributes } from "react";
-
-interface TextareaProps extends InputHTMLAttributes<HTMLTextAreaElement> {
-  id?: string;
+interface SelectProps extends React.SelectHTMLAttributes<HTMLSelectElement> {
+  children: React.ReactNode;
+  className?: string;
   label?: string;
+  id?: string;
   boxClassName?: string;
-  description?: string;
 }
 
-export default function Textarea({
-  id,
-  label,
+export default function Select({
+  children,
   boxClassName = "flex flex-col gap-2",
-  description,
+  label,
+  id,
   ...props
-}: TextareaProps) {
+}: SelectProps) {
   return (
     <div className={boxClassName}>
       {label && (
-        <label htmlFor={id} className="block text-xs font-semibold uppercase tracking-wide text-gray-500">
+        <label
+          htmlFor={id}
+          className="block text-xs font-semibold uppercase tracking-wide text-gray-500"
+        >
           {label}
         </label>
       )}
       <div className="w-full flex items-center gap-2 rounded-xl border border-gray-200 bg-white focus-within:border-gray-900 focus-within:ring-2 focus-within:ring-gray-900/10">
-        <textarea
+        <select
           id={id}
-          rows={3}
           className="h-full w-full p-3 bg-transparent text-sm text-gray-900 outline-none placeholder:text-gray-400"
           {...props}
-        />
+        >
+          {children}
+        </select>
       </div>
-      {description && (
-        <p className="mt-2 text-sm text-gray-500">{description}</p>
-      )}
     </div>
   );
 }

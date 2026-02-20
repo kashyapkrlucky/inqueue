@@ -6,6 +6,8 @@ import type {
 } from "../../types/index.types";
 import { priorityConfig, statusConfig } from "../../utils/helpers";
 import { Button } from "../ui/Button";
+import Textarea from "../ui/Textarea";
+import Select from "../ui/Select";
 
 export default function CreateTask({
   onAddTask,
@@ -43,61 +45,45 @@ export default function CreateTask({
           </button>
         </header>
         <section className="mt-4 flex flex-col gap-4">
-          <div className="flex flex-col items-start gap-2">
-            <span className="text-gray-500 text-xs font-semibold uppercase mr-2">
-              Content
-            </span>
-            <textarea
-              value={content}
-              onChange={(e) => setContent(e.target.value)}
-              className="w-full flex-1 h-14 p-2 border border-gray-200 rounded-lg outline-none focus:ring-2 focus:ring-black focus:border-transparent transition-all"
-              onClick={(e) => e.stopPropagation()}
-            />
-          </div>
-          <div className="flex flex-col items-start gap-2">
-            <span className="text-gray-500 text-xs font-semibold uppercase mr-2">
-              Status
-            </span>
-            <select
-              value={status}
-              onChange={(e) => setStatus(e.target.value as ITaskStatus)}
-              className="w-full border border-gray-200 rounded px-2 py-2 text-sm focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
-              onClick={(e) => e.stopPropagation()}
-            >
-              {Object.entries(statusConfig).map(([key, config]) => (
-                <option key={key} value={key}>
-                  {config.label}
-                </option>
-              ))}
-            </select>
-          </div>
-
-          <div className="flex flex-col items-start gap-2">
-            <span className="text-gray-500 text-xs font-semibold uppercase mr-2">
-              Priority
-            </span>
-            <select
-              value={priority}
-              onChange={(e) => setPriority(e.target.value as ITaskPriority)}
-              className="w-full border border-gray-200 rounded px-2 py-2 text-sm focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
-              onClick={(e) => e.stopPropagation()}
-            >
-              {Object.entries(priorityConfig).map(([key, config]) => (
-                <option key={key} value={key}>
-                  {config.label}
-                </option>
-              ))}
-            </select>
-          </div>
+          <Textarea
+            id="content"
+            label="Content"
+            value={content}
+            onChange={(e) => setContent(e.target.value)}
+            onClick={(e) => e.stopPropagation()}
+          />
+          <Select
+            id="status"
+            label="Status"
+            value={status}
+            onChange={(e) => setStatus(e.target.value)}
+            onClick={(e) => e.stopPropagation()}
+          >
+            {Object.entries(statusConfig).map(([key, config]) => (
+              <option key={key} value={key}>
+                {config.label}
+              </option>
+            ))}
+          </Select>
+          <Select
+            id="priority"
+            label="Priority"
+            value={priority}
+            onChange={(e) => setPriority(e.target.value)}
+            onClick={(e) => e.stopPropagation()}
+          >
+            {Object.entries(priorityConfig).map(([key, config]) => (
+              <option key={key} value={key}>
+                {config.label}
+              </option>
+            ))}
+          </Select>
         </section>
         <footer className="flex items-center justify-end gap-2 mt-4">
-          <Button variant="ghost" onClick={onClose}>
+          <Button variant="ghost" size="sm" onClick={onClose}>
             Cancel
           </Button>
-          <Button
-            type="submit"
-            variant="default"
-          >
+          <Button type="submit" variant="default" size="sm">
             Create
           </Button>
         </footer>

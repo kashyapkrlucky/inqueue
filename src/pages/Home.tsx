@@ -11,7 +11,7 @@ import {
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../hooks/useAuth";
 import { TaskStats } from "../components/home/TaskStats";
-import { TaskDistributions } from "../components/home/TaskDistributions";
+import { TaskStatistics } from "../components/home/TaskStatistics";
 import { NotesActivity } from "../components/home/NotesActivity";
 import { UpcomingTasks } from "../components/home/UpcomingTasks";
 import { RecentTasks } from "../components/home/RecentTasks";
@@ -168,7 +168,7 @@ const Home = () => {
         />
 
         <section className="mb-6 grid grid-cols-1 gap-4 lg:grid-cols-3">
-          <TaskDistributions
+          <TaskStatistics
             taskStats={taskStats}
             taskStatusChart={taskStatusChart}
             taskPriorityChart={taskPriorityChart}

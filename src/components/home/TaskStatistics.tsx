@@ -1,6 +1,6 @@
 import { Loader2Icon } from "lucide-react";
 
-interface TaskDistributionsProps {
+interface TaskStatisticsProps {
   taskStats: {
     total: number;
     todo: number;
@@ -23,19 +23,19 @@ interface TaskDistributionsProps {
   loading: boolean;
 }
 
-export function TaskDistributions({
+export function TaskStatistics({
   taskStats,
   taskStatusChart,
   taskPriorityChart,
   loading,
-}: TaskDistributionsProps) {
+}: TaskStatisticsProps) {
   return (
     <div className="rounded-2xl bg-white p-5 shadow-sm lg:col-span-2">
       <div className="flex items-start justify-between gap-3">
         <div>
-          <h2 className="text-sm font-bold text-gray-900">Task distribution</h2>
+          <h2 className="text-sm font-bold text-gray-900">Task Statistics</h2>
           <p className="mt-1 text-xs text-gray-500">
-            Status mix + priority strength
+            Status &amp; Priority strength
           </p>
         </div>
         {loading ? (
