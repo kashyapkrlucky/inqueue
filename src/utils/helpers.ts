@@ -102,15 +102,15 @@ export const statusConfig = {
 export const priorityConfig = {
   low: {
     label: "Low",
-    color: "bg-red-200",
+    color: "bg-gray-300",
   },
   medium: {
     label: "Medium",
-    color: "bg-red-400",
+    color: "bg-orange-300",
   },
   high: {
     label: "High",
-    color: "bg-red-600",
+    color: "bg-red-300",
   },
 } as const satisfies Record<ITaskPriority, { label: string; color: string }>;
 

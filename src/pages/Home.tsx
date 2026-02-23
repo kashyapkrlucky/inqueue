@@ -2,14 +2,9 @@ import { useEffect, useMemo } from "react";
 import { useTaskStore } from "../store/useTaskStore";
 import { useNoteStore } from "../store/useNoteStore";
 import {
-  // asDate,
   clamp,
   formatDate,
-  // getTaskPriority,
-  // getTaskStatus,
 } from "../utils/helpers";
-// import { useNavigate } from "react-router-dom";
-// import { useAuth } from "../hooks/useAuth";
 import { TaskStats } from "../components/home/TaskStats";
 import { TaskStatistics } from "../components/home/TaskStatistics";
 import { TaskActivity } from "../components/home/TaskActivity";
@@ -19,10 +14,7 @@ import { RecentNotes } from "../components/home/RecentNotes";
 
 const Home = () => {
   const {
-    // tasks,
     loading: tasksLoading,
-    // error: tasksError,
-    // getTasks,
     getStats,
     getRecents,
     stats,
@@ -30,83 +22,17 @@ const Home = () => {
   } = useTaskStore();
   const {
     loading: notesLoading,
-    // error: notesError,
-    // getNotes,
     stats: noteStats,
     getStats: getNoteStats,
   } = useNoteStore();
 
   useEffect(() => {
-    // void getTasks();
-    // void getNotes();
     void getStats();
     void getRecents();
     void getNoteStats();
   }, [getStats, getRecents, getNoteStats]);
 
-  // const { isAuthenticated, loading: authLoading } = useAuth();
-
   const loading = tasksLoading || notesLoading;
-  // const error = tasksError || notesError;
-
-  // const taskStats = useMemo(() => {
-  //   const base = {
-  //     total: tasks.length,
-  //     todo: 0,
-  //     in_progress: 0,
-  //     done: 0,
-  //     low: 0,
-  //     medium: 0,
-  //     high: 0,
-  //   } as const;
-
-  //   const mutable = { ...base } as {
-  //     total: number;
-  //     todo: number;
-  //     in_progress: number;
-  //     done: number;
-  //     low: number;
-  //     medium: number;
-  //     high: number;
-  //   };
-
-  //   for (const t of tasks) {
-  //     mutable[getTaskStatus(t.status)] += 1;
-  //     mutable[getTaskPriority(t.priority)] += 1;
-  //   }
-  //   return mutable;
-  // }, [tasks]);
-
-  // const upcomingTasks = useMemo(() => {
-  //   const now = new Date();
-  //   return tasks
-  //     .map((t) => ({ _id: t._id, task: t, due: asDate(t.dueDate) }))
-  //     .filter((x) => x.due && x.due.getTime() >= now.getTime())
-  //     .sort((a, b) => a.due!.getTime() - b.due!.getTime())
-  //     .slice(0, 6);
-  // }, [tasks]);
-
-  // const notesByMonth = useMemo(() => {
-  //   const now = new Date();
-  //   const months: Array<{ key: string; label: string; count: number }> = [];
-  //   for (let i = 5; i >= 0; i -= 1) {
-  //     const d = new Date(now.getFullYear(), now.getMonth() - i, 1);
-  //     const key = `${d.getFullYear()}-${d.getMonth()}`;
-  //     const label = d.toLocaleString("default", { month: "short" });
-  //     months.push({ key, label, count: 0 });
-  //   }
-
-  //   for (const n of notes) {
-  //     const created = asDate(n.createdAt);
-  //     if (!created) continue;
-  //     const key = `${created.getFullYear()}-${created.getMonth()}`;
-  //     const idx = months.findIndex((m) => m.key === key);
-  //     if (idx >= 0) months[idx].count += 1;
-  //   }
-
-  //   const max = Math.max(1, ...months.map((m) => m.count));
-  //   return { months, max };
-  // }, [notes]);
 
   const taskStatusChart = useMemo(() => {
     const total = Math.max(1, stats.total);
@@ -124,14 +50,6 @@ const Home = () => {
       highPct: clamp((stats.high / total) * 100, 0, 100),
     };
   }, [stats]);
-
-  // const navigate = useNavigate();
-
-  // useEffect(() => {
-  //   if (!authLoading && !isAuthenticated) {
-  //     navigate("/login");
-  //   }
-  // }, [isAuthenticated, authLoading, navigate]);
 
   if (loading) {
     return (
@@ -156,18 +74,6 @@ const Home = () => {
             {formatDate(new Date())}
           </div>
         </div>
-
-        {/* {error ? (
-          <div className="mb-6 rounded-2xl border border-red-200 bg-red-50 p-4 text-sm text-red-800">
-            <div className="flex items-start gap-2">
-              <AlertTriangle className="mt-0.5 h-4 w-4" />
-              <div className="min-w-0">
-                <p className="font-semibold">Something went wrong</p>
-                <p className="mt-1 break-words text-red-700">{error}</p>
-              </div>
-            </div>
-          </div>
-        ) : null} */}
 
         <TaskStats
           taskStats={stats}

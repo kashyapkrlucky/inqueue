@@ -12,7 +12,7 @@ export default function Confirm({
   closeAction,
 }: ConfirmProps) {
   return (
-    <div className="fixed inset-0 bg-gray-900/30 w-screen h-screen flex flex-row items-center justify-center">
+    <div className="fixed inset-0 bg-gray-900/30 w-screen h-screen flex flex-row items-center justify-center z-50">
       <div className="bg-white rounded-lg flex flex-col shadow-sm">
         <header className="p-4">
           <h1 className="text-lg font-semibold">Confirm</h1>

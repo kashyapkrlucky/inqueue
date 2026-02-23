@@ -17,7 +17,7 @@ interface TaskStats {
   low: number;
   medium: number;
   high: number;
-  weeklyStats: { [key: string]: number };
+  weeklyStats: { _id: string; done: number }[];
 }
 
 interface TaskState {
@@ -47,7 +47,7 @@ export const useTaskStore = create<TaskState>((set) => ({
     low: 0,
     medium: 0,
     high: 0,
-    weeklyStats: {},
+    weeklyStats: [],
   },
   homeData: {
     recent: [],

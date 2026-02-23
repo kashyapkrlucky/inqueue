@@ -111,9 +111,9 @@ export function TaskStatistics({
                 className="h-24 w-24 rounded-full"
                 style={{
                   background: `conic-gradient(
-                    #fef2f2 0% ${taskPriorityChart.lowPct}%,
-                    #fca5a5 ${taskPriorityChart.lowPct}% ${taskPriorityChart.lowPct + taskPriorityChart.mediumPct}%,
-                    #dc2626 ${taskPriorityChart.lowPct + taskPriorityChart.mediumPct}% 100%
+                    #d1d5dc ${taskPriorityChart.lowPct}%,
+                    #ffb86a ${taskPriorityChart.lowPct}% ${taskPriorityChart.lowPct + taskPriorityChart.mediumPct}%,
+                    #fb2c36 ${taskPriorityChart.lowPct + taskPriorityChart.mediumPct}% 100%
                   )`
                 }}
               />
@@ -125,21 +125,21 @@ export function TaskStatistics({
           {/* Legend */}
           <div className="mt-4 space-y-2">
             <div className="flex items-center gap-2 text-xs">
-              <span className="h-3 w-3 rounded-full bg-red-200" />
+              <span className="h-3 w-3 rounded-full bg-gray-300" />
               <span className="text-gray-600">Low</span>
               <span className="ml-auto font-semibold text-gray-900">
                 {taskStats.low}
               </span>
             </div>
             <div className="flex items-center gap-2 text-xs">
-              <span className="h-3 w-3 rounded-full bg-red-400" />
+              <span className="h-3 w-3 rounded-full bg-orange-300" />
               <span className="text-gray-600">Medium</span>
               <span className="ml-auto font-semibold text-gray-900">
                 {taskStats.medium}
               </span>
             </div>
             <div className="flex items-center gap-2 text-xs">
-              <span className="h-3 w-3 rounded-full bg-red-600" />
+              <span className="h-3 w-3 rounded-full bg-red-500" />
               <span className="text-gray-600">High</span>
               <span className="ml-auto font-semibold text-gray-900">
                 {taskStats.high}

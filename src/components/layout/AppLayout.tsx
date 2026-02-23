@@ -5,6 +5,7 @@ import { useEffect } from "react";
 import { useAuth } from "../../hooks/useAuth";
 import { useNavigate } from "react-router-dom";
 import { Loader } from "lucide-react";
+import { Toaster } from "react-hot-toast";
 
 export default function AppLayout() {
 
@@ -27,6 +28,7 @@ export default function AppLayout() {
       <main className="flex-1 overflow-y-auto">
         <Outlet />
       </main>
+      <Toaster />
     </div>
   );
 }

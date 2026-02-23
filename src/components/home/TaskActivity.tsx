@@ -1,9 +1,7 @@
 import { Loader2Icon } from "lucide-react";
 
 interface TaskActivityProps {
-  data: {
-    [key: string]: number;
-  };
+  data: Array<{ _id: string; done: number }>;
   loading: boolean;
 }
 
@@ -11,38 +9,43 @@ export function TaskActivity({
   data,
   loading,
 }: TaskActivityProps) {
-  // Process data: if array, convert to object {month: count}
-  const processedData = Array.isArray(data)
-    ? data.reduce((acc, item) => {
-        acc[item._id] = item.done;
-        return acc;
-      }, {} as { [key: string]: number })
-    : data;
+  const today = new Date();
+  const days = [];
+  for (let i = 6; i >= 0; i--) {
+    const d = new Date(today);
+    d.setDate(today.getDate() - i);
+    days.push(d.toISOString().split('T')[0]);
+  }
 
-  // Calculate chart dimensions and points
+  const dayData = days.map(day => {
+    const item = data.find(d => d._id === day);
+    return {
+      day,
+      count: item ? item.done : 0,
+      label: new Date(day).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })
+    };
+  });
+
   const chartWidth = 300;
   const chartHeight = 120;
   const padding = 20;
+  const maxCount = Math.max(...dayData.map(d => d.count), 1);
 
-  // Calculate points for the chart
-  const points = Object.entries(processedData).map(([key, value], index) => {
-    const count = typeof value === 'number' ? value : 0;
-    const x =
-      padding +
-      (index / (Object.keys(processedData).length - 1)) * (chartWidth - 2 * padding);
-    const y =
-      chartHeight -
-      padding -
-      (count / Math.max(...Object.values(processedData).map(v => typeof v === 'number' ? v : 0), 1)) *
-        (chartHeight - 2 * padding);
-    return { x, y, count, label: key };
+  const points = dayData.map((d, index) => {
+    const x = padding + (index / 6) * (chartWidth - 2 * padding);
+    const y = chartHeight - padding - (d.count / maxCount) * (chartHeight - 2 * padding);
+    return { x, y, count: d.count, label: d.label };
   });
 
-  // Create area path (filled area under the line)
-  const areaPath = points.length > 0 ? `M${points[0].x || 0},${chartHeight - padding} ${points.map((p) => `L${p.x || 0},${p.y || 0}`).join(" ")} L${points[points.length - 1].x || 0},${chartHeight - padding} Z` : "";
-
-  // Create line path
-  const linePath = points.length > 0 ? `M${points.map((p) => `${p.x || 0},${p.y || 0}`).join(" L")}` : "";
+  // Create smooth line path with quadratic curves
+  let linePath = `M${points[0].x},${points[0].y}`;
+  for (let i = 1; i < points.length; i++) {
+    const prev = points[i - 1];
+    const curr = points[i];
+    const midX = (prev.x + curr.x) / 2;
+    const midY = (prev.y + curr.y) / 2;
+    linePath += ` Q${midX},${midY} ${curr.x},${curr.y}`;
+  }
 
   return (
     <div className="rounded-2xl bg-white p-5 shadow-sm">
@@ -50,7 +53,7 @@ export function TaskActivity({
         <div>
           <h2 className="text-sm font-bold text-gray-900">Task activity</h2>
           <p className="mt-1 text-xs text-gray-500">
-            Marked done per day
+            Completed per day (last 7)
           </p>
         </div>
         {loading && (
@@ -58,8 +61,8 @@ export function TaskActivity({
         )}
       </div>
 
-      {/* Chart Container */}
       <div className="mt-5 relative">
+        {/* SVG Line Chart */}
         <svg
           width={chartWidth}
           height={chartHeight}
@@ -84,14 +87,11 @@ export function TaskActivity({
           </defs>
           <rect width="100%" height="100%" fill="url(#grid)" />
 
-          {/* Area fill */}
-          <path d={areaPath} fill="url(#areaGradient)" opacity="0.3" />
-
           {/* Line */}
           <path
             d={linePath}
             fill="none"
-            stroke="#6366f1"
+            stroke="#00bc7d"
             strokeWidth="3"
             strokeLinecap="round"
             strokeLinejoin="round"
@@ -104,24 +104,16 @@ export function TaskActivity({
               cx={point.x}
               cy={point.y}
               r="4"
-              fill="#6366f1"
+              fill="#00bc7d"
               className="hover:r-6"
               style={{ transition: "r 0.2s" }}
             >
-              <title>{`${point.count} tasks done in ${point.label}`}</title>
+              <title>{`${point.count} tasks done on ${point.label}`}</title>
             </circle>
           ))}
-
-          {/* Gradient definition */}
-          <defs>
-            <linearGradient id="areaGradient" x1="0%" y1="0%" x2="0%" y2="100%">
-              <stop offset="0%" stopColor="#6366f1" stopOpacity="0.8" />
-              <stop offset="100%" stopColor="#6366f1" stopOpacity="0.1" />
-            </linearGradient>
-          </defs>
         </svg>
 
-        {/* Month labels */}
+        {/* Day labels */}
         <div className="flex justify-between mt-2 px-5">
           {points.map((point, index) => (
             <div key={index} className="text-center">

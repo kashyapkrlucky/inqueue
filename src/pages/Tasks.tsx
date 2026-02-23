@@ -16,6 +16,7 @@ import {
 } from "../utils/helpers";
 import { TaskCard } from "../components/tasks/TaskCard";
 import { Button } from "../components/ui/Button";
+import CustomToast from "../components/ui/CustomToast";
 
 export default function Tasks() {
   const { tasks, getTasks, loading, error, addTask } = useTaskStore();
@@ -25,7 +26,10 @@ export default function Tasks() {
   const [priorityFilter, setPriorityFilter] = useState<ITaskPriority | "all">(
     "all",
   );
-  console.log(error);
+
+  if (error) {
+    CustomToast("error", error);
+  }
 
   const [isTaskModalOpen, setIsTaskModalOpen] = useState(false);
 
@@ -43,17 +47,6 @@ export default function Tasks() {
       document.body.style.overflow = "";
     };
   }, []);
-
-  // const stats = useMemo(() => {
-  //   const base = { todo: 0, in_progress: 0, done: 0 } as Record<
-  //     ITaskStatus,
-  //     number
-  //   >;
-  //   for (const t of tasks) {
-  //     base[getTaskStatus(t.status)] += 1;
-  //   }
-  //   return base;
-  // }, [tasks]);
 
   const filteredTasks = useMemo(() => {
     const q = query.trim().toLowerCase();
@@ -73,8 +66,8 @@ export default function Tasks() {
 
   return (
     <div className="h-screen bg-gradient-to-b from-gray-50 to-white overflow-y-scroll">
-      <div className="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8 h-full relative space-y-4">
-        <div className="sticky top-0 z-10 bg-gradient-to-b from-gray-50 to-white space-y-4 ">
+      <div className="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8 h-full relative">
+        <div className="sticky top-0 z-10 bg-gradient-to-b from-gray-50 to-white space-y-4 pt-4">
           <header className="flex flex-col gap-4">
             <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
               <div>
@@ -155,19 +148,7 @@ export default function Tasks() {
           </section>
         </div>
 
-        {/* {error ? (
-          <div className="mb-6 rounded-2xl border border-red-200 bg-red-50 p-4 text-sm text-red-800">
-            <div className="flex items-start gap-2">
-              <AlertTriangle className="mt-0.5 h-4 w-4" />
-              <div className="min-w-0">
-                <p className="font-semibold">Something went wrong</p>
-                <p className="mt-1 break-words text-red-700">{error}</p>
-              </div>
-            </div>
-          </div>
-        ) : null} */}
-
-        <section className="flex-1">
+        <section className="flex-1 py-4">
           {loading ? (
             <div className="rounded-2xl bg-white p-6 text-sm text-gray-500 shadow-sm">
               <div className="flex items-center gap-2">
@@ -183,9 +164,6 @@ export default function Tasks() {
               <p className="mt-1 text-sm text-gray-500">
                 Try adjusting filters or create a new task.
               </p>
-              <Button size="sm" onClick={() => setIsTaskModalOpen(true)}>
-                <Plus className="h-4 w-4" /> Add Task
-              </Button>
             </div>
           ) : (
             <ul className="space-y-3">

@@ -23,6 +23,7 @@ import {
 import Confirm from "../ui/Confirm";
 import Input from "../ui/Input";
 import Select from "../ui/Select";
+import CustomToast from "../ui/CustomToast";
 
 const nextStatus = (status: ITaskStatus): ITaskStatus => {
   if (status === "todo") return "in_progress";
@@ -66,6 +67,7 @@ export const TaskCard = ({
   const commitUpdate = async (id: string, partial: Partial<ITask>) => {
     if (!canMutate) return;
     await updateTask(id, { ...task, ...partial } as ITask);
+    CustomToast("success", "Task updated successfully");
   };
 
   const onToggleStatus = async () => {
@@ -90,7 +92,7 @@ export const TaskCard = ({
   const onDelete = async () => {
     if (!task._id) return;
     await deleteTask(task._id);
-    // getTasks();
+    CustomToast("success", "Task deleted successfully");
   };
 
   const handleToggleExpanded = () => {
