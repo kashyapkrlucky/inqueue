@@ -82,7 +82,7 @@ export interface ITask {
   /** When the task was created */
   createdAt: Date;
   /** When the task was last updated */
-  updatedAt?: Date;
+  updatedAt: Date;
 }
 
 export type NewTask = {

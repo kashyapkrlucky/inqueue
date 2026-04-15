@@ -4,6 +4,7 @@ import Loader from "./components/layout/Loader";
 import { ProtectedRoute } from "./components/layout/ProtectedRoute";
 import { ErrorBoundary } from "./components/layout/ErrorBoundary";
 import AppLayout from "./components/layout/AppLayout";
+import Roadmap from "./pages/Roadmap";
 
 // Lazy-loaded Pages
 const Home = lazy(() => import("./pages/Home"));
@@ -42,6 +43,11 @@ const routeConfig: RouteConfig[] = [
       {
         path: "/notes",
         element: <Notes />,
+        protected: true,
+      },
+      {
+        path: "/roadmap",
+        element: <Roadmap />,
         protected: true,
       },
       {

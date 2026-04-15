@@ -1,4 +1,4 @@
-export const APP_NAME = "InQueue";
+export const APP_NAME = "InQ";
 
 // import { TaskStatus, TaskPriority, UserRole, Department } from '../types';
 // import type { TaskStatusConfig } from '../types';

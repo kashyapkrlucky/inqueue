@@ -3,10 +3,11 @@ import { Link, NavLink, useNavigate } from "react-router-dom";
 import {
   ChevronDownIcon,
   Home,
-  ListTodo,
+  ListTodoIcon,
   LogOutIcon,
   SettingsIcon,
-  StickyNote,
+  SquareChartGanttIcon,
+  StickyNoteIcon,
 } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import useAuthStore from "../../store/useAuthStore";
@@ -15,8 +16,9 @@ import { APP_NAME } from "../../utils/constants";
 export default function Sidebar() {
   const navItems = [
     { to: "/", icon: Home },
-    { to: "/tasks", icon: ListTodo },
-    { to: "/notes", icon: StickyNote },
+    { to: "/tasks", icon: ListTodoIcon },
+    { to: "/notes", icon: StickyNoteIcon },
+    { to: "/roadmap", icon: SquareChartGanttIcon },
   ];
   const [isProfileOpen, setIsProfileOpen] = useState(false);
   const { user, logout } = useAuthStore();
@@ -50,7 +52,7 @@ export default function Sidebar() {
   };
 
   return (
-    <nav className="w-16 md:w-24 p-2 bg-white border-r border-gray-200 flex flex-col gap-6">
+    <nav className="w-16 md:w-16 p-2 bg-white border-r border-gray-200 flex flex-col gap-6">
       <Link to="/" className="flex items-center">
         <p className="hidden md:block text-lg font-bold m-auto text-indigo-600 text-lg font-bold">
           {APP_NAME}

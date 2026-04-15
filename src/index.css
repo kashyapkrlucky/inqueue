@@ -22,3 +22,8 @@
     background-color: #ffffff;
   }
 }
+
+.hide-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+  
