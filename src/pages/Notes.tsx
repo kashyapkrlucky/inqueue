@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { PlusIcon } from "lucide-react";
-import type { INote } from "../types/index.types";
+import type { INoteCreate } from "../types/index.types";
 import { useNoteStore } from "../store/useNoteStore";
 import { Button } from "../components/ui/Button";
 import NotesSidebar from "../components/notes/NotesSidebar";
@@ -29,10 +29,12 @@ export default function Notes() {
     if (isNewNote) {
       return;
     }
-    const newNote: INote = {
+    const newNote: INoteCreate = {
       _id: tempId,
       title: "Untitled Note",
       content: "",
+      createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString(),
     };
     insertNote(newNote);
     setIsEditing(true);

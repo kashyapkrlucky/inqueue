@@ -64,7 +64,7 @@ export const Header = () => {
                     <p className="text-sm font-medium text-gray-700">
                       {user?.name || "Homer Simpson"}
                     </p>
-                    <p className="text-xs text-gray-500">@{user?.userName || "homersimpson"}</p>
+                    <p className="text-xs text-gray-500">@{user?.username || "homersimpson"}</p>
                   </div>
                   <div className="py-1">
                     <Link

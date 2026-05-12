@@ -22,7 +22,7 @@ export default function Sidebar() {
   ];
   const [isProfileOpen, setIsProfileOpen] = useState(false);
   const { user, logout } = useAuthStore();
-
+  const hostUrl = import.meta.env.VITE_API_URL;
   const navigate = useNavigate();
   const dropdownRef = useRef<HTMLDivElement>(null);
 
@@ -88,7 +88,7 @@ export default function Sidebar() {
         >
           <img
             className="h-8 w-8 rounded-full"
-            src={user?.avatar || "/user.png"}
+            src={hostUrl + "/avatars/" + user?.avatar || "/user.png"}
             alt="User profile"
           />
           <ChevronDownIcon className="h-4 w-4 text-gray-500" />
@@ -102,7 +102,7 @@ export default function Sidebar() {
                 {user?.name}
               </p>
               <p className="text-xs text-gray-500">
-                @{user?.userName}
+                @{user?.username}
               </p>
             </div>
             <div className="py-1">

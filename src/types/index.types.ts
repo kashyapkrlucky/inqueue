@@ -1,15 +1,19 @@
+export interface BaseEntity {
+  _id: string;
+  createdAt: string;
+  updatedAt: string;
+}
+
 /**
  * Represents a user in the system
  */
-export interface IUser {
-  /** Unique identifier for the user */
-  _id: string;
+export interface IUser extends BaseEntity {
   /** User's full name */
   name: string;
   /** User's email address (must be unique) */
   email: string;
   /** User's username (must be unique) */
-  userName: string;
+  username: string;
   /** Hashed password (not returned in API responses) */
   password?: string;
   /** URL to the user's avatar image */
@@ -18,34 +22,22 @@ export interface IUser {
   avatarId?: string;
   /** User account status */
   status: "active" | "inactive";
-  /** When the user account was created */
-  createdAt?: Date;
-  /** When the user account was last updated */
-  updatedAt?: Date;
 }
 
 /**
  * Represents a folder for organizing notes
  */
-export interface IFolder {
-  /** Unique identifier for the folder */
-  _id: string;
+export interface IFolder extends BaseEntity {
   /** ID of the user who owns the folder */
   user: IUser;
   /** Title of the folder */
   title: string;
-  /** When the folder was created */
-  createdAt?: Date;
-  /** When the folder was last updated */
-  updatedAt?: Date;
 }
 
 /**
  * Represents a note or page in the system
  */
-export interface INote {
-  /** Unique identifier for the note */
-  _id: string;
+export interface INote extends BaseEntity {
   /** ID of the user who owns the note */
   user?: IUser;
   /** Title of the note */
@@ -54,10 +46,15 @@ export interface INote {
   content: string;
   /** Optional reference to the parent folder */
   folder?: IFolder;
-  /** When the note was created */
-  createdAt?: string;
-  /** When the note was last updated */
-  updatedAt?: string;
+}
+
+export interface INoteCreate {
+  _id: string;
+  title: string;
+  content: string;
+  folder?: string;
+  createdAt: string;
+  updatedAt: string;
 }
 
 export type ITaskStatus = "todo" | "in_progress" | "done";
@@ -66,11 +63,9 @@ export type ITaskPriority = "low" | "medium" | "high";
 /**
  * Represents a task or to-do item
  */
-export interface ITask {
-  /** Unique identifier for the task */
-  _id: string;
+export interface ITask extends BaseEntity {
   /** ID of the user who created the task */
-  user: string;
+  user: IUser;
   /** The task description */
   content: string;
   /** Status of the task (e.g., completed or not) */
@@ -79,10 +74,6 @@ export interface ITask {
   priority?: ITaskPriority;
   /** Due date for the task */
   dueDate?: Date;
-  /** When the task was created */
-  createdAt: Date;
-  /** When the task was last updated */
-  updatedAt: Date;
 }
 
 export type NewTask = {
@@ -92,7 +83,7 @@ export type NewTask = {
   dueDate?: Date;
 };
 
-export type TaskUpdate = Partial<Omit<ITask, '_id' | 'createdAt'>>; // updatedAt managed by repo
+export type TaskUpdate = Partial<Omit<ITask, '_id'>>;
 
 
 

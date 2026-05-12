@@ -14,6 +14,9 @@ export interface AuthState {
   signup: (name: string, email: string, password: string) => Promise<void>;
   clearError: () => void;
   initialize: () => Promise<void>;
+
+  getUserData: (code: string) => Promise<{ user: IUser; token: string } | null>;
+  onGuestLogin: () => Promise<{ user: IUser; token: string } | null>;
 }
 
 export const useAuthStore = create<AuthState>((set) => ({
@@ -104,6 +107,39 @@ export const useAuthStore = create<AuthState>((set) => ({
         loading: false,
         error: error instanceof Error ? error.message : "Initialization failed",
       });
+    }
+  },
+
+  getUserData: async (code: string) => {
+    try {
+      const {
+        data: { data },
+      } = await axios.post("/v1/public/session", {
+        code,
+      });
+      const { user, token } = data;
+      set({ user, token });
+      localStorage.setItem("user", JSON.stringify(user));
+      localStorage.setItem("token", token);
+      return { user, token };
+    } catch {
+      return null;
+    }
+  },
+
+  onGuestLogin: async () => {
+    try {
+      const baseUrl = import.meta.env.VITE_BASE_URL;
+      const {
+        data: { data },
+      } = await axios.post("/v1/public/guest", { clientUrl: baseUrl });
+      const { user, token } = data;
+      set({ user, token });
+      localStorage.setItem("user", JSON.stringify(user));
+      localStorage.setItem("token", token);
+      return { user, token };
+    } catch {
+      return null;
     }
   },
 }));

@@ -2,7 +2,7 @@ import { formatDistance } from "date-fns";
 import type { ITask, ITaskPriority, ITaskStatus } from "../types/index.types";
 import { CheckCircle2Icon, CircleIcon, ClockIcon } from "lucide-react";
 
-export const TOKEN_KEY = "auth_token";
+export const TOKEN_KEY = "token";
 
 export const STORAGE_KEYS = {
   tasks: "tasks",
@@ -139,6 +139,16 @@ export const asDate = (value: unknown): Date | null => {
 export const clamp = (n: number, min: number, max: number) =>
   Math.min(max, Math.max(min, n));
 
+// ---------------
+
+export const getCodeFromURL = () => {
+  const params = new URLSearchParams(window.location.search);
+  const code = params.get("c");
+  if (code) {
+    window.history.replaceState({}, "", window.location.pathname);
+  }
+  return code;
+};
 
 
 // import { TaskStatus, TaskPriority } from '../types';

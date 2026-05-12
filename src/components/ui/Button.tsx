@@ -20,24 +20,31 @@ export const Button = ({
     | "ghost"
     | "link";
   className?: string;
-  size?: "default" | "sm" | "lg";
+  size?: "default" | "xs" | "sm" | "lg";
   onClick?: () => void;
   disabled?: boolean;
 }) => {
+
+  const sizeClasses = {
+    xs: "text-xs px-2 py-1",
+    sm: "text-sm px-3 py-1.5",
+    lg: "text-lg px-6 py-3",
+    default: "text-base px-5 py-2.5"
+  };
   return (
     <button
       type={type}
-      className={`px-5 py-2.5 rounded-xl inline-flex items-center gap-2 font-semibold cursor-pointer justify-center disabled:opacity-50 disabled:cursor-not-allowed ${
+      className={`rounded-xl inline-flex items-center gap-2 font-semibold cursor-pointer justify-center disabled:opacity-50 disabled:cursor-not-allowed ${
         variant === "destructive"
-          ? "bg-red-500 hover:bg-red-600"
+          ? "bg-red-500 text-white hover:bg-red-600"
           : variant === "warning"
-          ? "bg-yellow-500 hover:bg-yellow-600"
+          ? "bg-yellow-500 text-white hover:bg-yellow-600"
           : variant === "success"
-          ? "bg-emerald-500 hover:bg-emerald-600"
+          ? "bg-emerald-500 text-white hover:bg-emerald-600"
           : variant === "info"
           ? "bg-indigo-500 hover:bg-indigo-600"
           : variant === "outline"
-          ? "text-gray-200 border border-gray-300 hover:bg-gray-600"
+          ? "text-gray-600 border border-gray-600 hover:bg-gray-100"
           : variant === "secondary"
           ? "bg-gray-500 hover:bg-gray-600"
           : variant === "ghost"
@@ -45,7 +52,7 @@ export const Button = ({
           : variant === "link"
           ? "bg-transparent hover:bg-gray-100"
           : "bg-gray-900 text-white"
-      } ${className} ${size === "sm" ? "text-sm" : size === "lg" ? "text-lg" : "sm"}`}
+      } ${className} ${sizeClasses[size || "default"]}`}
       onClick={onClick}
       disabled={disabled}
     >

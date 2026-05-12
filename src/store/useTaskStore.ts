@@ -67,7 +67,7 @@ export const useTaskStore = create<TaskState>((set) => ({
       set({ loading: true });
       const {
         data: { data },
-      } = await axios.get("/tasks");
+      } = await axios.get("/v1/public/tasks");
       set({ tasks: data });
     } catch (error) {
       set({
@@ -85,7 +85,7 @@ export const useTaskStore = create<TaskState>((set) => ({
       set({ loading: true });
       const {
         data: { data },
-      } = await axios.get("/tasks/stats");
+      } = await axios.get("/v1/public/tasks/stats");
       set({ stats: data });
     } catch (error) {
       set({
@@ -101,7 +101,7 @@ export const useTaskStore = create<TaskState>((set) => ({
       set({ loading: true });
       const {
         data: { data },
-      } = await axios.get("/tasks/recent");
+      } = await axios.get("/v1/public/tasks/recent");
       set({ homeData: data });
     } catch (error) {
       set({
@@ -117,7 +117,7 @@ export const useTaskStore = create<TaskState>((set) => ({
       set({ loading: true });
       const {
         data: { data },
-      } = await axios.post("/tasks", task);
+      } = await axios.post("/v1/public/tasks", task);
       set((state) => ({ tasks: [data, ...state.tasks] }));
       // TaskRepository.create(task as ITask);
     } catch (error) {
@@ -133,7 +133,7 @@ export const useTaskStore = create<TaskState>((set) => ({
     try {
       console.log("Updating task:", taskId, task);
       set({ loading: true });
-      await axios.patch<Partial<ITask>>(`/tasks/${taskId}`, task);
+      await axios.patch<Partial<ITask>>(`/v1/public/tasks/${taskId}`, task);
       set((state) => ({
         tasks: state.tasks.map((t) =>
           t._id === taskId ? { ...t, ...task } : t,
@@ -152,7 +152,7 @@ export const useTaskStore = create<TaskState>((set) => ({
     try {
       set({ loading: true });
       // TaskRepository.remove(taskId);
-      await axios.delete("/tasks/" + taskId);
+      await axios.delete("/v1/public/tasks/" + taskId);
       set((state) => ({
         tasks: state.tasks.filter((t) => t._id !== taskId),
       }));

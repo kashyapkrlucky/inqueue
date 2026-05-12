@@ -15,7 +15,7 @@ export function useAuth() {
   const checkAuthStatus = () => {
     try {
       const userStr = localStorage.getItem('user');
-      const token = localStorage.getItem('auth_token');
+      const token = localStorage.getItem('token');
       
       console.log('useAuth - Checking auth status:', { userStr, token });
       
@@ -40,7 +40,7 @@ export function useAuth() {
 
   const logout = () => {
     localStorage.removeItem('user');
-    localStorage.removeItem('auth_token');
+    localStorage.removeItem('token');
     setUser(null);
     setIsAuthenticated(false);
     navigate('/');
@@ -48,7 +48,7 @@ export function useAuth() {
 
   const login = (userData: IUser, token: string) => {
     localStorage.setItem('user', JSON.stringify(userData));
-    localStorage.setItem('auth_token', token);
+    localStorage.setItem('token', token);
     setUser(userData);
     setIsAuthenticated(true);
   };

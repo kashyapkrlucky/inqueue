@@ -50,11 +50,7 @@ export const TaskCard = ({
   const StatusIcon = statusConfig[status].icon;
 
   const createdAt = useMemo(() => {
-    const d =
-      task.createdAt instanceof Date
-        ? task.createdAt
-        : new Date(task.createdAt);
-    return d;
+    return new Date(task.createdAt);
   }, [task.createdAt]);
 
   const dueDate = useMemo(() => {
@@ -237,7 +233,7 @@ export const TaskCard = ({
                     {config.label}
                   </option>
                 ))}
-              </Select> 
+              </Select>
             </div>
           </div>
         ) : null}

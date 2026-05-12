@@ -1,10 +1,10 @@
 import { ArrowUpRightIcon, ClockIcon, NotebookTextIcon } from "lucide-react";
-import type { INote } from "../../types/index.types";
+import type { INoteCreate } from "../../types/index.types";
 import { asDate, formatDate } from "../../utils/helpers";
 import { Link } from "react-router-dom";
 
 interface RecentNotesProps {
-  notes: INote[];
+  notes: INoteCreate[];
 }
 
 export function RecentNotes({ notes }: RecentNotesProps) {

@@ -11,7 +11,7 @@ export default function UserCard({ user }: { user: IUser }) {
       />
       <figcaption>
         <p className="font-medium text-gray-900">{user.name}</p>
-        <Link to={`/profile/${user.userName}`} className="text-xs text-gray-500">@{user.userName}</Link>
+        <Link to={`/profile/${user.username}`} className="text-xs text-gray-500">@{user.username}</Link>
       </figcaption>
     </figure>
   );
