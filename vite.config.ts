@@ -18,19 +18,16 @@ export default defineConfig({
         chunkFileNames: 'assets/chunk-[name]-[hash].js',
         entryFileNames: 'assets/entry-[name]-[hash].js',
         assetFileNames: 'assets/[name]-[hash][extname]',
-        // Optimize chunking
+        // Optimize chunking - keep React with vendor libraries to avoid forwardRef errors
         manualChunks: (id) => {
           if (id.includes('node_modules')) {
-            if (id.includes('react') || id.includes('react-dom') || id.includes('react-router')) {
-              return 'react-vendor';
-            }
             if (id.includes('lucide')) {
               return 'ui';
             }
             if (id.includes('tailwind')) {
               return 'styles';
             }
-            return 'app-vendor';
+            return 'vendor';
           }
         }
       }
