@@ -30,10 +30,10 @@ const Home = () => {
   } = useNoteStore();
 
   const { isAuthenticated, loading: authLoading } = useAuth();
-  
+
   useEffect(() => {
-    if (!authLoading && isAuthenticated) {
-      navigate("/");
+    if (!authLoading && !isAuthenticated) {
+      navigate("/login");
     }
   }, [isAuthenticated, authLoading, navigate]);
 
