@@ -28,7 +28,7 @@ export default function Login() {
   };
 
   const onAtlasLogin = () => {
-    window.location.href = `${import.meta.env.VITE_API_URL}/authorize?client_id=${import.meta.env.VITE_CLIENT_ID}`;
+    window.location.href = `${import.meta.env.VITE_API_URL}/login?client_id=${import.meta.env.VITE_CLIENT_ID}`;
   };
 
   return (
