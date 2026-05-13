@@ -1,4 +1,5 @@
 import { Loader2Icon } from "lucide-react";
+import CustomActiveShapePieChart from "../ui/CustomPieChart";
 
 interface TaskStatisticsProps {
   taskStats: {
@@ -10,27 +11,37 @@ interface TaskStatisticsProps {
     medium: number;
     high: number;
   };
-  taskStatusChart: {
-    todoPct: number;
-    inProgressPct: number;
-    donePct: number;
-  };
-  taskPriorityChart: {
-    lowPct: number;
-    mediumPct: number;
-    highPct: number;
-  };
   loading: boolean;
+}
+
+interface dateItem {
+  name: string;
+  value: number;
+  fill: string;
 }
 
 export function TaskStatistics({
   taskStats,
-  taskStatusChart,
-  taskPriorityChart,
   loading,
 }: TaskStatisticsProps) {
+  const taskStatsData: dateItem[] = [
+    { name: "To do", value: taskStats.todo + 1, fill: "#9ca3af" },
+    { name: "In progress", value: taskStats.in_progress + 3, fill: "#6366f1" },
+    { name: "Done", value: taskStats.done + 2, fill: "#10b981" },
+  ];
+
+  const taskPriorityData = [
+    { name: "Low", value: taskStats.low + 1, fill: "#d1d5dc" },
+    {
+      name: "Medium",
+      value: taskStats.medium + 1,
+      fill: "#ffb86a",
+    },
+    { name: "High", value: taskStats.high + 1, fill: "#fb2c36" },
+  ];
+
   return (
-    <div className="rounded-2xl bg-white p-5 shadow-sm lg:col-span-2">
+    <div className="flex-1 rounded-2xl bg-white p-5 shadow-sm">
       <div className="flex items-start justify-between gap-3">
         <div>
           <h2 className="text-sm font-bold text-gray-900">Task Statistics</h2>
@@ -48,51 +59,11 @@ export function TaskStatistics({
         <div className="mt-4">
           <div className="flex items-center justify-between text-sm font-semibold text-gray-600">
             <span>Status</span>
-            {/* <span>{taskStats.total} total</span> */}
           </div>
 
           {/* Donut Chart */}
           <div className="mt-3 flex items-center justify-center">
-            <div className="relative">
-              {/* Donut Chart using conic gradient */}
-              <div
-                className="h-24 w-24 rounded-full"
-                style={{
-                  background: `conic-gradient(
-                    #9ca3af 0% ${taskStatusChart.todoPct}%,
-                    #6366f1 ${taskStatusChart.todoPct}% ${taskStatusChart.todoPct + taskStatusChart.inProgressPct}%,
-                    #10b981 ${taskStatusChart.todoPct + taskStatusChart.inProgressPct}% 100%
-                  )`
-                }}
-              />
-              {/* Center hole for donut effect */}
-              <div className="absolute inset-0 m-auto h-12 w-12 rounded-full bg-white" />
-            </div>
-          </div>
-
-          {/* Legend */}
-          <div className="mt-4 space-y-2">
-            <div className="flex items-center gap-2 text-xs">
-              <span className="h-3 w-3 rounded-full bg-gray-400" />
-              <span className="text-gray-600">To do</span>
-              <span className="ml-auto font-semibold text-gray-900">
-                {taskStats.todo}
-              </span>
-            </div>
-            <div className="flex items-center gap-2 text-xs">
-              <span className="h-3 w-3 rounded-full bg-indigo-500" />
-              <span className="text-gray-600">In progress</span>
-              <span className="ml-auto font-semibold text-gray-900">
-                {taskStats.in_progress}
-              </span>
-            </div>
-            <div className="flex items-center gap-2 text-xs">
-              <span className="h-3 w-3 rounded-full bg-emerald-500" />
-              <span className="text-gray-600">Done</span>
-              <span className="ml-auto font-semibold text-gray-900">
-                {taskStats.done}
-              </span>
-            </div>
+            <CustomActiveShapePieChart data={taskStatsData} />
           </div>
         </div>
 
@@ -100,51 +71,11 @@ export function TaskStatistics({
         <div className="mt-4">
           <div className="flex items-center justify-between text-sm font-semibold text-gray-600">
             <span>Priority</span>
-            {/* <span>{taskStats.low + taskStats.medium + taskStats.high} total</span> */}
           </div>
 
           {/* Donut Chart */}
           <div className="mt-3 flex items-center justify-center">
-            <div className="relative">
-              {/* Donut Chart using conic gradient */}
-              <div
-                className="h-24 w-24 rounded-full"
-                style={{
-                  background: `conic-gradient(
-                    #d1d5dc ${taskPriorityChart.lowPct}%,
-                    #ffb86a ${taskPriorityChart.lowPct}% ${taskPriorityChart.lowPct + taskPriorityChart.mediumPct}%,
-                    #fb2c36 ${taskPriorityChart.lowPct + taskPriorityChart.mediumPct}% 100%
-                  )`
-                }}
-              />
-              {/* Center hole for donut effect */}
-              <div className="absolute inset-0 m-auto h-12 w-12 rounded-full bg-white" />
-            </div>
-          </div>
-
-          {/* Legend */}
-          <div className="mt-4 space-y-2">
-            <div className="flex items-center gap-2 text-xs">
-              <span className="h-3 w-3 rounded-full bg-gray-300" />
-              <span className="text-gray-600">Low</span>
-              <span className="ml-auto font-semibold text-gray-900">
-                {taskStats.low}
-              </span>
-            </div>
-            <div className="flex items-center gap-2 text-xs">
-              <span className="h-3 w-3 rounded-full bg-orange-300" />
-              <span className="text-gray-600">Medium</span>
-              <span className="ml-auto font-semibold text-gray-900">
-                {taskStats.medium}
-              </span>
-            </div>
-            <div className="flex items-center gap-2 text-xs">
-              <span className="h-3 w-3 rounded-full bg-red-500" />
-              <span className="text-gray-600">High</span>
-              <span className="ml-auto font-semibold text-gray-900">
-                {taskStats.high}
-              </span>
-            </div>
+            <CustomActiveShapePieChart data={taskPriorityData} />
           </div>
         </div>
       </div>

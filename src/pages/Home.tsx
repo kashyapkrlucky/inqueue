@@ -1,8 +1,7 @@
-import { useEffect, useMemo } from "react";
+import { useEffect } from "react";
 import { useTaskStore } from "../store/useTaskStore";
 import { useNoteStore } from "../store/useNoteStore";
 import {
-  clamp,
   formatDate,
 } from "../utils/helpers";
 import { TaskStats } from "../components/home/TaskStats";
@@ -34,22 +33,7 @@ const Home = () => {
 
   const loading = tasksLoading || notesLoading;
 
-  const taskStatusChart = useMemo(() => {
-    const total = Math.max(1, stats.total);
-    const todoPct = clamp((stats.todo / total) * 100, 0, 100);
-    const inProgressPct = clamp((stats.in_progress / total) * 100, 0, 100);
-    const donePct = clamp((stats.done / total) * 100, 0, 100);
-    return { todoPct, inProgressPct, donePct };
-  }, [stats]);
 
-  const taskPriorityChart = useMemo(() => {
-    const total = Math.max(1, stats.low + stats.medium + stats.high);
-    return {
-      lowPct: clamp((stats.low / total) * 100, 0, 100),
-      mediumPct: clamp((stats.medium / total) * 100, 0, 100),
-      highPct: clamp((stats.high / total) * 100, 0, 100),
-    };
-  }, [stats]);
 
   if (loading) {
     return (
@@ -81,11 +65,9 @@ const Home = () => {
           upcomingTasks={homeData.upcoming.length}
         />
 
-        <section className="mb-6 grid grid-cols-1 gap-4 lg:grid-cols-3">
+        <section className="mb-6 flex flex-row gap-4">
           <TaskStatistics
             taskStats={stats}
-            taskStatusChart={taskStatusChart}
-            taskPriorityChart={taskPriorityChart}
             loading={loading}
           />
 
