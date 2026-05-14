@@ -1,0 +1,103 @@
+import { create } from "zustand";
+import axios from "../../../lib/axios";
+import {
+  getStoredToken,
+  setStoredToken,
+  TOKEN_KEY,
+  USER_KEY,
+} from "../../../shared/utils";
+import type { IUser } from "../types";
+
+export interface AuthState {
+  user: IUser | null;
+  token: string | null;
+  isAuthenticated: boolean;
+  loading: boolean;
+  error: string | null;
+  logout: () => void;
+  clearError: () => void;
+  initialize: () => Promise<void>;
+
+  getUserData: (code: string) => Promise<{ user: IUser; token: string } | null>;
+  onGuestLogin: () => Promise<{ user: IUser; token: string } | null>;
+  getLoggedInUser: () => IUser | null;
+  getToken: () => string | null;
+}
+
+export const useAuthStore = create<AuthState>((set) => ({
+  user: getStoredToken(USER_KEY) ? JSON.parse(getStoredToken(USER_KEY)!) : null,
+  token: getStoredToken(TOKEN_KEY),
+  isAuthenticated: !!getStoredToken(TOKEN_KEY),
+  loading: false,
+  error: null,
+
+  clearError: () => {
+    set({ error: null });
+  },
+
+  initialize: async () => {
+    set({ loading: true });
+    try {
+      const token = getStoredToken(TOKEN_KEY);
+      const user = getStoredToken(USER_KEY);
+      if (token && user) {
+        // Optionally validate token with backend here
+        set({ token, isAuthenticated: true, user: JSON.parse(user) });
+      }
+      set({ loading: false });
+    } catch (error) {
+      set({
+        loading: false,
+        error: error instanceof Error ? error.message : "Initialization failed",
+      });
+    }
+  },
+
+  getUserData: async (code: string) => {
+    try {
+      const {
+        data: { data },
+      } = await axios.post("/v1/public/session", {
+        code,
+      });
+      const { user, token } = data;
+      set({ user, token, isAuthenticated: true });
+      setStoredToken(USER_KEY, JSON.stringify(user));
+      setStoredToken(TOKEN_KEY, token);
+      return { user, token };
+    } catch {
+      return null;
+    }
+  },
+
+  onGuestLogin: async () => {
+    try {
+      const baseUrl = import.meta.env.VITE_BASE_URL;
+      const {
+        data: { data },
+      } = await axios.post("/v1/public/guest", { clientUrl: baseUrl });
+      const { user, token } = data;
+      set({ user, token, isAuthenticated: true });
+      setStoredToken(USER_KEY, JSON.stringify(user));
+      setStoredToken(TOKEN_KEY, token);
+      return { user, token };
+    } catch {
+      return null;
+    }
+  },
+  getLoggedInUser: () => {
+    return getStoredToken(USER_KEY)
+      ? JSON.parse(getStoredToken(USER_KEY)!)
+      : null;
+  },
+  getToken: () => {
+    return getStoredToken(TOKEN_KEY);
+  },
+  logout: () => {
+    setStoredToken(TOKEN_KEY, null);
+    setStoredToken(USER_KEY, null);
+    set({ user: null, token: null, isAuthenticated: false, error: null });
+  },
+}));
+
+export default useAuthStore;

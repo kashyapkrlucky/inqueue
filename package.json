@@ -1,16 +1,18 @@
 {
   "name": "inqueue",
   "private": true,
-  "version": "1.0.0",
+  "version": "1.1.0",
   "type": "module",
   "scripts": {
     "dev": "vite",
     "build": "tsc -b && vite build",
     "lint": "eslint .",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "test": "vitest"
   },
   "dependencies": {
     "@tailwindcss/vite": "^4.1.18",
+    "@testing-library/react": "^16.3.2",
     "axios": "^1.13.2",
     "date-fns": "^4.1.0",
     "lucide-react": "^0.561.0",
@@ -20,6 +22,7 @@
     "react-router-dom": "^7.10.1",
     "recharts": "^3.8.1",
     "tailwindcss": "^4.1.18",
+    "vitest": "^4.1.6",
     "zustand": "^5.0.9"
   },
   "devDependencies": {

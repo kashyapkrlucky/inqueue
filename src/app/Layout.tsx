@@ -1,0 +1,52 @@
+import { Outlet } from "react-router-dom";
+import Sidebar from "../shared/components/layout/Sidebar";
+import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { Toaster } from "react-hot-toast";
+import { getCodeFromURL } from "../shared/utils";
+import PageLoader from "../shared/ui/PageLoader";
+import useAuthStore from "../features/auth/store/useAuthStore";
+
+export default function AppLayout() {
+  const navigate = useNavigate();
+  const [isOAuthChecked, setIsOAuthChecked] = useState(false);
+  const { getUserData, isAuthenticated, loading } = useAuthStore();
+
+  useEffect(() => {
+    const handleOAuthCallback = async () => {
+      const code = getCodeFromURL();
+      if (code) {
+        try {
+          await getUserData(code);
+          setIsOAuthChecked(true);
+        } catch (error) {
+          console.error("OAuth callback failed:", error);
+        }
+      } else {
+        setIsOAuthChecked(true);
+      }
+    };
+
+    handleOAuthCallback();
+  }, [getUserData]);
+
+  useEffect(() => {
+    if (isOAuthChecked && !isAuthenticated && !loading) {
+      navigate("/login");
+    }
+  }, [isAuthenticated, loading, isOAuthChecked, navigate]);
+
+  if (loading) {
+    return <PageLoader />;
+  }
+
+  return (
+    <div className="flex flex-row h-screen bg-gray-50">
+      <Sidebar />
+      <main className="flex-1 overflow-y-auto">
+        <Outlet />
+      </main>
+      <Toaster />
+    </div>
+  );
+}
