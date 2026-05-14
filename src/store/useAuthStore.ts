@@ -1,6 +1,11 @@
 import { create } from "zustand";
 import axios from "../lib/axios";
-import { getStoredToken, setStoredToken, TOKEN_KEY } from "../utils/helpers";
+import {
+  getStoredToken,
+  setStoredToken,
+  TOKEN_KEY,
+  USER_KEY,
+} from "../utils/helpers";
 import type { IUser } from "../types/index.types";
 
 export interface AuthState {
@@ -9,84 +14,22 @@ export interface AuthState {
   isAuthenticated: boolean;
   loading: boolean;
   error: string | null;
-  login: (email: string, password: string) => Promise<void>;
   logout: () => void;
-  signup: (name: string, email: string, password: string) => Promise<void>;
   clearError: () => void;
   initialize: () => Promise<void>;
 
   getUserData: (code: string) => Promise<{ user: IUser; token: string } | null>;
   onGuestLogin: () => Promise<{ user: IUser; token: string } | null>;
+  getLoggedInUser: () => IUser | null;
+  getToken: () => string | null;
 }
 
 export const useAuthStore = create<AuthState>((set) => ({
-  user: getStoredToken("user") ? JSON.parse(getStoredToken("user")!) : null,
+  user: getStoredToken(USER_KEY) ? JSON.parse(getStoredToken(USER_KEY)!) : null,
   token: getStoredToken(TOKEN_KEY),
   isAuthenticated: !!getStoredToken(TOKEN_KEY),
   loading: false,
   error: null,
-  people: [],
-  login: async (email: string, password: string) => {
-    set({ loading: true, error: null });
-    try {
-      const {
-        data: { data },
-      } = await axios.post("/users/signin", {
-        email,
-        password,
-      });
-      setStoredToken(data.token, TOKEN_KEY);
-      setStoredToken(data.user, "user");
-      set({
-        loading: false,
-        token: data.token,
-        isAuthenticated: true,
-        user: data.user,
-      });
-    } catch (error) {
-      set({
-        loading: false,
-        error:
-          error instanceof Error
-            ? "Invalid email or password"
-            : "An unknown error occurred",
-      });
-      throw error; // Re-throw to allow error handling in components
-    }
-  },
-
-  logout: () => {
-    setStoredToken(null, TOKEN_KEY);
-    setStoredToken(null, "user");
-    set({ user: null, token: null, isAuthenticated: false, error: null });
-  },
-
-  signup: async (name: string, email: string, password: string) => {
-    set({ loading: true, error: null });
-    try {
-      const {
-        data: { data },
-      } = await axios.post("/users", {
-        name,
-        email,
-        password,
-      });
-      setStoredToken(data.token, TOKEN_KEY);
-      setStoredToken(data.user, "user");
-      set({
-        loading: false,
-        token: data.token,
-        isAuthenticated: true,
-        user: data.user,
-      });
-    } catch (error) {
-      console.error("Signup error:", error);
-      set({
-        loading: false,
-        error: error instanceof Error ? error.message : "Signup failed",
-      });
-    }
-  },
 
   clearError: () => {
     set({ error: null });
@@ -96,7 +39,7 @@ export const useAuthStore = create<AuthState>((set) => ({
     set({ loading: true });
     try {
       const token = getStoredToken(TOKEN_KEY);
-      const user = getStoredToken("user");
+      const user = getStoredToken(USER_KEY);
       if (token && user) {
         // Optionally validate token with backend here
         set({ token, isAuthenticated: true, user: JSON.parse(user) });
@@ -118,9 +61,9 @@ export const useAuthStore = create<AuthState>((set) => ({
         code,
       });
       const { user, token } = data;
-      set({ user, token });
-      localStorage.setItem("user", JSON.stringify(user));
-      localStorage.setItem("token", token);
+      set({ user, token, isAuthenticated: true });
+      setStoredToken(USER_KEY, JSON.stringify(user));
+      setStoredToken(TOKEN_KEY, token);
       return { user, token };
     } catch {
       return null;
@@ -134,13 +77,26 @@ export const useAuthStore = create<AuthState>((set) => ({
         data: { data },
       } = await axios.post("/v1/public/guest", { clientUrl: baseUrl });
       const { user, token } = data;
-      set({ user, token });
-      localStorage.setItem("user", JSON.stringify(user));
-      localStorage.setItem("token", token);
+      set({ user, token, isAuthenticated: true });
+      setStoredToken(USER_KEY, JSON.stringify(user));
+      setStoredToken(TOKEN_KEY, token);
       return { user, token };
     } catch {
       return null;
     }
+  },
+  getLoggedInUser: () => {
+    return getStoredToken(USER_KEY)
+      ? JSON.parse(getStoredToken(USER_KEY)!)
+      : null;
+  },
+  getToken: () => {
+    return getStoredToken(TOKEN_KEY);
+  },
+  logout: () => {
+    setStoredToken(TOKEN_KEY, null);
+    setStoredToken(USER_KEY, null);
+    set({ user: null, token: null, isAuthenticated: false, error: null });
   },
 }));
 

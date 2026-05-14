@@ -3,6 +3,7 @@ import type { ITask, ITaskPriority, ITaskStatus } from "../types/index.types";
 import { CheckCircle2Icon, CircleIcon, ClockIcon } from "lucide-react";
 
 export const TOKEN_KEY = "token";
+export const USER_KEY = "user";
 
 export const STORAGE_KEYS = {
   tasks: "tasks",
@@ -44,8 +45,8 @@ export const getStoredToken = (key: string): string | null => {
 };
 
 export const setStoredToken = (
-  data: object | string | null,
   key: string = TOKEN_KEY,
+  data: object | string | null,
 ): void => {
   if (typeof window !== "undefined") {
     if (data) {

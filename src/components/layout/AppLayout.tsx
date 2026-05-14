@@ -2,7 +2,6 @@
 import { Outlet } from "react-router-dom";
 import Sidebar from "./Sidebar";
 import { useEffect, useState } from "react";
-import { useAuth } from "../../hooks/useAuth";
 import { useNavigate } from "react-router-dom";
 import { Loader } from "lucide-react";
 import { Toaster } from "react-hot-toast";
@@ -10,41 +9,35 @@ import { getCodeFromURL } from "../../utils/helpers";
 import useAuthStore from "../../store/useAuthStore";
 
 export default function AppLayout() {
-  const { isAuthenticated, loading: authLoading, login } = useAuth();
   const navigate = useNavigate();
-  const [isOAuthLoading, setIsOAuthLoading] = useState(false);
-  const { getUserData } = useAuthStore();
+  const [isOAuthChecked, setIsOAuthChecked] = useState(false);
+  const { getUserData, isAuthenticated, loading } = useAuthStore();
 
   useEffect(() => {
     const handleOAuthCallback = async () => {
       const code = getCodeFromURL();
-      console.log(code);
-
       if (code) {
-        setIsOAuthLoading(true);
         try {
-          const result = await getUserData(code);
-          if (result?.token) {
-            login(result.user, result.token);
-          }
+          await getUserData(code);
+          setIsOAuthChecked(true);
         } catch (error) {
           console.error("OAuth callback failed:", error);
-        } finally {
-          setIsOAuthLoading(false);
         }
+      } else {
+        setIsOAuthChecked(true);
       }
     };
 
     handleOAuthCallback();
-  }, []);
+  }, [getUserData]);
 
   useEffect(() => {
-    if (!authLoading && !isAuthenticated && !isOAuthLoading) {
-      // navigate("/login");
+    if (isOAuthChecked && !isAuthenticated && !loading) {
+      navigate("/login");
     }
-  }, [isAuthenticated, authLoading, isOAuthLoading, navigate]);
+  }, [isAuthenticated, loading, isOAuthChecked, navigate]);
 
-  if (authLoading) {
+  if (loading) {
     return <Loader />;
   }
 

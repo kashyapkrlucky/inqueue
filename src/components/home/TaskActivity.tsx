@@ -1,5 +1,5 @@
 import { Loader2Icon } from "lucide-react";
-import CustomLineChart from "../ui/CustomLineChart";
+import CustomAreaChart from "../ui/CustomAreaChart";
 
 interface TaskActivityProps {
   data: Array<{ _id: string; done: number }>;
@@ -23,7 +23,7 @@ export function TaskActivity({
     return {
       name: new Date(day).toLocaleDateString('en-US', { month: 'short', day: 'numeric' }),
       label: new Date(day).toLocaleDateString('en-US', { month: 'short', day: 'numeric' }),
-      tasks: (item ? item.done : 0) + 5,
+      tasks: (item ? item.done : 0),
     };
   });
 
@@ -44,7 +44,7 @@ export function TaskActivity({
       </div>
 
       <div className="mt-5 relative">
-        <CustomLineChart data={dayData}/>
+        <CustomAreaChart data={dayData}/>
       </div>
     </div>
   );

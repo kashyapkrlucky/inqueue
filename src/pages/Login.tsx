@@ -1,22 +1,19 @@
 import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { useAuthStore } from "../store/useAuthStore";
-import { useAuth } from "../hooks/useAuth";
+import useAuthStore from "../store/useAuthStore";
 import { APP_NAME } from "../utils/constants";
 import { Button } from "../components/ui/Button";
 import { CircleUserRoundIcon, LogInIcon } from "lucide-react";
 
 export default function Login() {
   const navigate = useNavigate();
-  const { onGuestLogin } = useAuthStore();
-
-  const { isAuthenticated, loading } = useAuth();
+  const { onGuestLogin, isAuthenticated, loading } = useAuthStore();
 
   useEffect(() => {
-    if (!loading && isAuthenticated) {
+    if (isAuthenticated) {
       navigate("/");
     }
-  }, [isAuthenticated, loading, navigate]);
+  }, [isAuthenticated, navigate]);
 
   const handleGuestLogin = async () => {
     const token = await onGuestLogin();

@@ -24,20 +24,22 @@ export function TaskStatistics({
   taskStats,
   loading,
 }: TaskStatisticsProps) {
+  const isTaskData = taskStats.todo > 0 || taskStats.in_progress > 0 || taskStats.done > 0;
+  const isTaskPriorityData = taskStats.low > 0 || taskStats.medium > 0 || taskStats.high > 0;
   const taskStatsData: dateItem[] = [
-    { name: "To do", value: taskStats.todo + 1, fill: "#9ca3af" },
-    { name: "In progress", value: taskStats.in_progress + 3, fill: "#6366f1" },
-    { name: "Done", value: taskStats.done + 2, fill: "#10b981" },
+    { name: "To do", value: taskStats.todo, fill: "#9ca3af" },
+    { name: "In progress", value: taskStats.in_progress, fill: "#6366f1" },
+    { name: "Done", value: taskStats.done, fill: "#10b981" },
   ];
 
   const taskPriorityData = [
-    { name: "Low", value: taskStats.low + 1, fill: "#d1d5dc" },
+    { name: "Low", value: taskStats.low, fill: "#d1d5dc" },
     {
       name: "Medium",
-      value: taskStats.medium + 1,
+      value: taskStats.medium,
       fill: "#ffb86a",
     },
-    { name: "High", value: taskStats.high + 1, fill: "#fb2c36" },
+    { name: "High", value: taskStats.high, fill: "#fb2c36" },
   ];
 
   return (
@@ -63,7 +65,11 @@ export function TaskStatistics({
 
           {/* Donut Chart */}
           <div className="mt-3 flex items-center justify-center">
-            <CustomActiveShapePieChart data={taskStatsData} />
+            {isTaskData ? (
+              <CustomActiveShapePieChart data={taskStatsData} />
+            ) : (
+              <div className="text-sm text-gray-500">No tasks</div>
+            )}
           </div>
         </div>
 
@@ -75,7 +81,11 @@ export function TaskStatistics({
 
           {/* Donut Chart */}
           <div className="mt-3 flex items-center justify-center">
-            <CustomActiveShapePieChart data={taskPriorityData} />
+            {isTaskPriorityData ? (
+              <CustomActiveShapePieChart data={taskPriorityData} />
+            ) : (
+              <div className="text-sm text-gray-500">No tasks</div>
+            )}
           </div>
         </div>
       </div>

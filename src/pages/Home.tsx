@@ -10,12 +10,9 @@ import { TaskActivity } from "../components/home/TaskActivity";
 import { UpcomingTasks } from "../components/home/UpcomingTasks";
 import { RecentTasks } from "../components/home/RecentTasks";
 import { RecentNotes } from "../components/home/RecentNotes";
-import { useAuth } from "../hooks/useAuth";
-import { useNavigate } from "react-router-dom";
+import useAuthStore from "../store/useAuthStore";
 
 const Home = () => {
-
-  const navigate = useNavigate();
   const {
     loading: tasksLoading,
     getStats,
@@ -29,14 +26,7 @@ const Home = () => {
     getStats: getNoteStats,
   } = useNoteStore();
 
-  const { isAuthenticated, loading: authLoading } = useAuth();
-
-  useEffect(() => {
-    if (!authLoading && !isAuthenticated) {
-      navigate("/login");
-    }
-  }, [isAuthenticated, authLoading, navigate]);
-
+  const { isAuthenticated, loading: authLoading } = useAuthStore();
 
   useEffect(() => {
     if (!authLoading && isAuthenticated) {

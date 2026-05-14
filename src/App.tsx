@@ -9,7 +9,6 @@ import Roadmap from "./pages/Roadmap";
 // Lazy-loaded Pages
 const Home = lazy(() => import("./pages/Home"));
 const Login = lazy(() => import("./pages/Login"));
-const Signup = lazy(() => import("./pages/Signup"));
 const Notes = lazy(() => import("./pages/Notes"));
 const Tasks = lazy(() => import("./pages/Tasks"));
 const Settings = lazy(() => import("./pages/Settings"));
@@ -60,11 +59,6 @@ const routeConfig: RouteConfig[] = [
   {
     path: "/login",
     element: <Login />,
-    guestOnly: true,
-  },
-  {
-    path: "/signup",
-    element: <Signup />,
     guestOnly: true,
   },
   {
