@@ -2,6 +2,8 @@ import { CalendarIcon, FileTextIcon } from "lucide-react";
 import type { ITask } from "../../tasks/types";
 import { asDate, formatDate } from "../../../shared/utils";
 import { getTaskStatus } from "../../tasks/utils";
+import InfoCard from "../../../shared/ui/InfoCard";
+import { NoItems } from "../../../shared/ui/NoItems";
 
 interface RecentTasksProps {
   tasks: ITask[];
@@ -9,21 +11,15 @@ interface RecentTasksProps {
 export function RecentTasks({ tasks }: RecentTasksProps) {
   return (
     <div className="flex-1 rounded-2xl bg-white p-4 shadow-sm">
-      <div className="flex items-start justify-between gap-3">
-        <div>
-          <h2 className="text-sm font-bold text-gray-900">Recent tasks</h2>
-          <p className="mt-1 text-xs text-gray-500">Latest updated</p>
-        </div>
-        <div className="inline-flex h-9 w-9 items-center justify-center rounded-2xl bg-gray-50 text-gray-700">
-          <FileTextIcon className="h-4 w-4" />
-        </div>
-      </div>
+      <InfoCard
+        title="Recent tasks"
+        description="Latest updated"
+        icon={<FileTextIcon className="h-4 w-4" />}
+      />
 
       <div className="mt-4 space-y-2 overflow-y-auto h-[240px] scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-gray-100">
         {tasks.length === 0 ? (
-          <div className="rounded-xl bg-gray-50 p-4 text-sm text-gray-500">
-            No tasks yet.
-          </div>
+          <NoItems title="No tasks yet." />
         ) : (
           tasks.map((t) => {
             const created = asDate(t.updatedAt);

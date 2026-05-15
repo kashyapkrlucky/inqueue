@@ -1,6 +1,8 @@
 import { ArrowUpRightIcon, CalendarIcon, ClockIcon } from "lucide-react";
 import type { ITask } from "../../tasks/types";
 import { formatDate } from "../../../shared/utils";
+import InfoCard from "../../../shared/ui/InfoCard";
+import { NoItems } from "../../../shared/ui/NoItems";
 interface UpcomingTasksProps {
   upcomingTasks: ITask[];
 }
@@ -9,21 +11,17 @@ const getTaskTitle = (task: ITask) =>
 export function UpcomingTasks({ upcomingTasks }: UpcomingTasksProps) {
   return (
     <div className="rounded-2xl bg-white p-5 shadow-sm">
-      <div className="flex items-start justify-between gap-3">
-        <div>
-          <h2 className="text-sm font-bold text-gray-900">Upcoming</h2>
-          <p className="mt-1 text-xs text-gray-500">Tasks with a due date</p>
-        </div>
-        <div className="inline-flex h-9 w-9 items-center justify-center rounded-2xl bg-orange-50 text-orange-700">
-          <CalendarIcon className="h-4 w-4" />
-        </div>
-      </div>
+      <InfoCard
+        title="Upcoming"
+        description="Tasks with a due date"
+        icon={<CalendarIcon className="h-4 w-4" />}
+        iconBg="bg-orange-50"
+        iconColor="text-orange-700"
+      />
 
       <div className="mt-4 space-y-2">
         {upcomingTasks.length === 0 ? (
-          <div className="rounded-xl bg-gray-50 p-4 text-sm text-gray-500">
-            No upcoming due tasks.
-          </div>
+          <NoItems title="No upcoming due tasks" />
         ) : (
           upcomingTasks.map((task) => (
             <div

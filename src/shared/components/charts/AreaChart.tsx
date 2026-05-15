@@ -35,10 +35,10 @@ export default function CustomAreaChart({
         dataKey="tasks"
         width="auto"
         tickCount={5}
-        domain={[0, "dataMax + 10"]}
+        domain={[0, "dataMax + 5"]}
         stroke="var(--color-text-3)"
       />
-      <Tooltip />
+      <Tooltip cursor={{ fill: "var(--color-bg-2)", opacity: 0.1 }} />
       <Area
         type="monotone"
         dataKey="tasks"

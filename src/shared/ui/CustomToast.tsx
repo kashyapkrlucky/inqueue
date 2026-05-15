@@ -1,26 +1,13 @@
 import toast from "react-hot-toast";
 
 export default function CustomToast(type: string, message: string) {
-    const baseStyle = {
-        borderRadius: "6px",
-        padding: "12px 16px",
-        fontSize: "14px",
-        fontWeight: "500",
-        boxShadow: "0 8px 24px rgba(0, 0, 0, 0.12)",
-        border: "1px solid",
-        backdropFilter: "blur(8px)",
-    };
+    const baseClasses = "rounded-md px-4 py-3 text-sm font-medium shadow-lg border backdrop-blur-sm";
 
     if (type === "success") {
         return toast.success(message, {
             position: "bottom-right",
             duration: 3000,
-            style: {
-                ...baseStyle,
-                backgroundColor: "#dcfce7",
-                color: "#166534",
-                borderColor: "#bbf7d0",
-            },
+            className: `${baseClasses} bg-green-100 text-green-800 border-green-200`,
             iconTheme: {
                 primary: "#16a34a",
                 secondary: "#dcfce7",
@@ -30,12 +17,7 @@ export default function CustomToast(type: string, message: string) {
         return toast.error(message, {
             position: "bottom-right",
             duration: 3000,
-            style: {
-                ...baseStyle,
-                backgroundColor: "#fef2f2",
-                color: "#991b1b",
-                borderColor: "#fecaca",
-            },
+            className: `${baseClasses} bg-red-100 text-red-800 border-red-200`,
             iconTheme: {
                 primary: "#dc2626",
                 secondary: "#fef2f2",
@@ -45,23 +27,13 @@ export default function CustomToast(type: string, message: string) {
         return toast.custom(message, {
             position: "bottom-right",
             duration: 3000,
-            style: {
-                ...baseStyle,
-                backgroundColor: "#e97a19",
-                color: "#92400e",
-                borderColor: "#fed7aa",
-            },
+            className: `${baseClasses} bg-orange-500 text-amber-900 border-orange-200`,
         });
     } else {
         return toast(message, {
             position: "bottom-right",
             duration: 3000,
-            style: {
-                ...baseStyle,
-                backgroundColor: "#f8fafc",
-                color: "#334155",
-                borderColor: "#e2e8f0",
-            },
+            className: `${baseClasses} bg-slate-100 text-slate-700 border-slate-200`,
         });
     }
 }

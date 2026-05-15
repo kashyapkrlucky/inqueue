@@ -2,15 +2,19 @@ interface InfoCardProps {
   title: string;
   description: string;
   icon: React.ReactNode;
+  iconBg?: string;
+  iconColor?: string;
 }
 
-export default function InfoCard({ title, description, icon }: InfoCardProps) {
+export default function InfoCard({ title, description, icon, iconBg = "bg-gray-50", iconColor = "text-gray-700" }: InfoCardProps) {
   return (
-    <div className="flex items-center space-x-3 mb-4">
-      <div className="p-2 bg-gray-100 rounded-lg">{icon}</div>
+    <div className="flex items-start justify-between gap-3">
       <div>
-        <h3 className="text-lg font-semibold text-gray-900">{title}</h3>
-        <p className="text-xs text-gray-500">{description}</p>
+        <h2 className="text-sm font-bold text-gray-900">{title}</h2>
+        <p className="mt-1 text-xs text-gray-500">{description}</p>
+      </div>
+      <div className={`inline-flex h-9 w-9 items-center justify-center rounded-2xl ${iconBg} ${iconColor}`}>
+        {icon}
       </div>
     </div>
   );

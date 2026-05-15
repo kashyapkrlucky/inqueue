@@ -2,6 +2,8 @@ import { ArrowUpRightIcon, ClockIcon, NotebookTextIcon } from "lucide-react";
 import { Link } from "react-router-dom";
 import type { INoteCreate } from "../../notes/types";
 import { asDate, formatDate } from "../../../shared/utils";
+import InfoCard from "../../../shared/ui/InfoCard";
+import { NoItems } from "../../../shared/ui/NoItems";
 
 interface RecentNotesProps {
   notes: INoteCreate[];
@@ -10,21 +12,17 @@ interface RecentNotesProps {
 export function RecentNotes({ notes }: RecentNotesProps) {
   return (
     <div className="flex-1 rounded-2xl bg-white p-4 shadow-sm">
-      <div className="flex items-start justify-between gap-3">
-        <div>
-          <h2 className="text-sm font-bold text-gray-900">Recent notes</h2>
-          <p className="mt-1 text-xs text-gray-500">Latest updated</p>
-        </div>
-        <div className="inline-flex h-9 w-9 items-center justify-center rounded-2xl bg-indigo-50 text-indigo-700">
-          <NotebookTextIcon className="h-4 w-4" />
-        </div>
-      </div>
+      <InfoCard
+        title="Recent notes"
+        description="Latest updated"
+        icon={<NotebookTextIcon className="h-4 w-4" />}
+        iconBg="bg-indigo-50"
+        iconColor="text-indigo-700"
+      />
 
       <div className="mt-4 space-y-2 h-[240px] overflow-y-auto scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-gray-100">
         {notes.length === 0 ? (
-          <div className="rounded-xl bg-gray-50 p-4 text-sm text-gray-500">
-            No notes yet.
-          </div>
+          <NoItems title="No notes yet." />
         ) : (
           notes.map((n) => {
             const updated = asDate(n.updatedAt) ?? asDate(n.createdAt);

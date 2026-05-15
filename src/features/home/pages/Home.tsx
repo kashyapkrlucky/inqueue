@@ -78,9 +78,9 @@ const Home = () => {
         </section>
 
         <section className="grid grid-cols-1 gap-4 lg:grid-cols-3">
-          <UpcomingTasks upcomingTasks={homeData.upcoming} />
           <RecentTasks tasks={homeData.recent} />
           <RecentNotes notes={noteStats.recent} />
+          <UpcomingTasks upcomingTasks={homeData.upcoming} />
         </section>
       </main>
     </div>
