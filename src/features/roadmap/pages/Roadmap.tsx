@@ -1,5 +1,4 @@
-import { useState, useMemo } from "react";
-import { useTaskStore } from "../../tasks/store/useTaskStore";
+import { useState, useMemo, useEffect } from "react";
 import { Calendar, Filter, Clock, CheckCircle, Circle, Edit3, Trash2, Archive, MoreVertical, Tag, CalendarDays, User, AlertCircle } from "lucide-react";
 import {
   format,
@@ -10,6 +9,7 @@ import {
   isSameDay,
 } from "date-fns";
 import type { ITask } from "../../tasks/types";
+import { useRoadmapStore } from "../store/useRoadmapStore";
 
 type FilterOption = "lastWeek" | "lastMonth" | "twoMonths" | null;
 type TaskStatus = "todo" | "in_progress" | "done";
@@ -289,7 +289,7 @@ const SelectedTaskPanel: React.FC<SelectedTaskPanelProps> = ({ task }) => {
 };
 
 export default function Roadmap() {
-  const { tasks } = useTaskStore();
+  const { tasks, getTasks } = useRoadmapStore();
   const [selectedTask, setSelectedTask] = useState<ITask | null>(null);
   const [dateRange, setDateRange] = useState<DateRange>({
     from: subDays(endOfDay(new Date()), 7),
@@ -332,6 +332,10 @@ export default function Roadmap() {
   const onTaskClick = (task: ITask) => {
     setSelectedTask(task);
   };
+
+  useEffect(() => {
+    getTasks(dateRange.from.toISOString(), dateRange.to.toISOString());
+  }, [dateRange, getTasks]);
 
 
   return (

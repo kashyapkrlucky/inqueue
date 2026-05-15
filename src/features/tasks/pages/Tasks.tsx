@@ -1,10 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
-import {
-  Plus,
-  Search,
-  Loader2,
-  // AlertTriangle,
-} from "lucide-react";
+import { FilterIcon, Plus } from "lucide-react";
 import { useTaskStore } from "../store/useTaskStore";
 import type { ITask, ITaskStatus, ITaskPriority } from "../types";
 import CreateTask from "../components/CreateTask";
@@ -19,6 +14,9 @@ import { Button } from "../../../shared/components/form/Button";
 import CustomToast from "../../../shared/components/ui/CustomToast";
 import PageLoader from "../../../shared/components/loaders/PageLoader";
 import Text from "../../../shared/components/content/Text";
+import ListLoading from "../../../shared/components/ui/ListLoading";
+import Input from "../../../shared/components/form/Input";
+import Select from "../../../shared/components/form/Select";
 
 export default function Tasks() {
   const { tasks, getTasks, loading, error, addTask } = useTaskStore();
@@ -66,6 +64,12 @@ export default function Tasks() {
     setExpandedTask((prev) => (prev === taskId ? null : taskId));
   };
 
+  const handleResetFilters = () => {
+    setStatusFilter("all");
+    setPriorityFilter("all");
+    setQuery("");
+  };
+
   if (loading) {
     return <PageLoader />;
   }
@@ -77,9 +81,7 @@ export default function Tasks() {
           <header className="flex flex-col gap-4">
             <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
               <div>
-                <Text variant="h1">
-                  My Tasks
-                </Text>
+                <Text variant="h1">My Tasks</Text>
                 <Text variant="body-sm" color="muted" className="mt-1">
                   Track what matters. Update status, priority, and details in
                   one place.
@@ -87,7 +89,10 @@ export default function Tasks() {
               </div>
 
               <div className="flex items-center gap-2">
-                <Button icon={<Plus className="h-4 w-4" />} onClick={() => setIsTaskModalOpen(true)}>
+                <Button
+                  icon={<Plus className="h-4 w-4" />}
+                  onClick={() => setIsTaskModalOpen(true)}
+                >
                   Add Task
                 </Button>
               </div>
@@ -95,109 +100,80 @@ export default function Tasks() {
           </header>
 
           <section className="flex-1 rounded-xl bg-white p-3 shadow-sm">
-            <div className="grid grid-cols-1 gap-3 sm:grid-cols-12 sm:items-center">
-              <div className="sm:col-span-6">
-                <label className="block text-xs font-semibold uppercase tracking-wide text-gray-500">
-                  Search
-                </label>
-                <div className="mt-1 flex h-11 items-center gap-2 rounded-xl border border-gray-200 bg-white px-3 focus-within:border-gray-900 focus-within:ring-2 focus-within:ring-gray-900/10">
-                  <Search className="h-4 w-4 text-gray-400" />
-                  <input
-                    value={query}
-                    onChange={(e) => setQuery(e.target.value)}
-                    placeholder="Search tasks by title…"
-                    className="h-full w-full bg-transparent text-sm text-gray-900 outline-none placeholder:text-gray-400"
-                  />
-                </div>
-              </div>
+            <div className="grid grid-cols-1 gap-3 sm:grid-cols-12 sm:items-end justify-end">
+              <Input
+                label="Search"
+                type="text"
+                boxClassName="flex flex-col gap-2 sm:col-span-6"
+                placeholder="Search tasks by title…"
+                value={query}
+                onChange={(e) => setQuery(e.target.value)}
+              />
 
+              <Select
+                label="Status"
+                value={statusFilter}
+                boxClassName="flex flex-col gap-2 sm:col-span-2"
+                onChange={(e) =>
+                  setStatusFilter(e.target.value as ITaskStatus | "all")
+                }
+              >
+                {Object.entries(statusConfig).map(([key, config]) => (
+                  <option key={key} value={key}>
+                    {config.label}
+                  </option>
+                ))}
+              </Select>
 
+              <Select
+                label="Priority"
+                value={priorityFilter}
+                boxClassName="flex flex-col gap-2 sm:col-span-2"
+                onChange={(e) =>
+                  setPriorityFilter(e.target.value as ITaskPriority | "all")
+                }
+              >
+                {Object.entries(priorityConfig).map(([key, config]) => (
+                  <option key={key} value={key}>
+                    {config.label}
+                  </option>
+                ))}
+              </Select>
 
-              <div className="sm:col-span-3">
-                <label className="block text-xs font-semibold uppercase tracking-wide text-gray-500">
-                  Status
-                </label>
-                <select
-                  value={statusFilter}
-                  onChange={(e) =>
-                    setStatusFilter(e.target.value as ITaskStatus | "all")
-                  }
-                  className="mt-1 h-11 w-full rounded-xl border border-gray-200 bg-white px-3 text-sm text-gray-900 outline-none transition focus:border-gray-900 focus:ring-2 focus:ring-gray-900/10"
-                >
-                  <option value="all">All</option>
-                  {Object.entries(statusConfig).map(([key, config]) => (
-                    <option key={key} value={key}>
-                      {config.label}
-                    </option>
-                  ))}
-                </select>
-              </div>
-
-              <div className="sm:col-span-3">
-                <label className="block text-xs font-semibold uppercase tracking-wide text-gray-500">
-                  Priority
-                </label>
-                <select
-                  value={priorityFilter}
-                  onChange={(e) =>
-                    setPriorityFilter(e.target.value as ITaskPriority | "all")
-                  }
-                  className="mt-1 h-11 w-full rounded-xl border border-gray-200 bg-white px-3 text-sm text-gray-900 outline-none transition focus:border-gray-900 focus:ring-2 focus:ring-gray-900/10"
-                >
-                  <option value="all">All</option>
-                  {Object.entries(priorityConfig).map(([key, config]) => (
-                    <option key={key} value={key}>
-                      {config.label}
-                    </option>
-                  ))}
-                </select>
-              </div>
+              <Button
+                icon={<FilterIcon className="h-4 w-4" />}
+                onClick={handleResetFilters}
+                className="sm:col-span-2 justify-end"
+              >
+                Reset Filters
+              </Button>
             </div>
           </section>
         </div>
 
         <section className="flex-1 py-4">
-          {loading ? (
-            <div className="rounded-2xl bg-white p-6 text-sm text-gray-500 shadow-sm">
-              <div className="flex items-center gap-2">
-                <Loader2 className="h-4 w-4 animate-spin" />
-                Loading tasks…
-              </div>
-            </div>
-          ) : filteredTasks.length === 0 ? (
-            <div className="rounded-2xl bg-white p-10 text-center shadow-sm">
-              <p className="text-sm font-semibold text-gray-900">
-                No tasks found
-              </p>
-              <p className="mt-1 text-sm text-gray-500">
-                Try adjusting filters or create a new task.
-              </p>
-            </div>
-          ) : (
-            <ul className="space-y-3">
-              {filteredTasks.map((task) => {
-                const key = task._id;
-                const isExpanded = expandedTask === task._id;
-                return (
-                  <li
-                    key={key}
-                    className={`transition-all ${
-                      isExpanded ? "ring-2 ring-indigo-600/80 rounded-xl" : ""
-                    }`}
-                  >
-                    <TaskCard
-                      task={task}
-                      expanded={Boolean(task._id && isExpanded)}
-                      onToggleExpanded={() => {
-                        if (!task._id) return;
-                        toggleTaskExpanded(task._id);
-                      }}
-                    />
-                  </li>
-                );
-              })}
-            </ul>
-          )}
+          <ListLoading
+            isLoading={loading}
+            items={filteredTasks}
+            gap="py-2"
+            emptyMessage="No tasks found, Try adjusting filters or create a new task."
+          >
+            {(task) => {
+              const key = task._id;
+              const isExpanded = expandedTask === task._id;
+              return (
+                <TaskCard
+                  key={key}
+                  task={task}
+                  expanded={Boolean(task._id && isExpanded)}
+                  onToggleExpanded={() => {
+                    if (!task._id) return;
+                    toggleTaskExpanded(task._id);
+                  }}
+                />
+              );
+            }}
+          </ListLoading>
         </section>
 
         {isTaskModalOpen && (

@@ -37,7 +37,7 @@ export default function ListLoading<T extends { _id: string }>({
   }
 
   return (
-    <div className="divide-y divide-gray-200 dark:divide-gray-700">
+    <div>
       {items.map((item) => (
         <div key={item._id.toString()} className={`${gap} first:pt-0 last:pb-0`}>
           {children(item)}
