@@ -1,4 +1,4 @@
-import InlineLoader from "./InlineLoader";
+import InlineLoader from "../loaders/InlineLoader";
 
 interface ListLoadingProps<T> {
   children: (item: T) => React.ReactNode;

@@ -1,15 +1,18 @@
+// src/components/layout/Sidebar.tsx
 import { Link, NavLink, useNavigate } from "react-router-dom";
 import {
+  ChevronDownIcon,
   Home,
   ListTodoIcon,
   LogOutIcon,
+  SettingsIcon,
   SquareChartGanttIcon,
   StickyNoteIcon,
 } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
-import useAuthStore from "../../../features/auth/store/useAuthStore";
-import { APP_NAME } from "../../constants";
-import { Button } from "../form/Button";
+import { Button } from "../../shared/components/form/Button";
+import useAuthStore from "../../features/auth/store/useAuthStore";
+import { APP_NAME } from "../../shared/constants";
 
 export default function Sidebar() {
   const navItems = [
@@ -56,7 +59,7 @@ export default function Sidebar() {
           {APP_NAME}
         </p>
         <span className="block md:hidden m-auto text-indigo-600 text-lg font-bold">
-          {APP_NAME}
+          InQ
         </span>
       </Link>
       <div className="flex-1 flex flex-col gap-6">
@@ -77,34 +80,49 @@ export default function Sidebar() {
         ))}
       </div>
 
-      <div
-        className="relative flex flex-col items-center justify-center"
-        ref={dropdownRef}
-        onClick={() => setIsProfileOpen(!isProfileOpen)}
-        aria-haspopup="true"
-        aria-expanded={isProfileOpen}
-      >
-        <img
-          className={
-            "h-10 w-10 rounded-full cursor-pointer" +
-            (isProfileOpen ? " ring-2 ring-indigo-500" : "")
-          }
-          src={hostUrl + "/avatars/" + user?.avatar || "/user.png"}
-          alt="User profile"
-        />
+      <div className="relative ml-2" ref={dropdownRef}>
+        <Button
+         variant="ghost"
+          onClick={() => setIsProfileOpen(!isProfileOpen)}
+          aria-haspopup="true"
+          aria-expanded={isProfileOpen}
+        >
+          <img
+            className="h-8 w-8 rounded-full"
+            src={hostUrl + "/avatars/" + user?.avatar || "/user.png"}
+            alt="User profile"
+          />
+          <ChevronDownIcon className="h-4 w-4 text-gray-500" />
+        </Button>
 
         {/* Dropdown Menu */}
         {isProfileOpen && (
-          <div className="absolute left-10 bottom-10 w-56 bg-white rounded-md shadow-lg py-1 border border-gray-100 ring-opacity-5">
+          <div className="absolute left-0 bottom-10 w-56 bg-white rounded-md shadow-lg py-1 border border-gray-100 ring-opacity-5">
             <div className="px-4 py-3 border-b border-gray-100">
-              <p className="text-sm font-medium text-gray-700">{user?.name}</p>
-              <p className="text-xs text-gray-500">@{user?.username}</p>
+              <p className="text-sm font-medium text-gray-700">
+                {user?.name}
+              </p>
+              <p className="text-xs text-gray-500">
+                @{user?.username}
+              </p>
+            </div>
+            <div className="py-1">
+              <Link
+                to="/settings"
+                className="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+              >
+                <SettingsIcon className="h-4 w-4 mr-3 text-gray-500" />
+                Settings
+              </Link>
             </div>
             <div className="py-1 border-t border-gray-100">
-              <Button variant="danger" onClick={handleLogout}>
+              <button
+                onClick={handleLogout}
+                className="w-full text-left flex items-center px-4 py-2 text-sm text-red-600 hover:bg-gray-100"
+              >
                 <LogOutIcon className="h-4 w-4 mr-3" />
                 Sign out
-              </Button>
+              </button>
             </div>
           </div>
         )}

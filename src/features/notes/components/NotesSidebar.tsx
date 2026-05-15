@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { PlusIcon, SearchIcon, Trash2Icon } from "lucide-react";
-import { Button } from "../../../shared/ui/Button";
+import { Button } from "../../../shared/components/form/Button";
 import { useNoteStore } from "../store/useNoteStore";
 
 export default function NotesSidebar({

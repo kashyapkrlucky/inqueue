@@ -15,9 +15,10 @@ import {
   statusConfig,
 } from "../utils";
 import { TaskCard } from "../components/TaskCard";
-import { Button } from "../../../shared/ui/Button";
-import CustomToast from "../../../shared/ui/CustomToast";
-import PageLoader from "../../../shared/ui/PageLoader";
+import { Button } from "../../../shared/components/form/Button";
+import CustomToast from "../../../shared/components/ui/CustomToast";
+import PageLoader from "../../../shared/components/loaders/PageLoader";
+import Text from "../../../shared/components/content/Text";
 
 export default function Tasks() {
   const { tasks, getTasks, loading, error, addTask } = useTaskStore();
@@ -76,18 +77,18 @@ export default function Tasks() {
           <header className="flex flex-col gap-4">
             <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
               <div>
-                <h1 className="text-2xl font-bold tracking-tight text-gray-900">
+                <Text variant="h1">
                   My Tasks
-                </h1>
-                <p className="mt-1 text-sm text-gray-500">
+                </Text>
+                <Text variant="body-sm" color="muted" className="mt-1">
                   Track what matters. Update status, priority, and details in
                   one place.
-                </p>
+                </Text>
               </div>
 
               <div className="flex items-center gap-2">
-                <Button size="sm" onClick={() => setIsTaskModalOpen(true)}>
-                  <Plus className="h-4 w-4" /> Add Task
+                <Button icon={<Plus className="h-4 w-4" />} onClick={() => setIsTaskModalOpen(true)}>
+                  Add Task
                 </Button>
               </div>
             </div>
@@ -109,6 +110,8 @@ export default function Tasks() {
                   />
                 </div>
               </div>
+
+
 
               <div className="sm:col-span-3">
                 <label className="block text-xs font-semibold uppercase tracking-wide text-gray-500">

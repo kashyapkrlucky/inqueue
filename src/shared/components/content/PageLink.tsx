@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { cn } from "../utils";
+import { cn } from "../../utils";
 
 interface PageLinkProps {
   url: string;

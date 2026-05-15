@@ -1,6 +1,6 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import { cn } from "../utils";
+import { cn } from "../../utils";
 
 interface LinkTextProps extends React.AnchorHTMLAttributes<HTMLAnchorElement> {
   href: string;

@@ -1,5 +1,5 @@
 import React from "react";
-import { cn } from "../utils";
+import { cn } from "../../utils";
 import { CheckCircleIcon, AlertCircleIcon, AlertTriangleIcon, InfoIcon } from "lucide-react";
 
 interface StatusTextProps {

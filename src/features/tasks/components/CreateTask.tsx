@@ -5,9 +5,9 @@ import type {
   ITask,
 } from "../types";
 import { priorityConfig, statusConfig } from "../utils";
-import { Button } from "../../../shared/ui/Button";
-import Textarea from "../../../shared/ui/Textarea";
-import Select from "../../../shared/ui/Select";
+import { Button } from "../../../shared/components/form/Button";
+import Textarea from "../../../shared/components/form/Textarea";
+import Select from "../../../shared/components/form/Select";
 
 export default function CreateTask({
   onAddTask,

@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import useAuthStore from "../store/useAuthStore";
-import { Button } from "../../../shared/ui/Button";
+import { Button } from "../../../shared/components/form/Button";
 import { CircleUserRoundIcon, LogInIcon } from "lucide-react";
 import {
   TEXT_WELCOME_BACK,
@@ -16,7 +16,7 @@ import {
   TEXT_BY_CONTINUING,
   TEXT_AND,
 } from "../constants";
-import PageLink from "../../../shared/ui/PageLink";
+import PageLink from "../../../shared/components/content/PageLink";
 
 export default function Login() {
   const navigate = useNavigate();

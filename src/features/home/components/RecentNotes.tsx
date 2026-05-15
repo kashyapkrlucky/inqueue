@@ -2,8 +2,8 @@ import { ArrowUpRightIcon, ClockIcon, NotebookTextIcon } from "lucide-react";
 import { Link } from "react-router-dom";
 import type { INoteCreate } from "../../notes/types";
 import { asDate, formatDate } from "../../../shared/utils";
-import InfoCard from "../../../shared/ui/InfoCard";
-import { NoItems } from "../../../shared/ui/NoItems";
+import InfoCard from "../../../shared/components/content/InfoCard";
+import { NoItems } from "../../../shared/components/content/NoItems";
 
 interface RecentNotesProps {
   notes: INoteCreate[];

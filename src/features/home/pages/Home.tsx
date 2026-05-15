@@ -7,7 +7,7 @@ import { TaskActivity } from "../components/TaskActivity";
 import { UpcomingTasks } from "../components/UpcomingTasks";
 import { RecentTasks } from "../components/RecentTasks";
 import { RecentNotes } from "../components/RecentNotes";
-import PageLoader from "../../../shared/ui/PageLoader";
+import PageLoader from "../../../shared/components/loaders/PageLoader";
 import useAuthStore from "../../auth/store/useAuthStore";
 import { formatDateWithTime } from "../../../shared/utils";
 

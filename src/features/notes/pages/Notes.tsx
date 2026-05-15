@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { PlusIcon } from "lucide-react";
 import type { INoteCreate } from "../types";
 import { useNoteStore } from "../store/useNoteStore";
-import { Button } from "../../../shared/ui/Button";
+import { Button } from "../../../shared/components/form/Button";
 import NotesSidebar from "../components/NotesSidebar";
 import NotesActions from "../components/NotesActions";
 

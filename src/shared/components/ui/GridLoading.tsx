@@ -1,5 +1,5 @@
-import InlineLoader from "./InlineLoader";
-import { NoItems } from "./NoItems";
+import InlineLoader from "../loaders/InlineLoader";
+import { NoItems } from "../content/NoItems";
 
 interface GridLoadingProps<T> {
   children: (item: T) => React.ReactNode;

@@ -1,8 +1,8 @@
 import { ArrowUpRightIcon, CalendarIcon, ClockIcon } from "lucide-react";
 import type { ITask } from "../../tasks/types";
 import { formatDate } from "../../../shared/utils";
-import InfoCard from "../../../shared/ui/InfoCard";
-import { NoItems } from "../../../shared/ui/NoItems";
+import InfoCard from "../../../shared/components/content/InfoCard";
+import { NoItems } from "../../../shared/components/content/NoItems";
 interface UpcomingTasksProps {
   upcomingTasks: ITask[];
 }

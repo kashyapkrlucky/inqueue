@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Toaster } from "react-hot-toast";
 import { getCodeFromURL } from "../shared/utils";
-import PageLoader from "../shared/ui/PageLoader";
+import PageLoader from "../shared/components/loaders/PageLoader";
 import useAuthStore from "../features/auth/store/useAuthStore";
 
 export default function AppLayout() {

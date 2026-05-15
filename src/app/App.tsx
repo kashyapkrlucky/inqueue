@@ -3,7 +3,7 @@ import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import { ProtectedRoute } from "../shared/components/layout/ProtectedRoute";
 import { ErrorBoundary } from "./ErrorBoundary";
 import AppLayout from "./Layout";
-import PageLoader from "../shared/ui/PageLoader";
+import PageLoader from "../shared/components/loaders/PageLoader";
 
 // Lazy-loaded Pages
 const Home = lazy(() => import("../features/home/pages/Home"));

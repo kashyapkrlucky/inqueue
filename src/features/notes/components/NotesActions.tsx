@@ -1,6 +1,6 @@
 import { ChevronLeftIcon, EditIcon, MenuIcon, SaveIcon, XIcon } from "lucide-react";
 import { useNoteStore } from "../store/useNoteStore";
-import { Button } from "../../../shared/ui/Button";
+import { Button } from "../../../shared/components/form/Button";
 
 
 interface NotesActionsProps {

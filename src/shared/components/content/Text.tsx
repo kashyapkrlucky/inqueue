@@ -1,5 +1,5 @@
 import React from "react";
-import { cn } from "../utils";
+import { cn } from "../../utils";
 
 interface TextProps extends React.HTMLAttributes<HTMLElement> {
   variant?: "h1" | "h2" | "h3" | "h4" | "body-lg" | "body-md" | "body-sm" | "body-xs" | "caption" | "overline";

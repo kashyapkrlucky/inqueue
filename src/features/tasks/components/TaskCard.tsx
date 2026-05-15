@@ -20,10 +20,10 @@ import {
   Loader2Icon,
   Trash2Icon,
 } from "lucide-react";
-import Confirm from "../../../shared/ui/Confirm";
-import Input from "../../../shared/ui/Input";
-import Select from "../../../shared/ui/Select";
-import CustomToast from "../../../shared/ui/CustomToast";
+import Confirm from "../../../shared/components/ui/Confirm";
+import Input from "../../../shared/components/form/Input";
+import Select from "../../../shared/components/form/Select";
+import CustomToast from "../../../shared/components/ui/CustomToast";
 
 const nextStatus = (status: ITaskStatus): ITaskStatus => {
   if (status === "todo") return "in_progress";
