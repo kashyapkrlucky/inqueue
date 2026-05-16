@@ -6,6 +6,7 @@ import {
   CartesianGrid,
   Tooltip,
 } from "recharts";
+import CustomTooltip from "./CustomTooltip";
 
 export default function CustomAreaChart({
   data,
@@ -16,6 +17,7 @@ export default function CustomAreaChart({
     <AreaChart
       style={{
         width: "100%",
+        height: "100%",
         aspectRatio: 1.618,
         fontSize: 12,
       }}
@@ -38,7 +40,14 @@ export default function CustomAreaChart({
         domain={[0, "dataMax + 5"]}
         stroke="var(--color-text-3)"
       />
-      <Tooltip cursor={{ fill: "var(--color-bg-2)", opacity: 0.1 }} />
+      <Tooltip
+        content={
+          <CustomTooltip
+            label={data[0]?.name}
+            payload={[{ value: data[0]?.tasks }]}
+          />
+        }
+      />
       <Area
         type="monotone"
         dataKey="tasks"

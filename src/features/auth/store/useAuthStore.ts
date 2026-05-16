@@ -55,6 +55,7 @@ export const useAuthStore = create<AuthState>((set) => ({
 
   getUserData: async (code: string) => {
     try {
+      set({ loading: true });
       const {
         data: { data },
       } = await axios.post("/v1/public/session", {
@@ -67,11 +68,14 @@ export const useAuthStore = create<AuthState>((set) => ({
       return { user, token };
     } catch {
       return null;
+    } finally {
+      set({ loading: false });
     }
   },
 
   onGuestLogin: async () => {
     try {
+      set({ loading: true });
       const baseUrl = import.meta.env.VITE_BASE_URL;
       const {
         data: { data },
@@ -83,6 +87,8 @@ export const useAuthStore = create<AuthState>((set) => ({
       return { user, token };
     } catch {
       return null;
+    } finally {
+      set({ loading: false });
     }
   },
   getLoggedInUser: () => {

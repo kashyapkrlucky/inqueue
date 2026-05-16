@@ -2,7 +2,7 @@ import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import useAuthStore from "../store/useAuthStore";
 import { Button } from "../../../shared/components/form/Button";
-import { CircleUserRoundIcon, LogInIcon } from "lucide-react";
+import { CircleUserRoundIcon, Loader2Icon, LogInIcon } from "lucide-react";
 import {
   TEXT_WELCOME_BACK,
   TEXT_DESCRIPTION,
@@ -80,7 +80,11 @@ export default function Login() {
             onClick={handleGuestLogin}
           >
             <span className="flex items-center justify-center gap-2">
-              <CircleUserRoundIcon />
+              {loading ? (
+                <Loader2Icon className="h-4 w-4 animate-spin" />
+              ) : (
+                <CircleUserRoundIcon className="w-4 h-4" />
+              )}
               {TEXT_CONTINUE_AS_GUEST}
             </span>
           </Button>

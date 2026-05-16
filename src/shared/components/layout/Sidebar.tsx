@@ -95,15 +95,15 @@ export default function Sidebar() {
 
         {/* Dropdown Menu */}
         {isProfileOpen && (
-          <div className="absolute left-10 bottom-10 w-56 bg-white rounded-md shadow-lg py-1 border border-gray-100 ring-opacity-5">
+          <div className="absolute left-10 bottom-10 w-56 bg-white rounded-lg shadow-xl py-1 border border-gray-100 ring-opacity-5 z-50">
             <div className="px-4 py-3 border-b border-gray-100">
-              <p className="text-sm font-medium text-gray-700">{user?.name}</p>
+              <p className="text-sm font-medium text-gray-700">{user?.name || "Guest"}</p>
               <p className="text-xs text-gray-500">@{user?.username}</p>
             </div>
             <div className="py-1 border-t border-gray-100">
               <Button variant="danger" onClick={handleLogout}>
-                <LogOutIcon className="h-4 w-4 mr-3" />
-                Sign out
+                <LogOutIcon className="h-5 w-5 mr-3" />
+                <span className="text-base">Sign out</span>
               </Button>
             </div>
           </div>

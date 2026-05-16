@@ -9,7 +9,7 @@ import { RecentTasks } from "../components/RecentTasks";
 import { RecentNotes } from "../components/RecentNotes";
 import PageLoader from "../../../shared/components/loaders/PageLoader";
 import useAuthStore from "../../auth/store/useAuthStore";
-import { formatDateWithTime } from "../../../shared/utils";
+import { formatDate } from "../../../shared/utils";
 
 const Home = () => {
   const {
@@ -54,8 +54,8 @@ const Home = () => {
               Overview of your notes, tasks, and what’s coming up.
             </p>
           </div>
-          <div className="text-sm font-semibold text-gray-600">
-            {formatDateWithTime(new Date())}
+          <div className="text-2xl font-semibold text-gray-600">
+            {formatDate(new Date())}
           </div>
         </div>
 
