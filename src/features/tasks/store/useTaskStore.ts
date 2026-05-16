@@ -32,6 +32,7 @@ interface TaskState {
   getStats: () => Promise<void>;
   homeData: { recent: ITask[]; upcoming: ITask[] };
   getRecents: () => Promise<void>;
+  getTaskCalendar: (startDate: string, endDate: string) => Promise<void>;
 }
 
 export const useTaskStore = create<TaskState>((set) => ({
@@ -150,6 +151,25 @@ export const useTaskStore = create<TaskState>((set) => ({
       set((state) => ({
         tasks: state.tasks.filter((t) => t._id !== taskId),
       }));
+    } catch (error) {
+      set({
+        error:
+          error instanceof Error ? error.message : "An unknown error occurred",
+      });
+    } finally {
+      set({ loading: false });
+    }
+  },
+  getTaskCalendar: async (startDate: string, endDate: string) => {
+    try {
+      set({ loading: true });
+      const {
+        data: { data },
+      } = await axios.post("/v1/public/tasks/calendar", {
+        startDate,
+        endDate,
+      });
+      set({ tasks: data.tasks });
     } catch (error) {
       set({
         error:

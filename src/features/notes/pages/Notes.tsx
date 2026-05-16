@@ -5,6 +5,7 @@ import { useNoteStore } from "../store/useNoteStore";
 import { Button } from "../../../shared/components/form/Button";
 import NotesSidebar from "../components/NotesSidebar";
 import NotesActions from "../components/NotesActions";
+import PageLoader from "../../../shared/components/loaders/PageLoader";
 
 export default function Notes() {
   const [isEditing, setIsEditing] = useState(false);
@@ -17,6 +18,7 @@ export default function Notes() {
     addNote,
     updateNote,
     insertNote,
+    loading
   } = useNoteStore();
 
   const tempId = "TempId";
@@ -49,6 +51,10 @@ export default function Notes() {
     }
     setIsNewNote(false);
   };
+
+  if (loading) {
+    return <PageLoader/>;
+  }
 
   return (
     <div className="flex h-screen bg-gray-50">
