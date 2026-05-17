@@ -17,6 +17,7 @@ import Text from "../../../shared/components/content/Text";
 import ListLoading from "../../../shared/components/ui/ListLoading";
 import Input from "../../../shared/components/form/Input";
 import Select from "../../../shared/components/form/Select";
+import Modal from "../../../shared/components/ui/Modal";
 
 export default function Tasks() {
   const { tasks, getTasks, loading, error, addTask } = useTaskStore();
@@ -176,12 +177,16 @@ export default function Tasks() {
           </ListLoading>
         </section>
 
-        {isTaskModalOpen && (
+        <Modal
+          title="Create Task"
+          isOpen={isTaskModalOpen}
+          onClose={() => setIsTaskModalOpen(false)}
+        >
           <CreateTask
             onAddTask={onAddTask}
             onClose={() => setIsTaskModalOpen(false)}
           />
-        )}
+        </Modal>
       </div>
     </div>
   );

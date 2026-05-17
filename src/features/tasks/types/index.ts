@@ -171,8 +171,8 @@ export const TASK_STATUS_CONFIG = {
 };
 
 export const PRIORITY_CONFIG = {
-  [TaskPriority.LOW]: { label: "Low", color: "gray", value: 1 },
-  [TaskPriority.MEDIUM]: { label: "Medium", color: "yellow", value: 2 },
-  [TaskPriority.HIGH]: { label: "High", color: "orange", value: 3 },
-  [TaskPriority.URGENT]: { label: "Urgent", color: "red", value: 4 },
+  [TaskPriority.LOW]: { label: "Low", color: "bg-gray-500", value: 1 },
+  [TaskPriority.MEDIUM]: { label: "Medium", color: "bg-yellow-500", value: 2 },
+  [TaskPriority.HIGH]: { label: "High", color: "bg-orange-500", value: 3 },
+  [TaskPriority.URGENT]: { label: "Urgent", color: "bg-red-500", value: 4 },
 };

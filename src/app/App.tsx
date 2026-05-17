@@ -11,6 +11,7 @@ const Login = lazy(() => import("../features/auth/pages/Login"));
 const Notes = lazy(() => import("../features/notes/pages/Notes"));
 const Tasks = lazy(() => import("../features/tasks/pages/Tasks"));
 const Roadmap = lazy(() => import("../features/roadmap/pages/Roadmap"));
+const Board = lazy(() => import("../features/board/pages/Board"));
 const NotFound = lazy(() => import("./NotFound"));
 
 // Type for our route configuration
@@ -32,6 +33,12 @@ const routeConfig: RouteConfig[] = [
       {
         path: "/",
         element: <Home />,
+        protected: true,
+      },
+      {
+        path: "/board",
+        element: <Board />,
+        protected: true,
       },
       {
         path: "/tasks",

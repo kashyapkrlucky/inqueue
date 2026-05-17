@@ -1,9 +1,5 @@
 import { useState } from "react";
-import type {
-  ITaskPriority,
-  ITaskStatus,
-  ITask,
-} from "../types";
+import type { ITaskPriority, ITaskStatus, ITask } from "../types";
 import { priorityConfig, statusConfig } from "../utils";
 import { Button } from "../../../shared/components/form/Button";
 import Textarea from "../../../shared/components/form/Textarea";
@@ -33,61 +29,50 @@ export default function CreateTask({
     onClose();
   };
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
-      <form
-        onSubmit={onSubmit}
-        className="w-[400px] bg-white p-6 rounded-lg shadow-lg"
-      >
-        <header className="flex items-center justify-between">
-          <h2>Create Task</h2>
-          <button type="button" onClick={onClose}>
-            Close
-          </button>
-        </header>
-        <section className="mt-4 flex flex-col gap-4">
-          <Textarea
-            id="content"
-            label="Content"
-            value={content}
-            onChange={(e) => setContent(e.target.value)}
-            onClick={(e) => e.stopPropagation()}
-          />
-          <Select
-            id="status"
-            label="Status"
-            value={status}
-            onChange={(e) => setStatus(e.target.value)}
-            onClick={(e) => e.stopPropagation()}
-          >
-            {Object.entries(statusConfig).map(([key, config]) => (
-              <option key={key} value={key}>
-                {config.label}
-              </option>
-            ))}
-          </Select>
-          <Select
-            id="priority"
-            label="Priority"
-            value={priority}
-            onChange={(e) => setPriority(e.target.value)}
-            onClick={(e) => e.stopPropagation()}
-          >
-            {Object.entries(priorityConfig).map(([key, config]) => (
-              <option key={key} value={key}>
-                {config.label}
-              </option>
-            ))}
-          </Select>
-        </section>
-        <footer className="flex items-center justify-end gap-2 mt-4">
-          <Button variant="ghost" size="sm" onClick={onClose}>
-            Cancel
-          </Button>
-          <Button type="submit" variant="primary" size="sm">
-            Create
-          </Button>
-        </footer>
-      </form>
-    </div>
+    <form onSubmit={onSubmit}>
+      <section className="flex flex-col gap-4">
+        <Textarea
+          id="content"
+          label="Content"
+          value={content}
+          onChange={(e) => setContent(e.target.value)}
+          onClick={(e) => e.stopPropagation()}
+        />
+        <Select
+          id="status"
+          label="Status"
+          value={status}
+          onChange={(e) => setStatus(e.target.value)}
+          onClick={(e) => e.stopPropagation()}
+        >
+          {Object.entries(statusConfig).map(([key, config]) => (
+            <option key={key} value={key}>
+              {config.label}
+            </option>
+          ))}
+        </Select>
+        <Select
+          id="priority"
+          label="Priority"
+          value={priority}
+          onChange={(e) => setPriority(e.target.value)}
+          onClick={(e) => e.stopPropagation()}
+        >
+          {Object.entries(priorityConfig).map(([key, config]) => (
+            <option key={key} value={key}>
+              {config.label}
+            </option>
+          ))}
+        </Select>
+      </section>
+      <footer className="flex items-center justify-end gap-2 mt-4">
+        <Button variant="ghost" onClick={onClose}>
+          Cancel
+        </Button>
+        <Button type="submit" variant="primary">
+          Create
+        </Button>
+      </footer>
+    </form>
   );
 }

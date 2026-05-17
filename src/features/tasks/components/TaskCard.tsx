@@ -63,7 +63,7 @@ export const TaskCard = ({
   const commitUpdate = async (id: string, partial: Partial<ITask>) => {
     if (!canMutate) return;
     await updateTask(id, { ...task, ...partial } as ITask);
-    CustomToast("success", "Task updated successfully");
+    CustomToast("success", "Task updated successfully 11");
   };
 
   const onToggleStatus = async () => {

@@ -1,6 +1,7 @@
 import { Link, NavLink, useNavigate } from "react-router-dom";
 import {
   Home,
+  LayoutDashboardIcon,
   ListTodoIcon,
   LogOutIcon,
   SquareChartGanttIcon,
@@ -14,6 +15,7 @@ import { Button } from "../form/Button";
 export default function Sidebar() {
   const navItems = [
     { to: "/", icon: Home },
+    { to: "/board", icon: LayoutDashboardIcon },
     { to: "/tasks", icon: ListTodoIcon },
     { to: "/notes", icon: StickyNoteIcon },
     { to: "/roadmap", icon: SquareChartGanttIcon },

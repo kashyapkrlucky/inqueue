@@ -46,7 +46,7 @@ export default function AppLayout() {
       <main className="flex-1 overflow-y-auto">
         <Outlet />
       </main>
-      <Toaster />
+      <Toaster position="bottom-right" reverseOrder={false} />
     </div>
   );
 }
