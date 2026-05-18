@@ -10,6 +10,8 @@ import { RecentNotes } from "../components/RecentNotes";
 import PageLoader from "../../../shared/components/loaders/PageLoader";
 import useAuthStore from "../../auth/store/useAuthStore";
 import { formatDate } from "../../../shared/utils";
+import { PageHeader } from "../../../shared/components/ui/PageHeader";
+import { LayoutDashboardIcon } from "lucide-react";
 
 const Home = () => {
   const {
@@ -25,7 +27,7 @@ const Home = () => {
     getStats: getNoteStats,
   } = useNoteStore();
 
-  const { isAuthenticated, loading: authLoading } = useAuthStore();
+  const { isAuthenticated, loading: authLoading, user } = useAuthStore();
 
   useEffect(() => {
     if (!authLoading && isAuthenticated) {
@@ -38,51 +40,37 @@ const Home = () => {
   const loading = tasksLoading || notesLoading || authLoading;
 
   if (loading) {
-    return (
-      <PageLoader/>
-    );
+    return <PageLoader />;
   }
   return (
-    <div className="min-h-screen bg-gradient-to-b from-gray-50 to-white">
-      <main className="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8">
-        <div className="mb-6 flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
-          <div>
-            <h1 className="text-2xl font-bold tracking-tight text-gray-900">
-              Home
-            </h1>
-            <p className="mt-1 text-sm text-gray-500">
-              Overview of your notes, tasks, and what’s coming up.
-            </p>
-          </div>
-          <div className="text-2xl font-semibold text-gray-600">
+    <div className="max-w-7xl mx-auto p-6 h-screen flex flex-col gap-4">
+      <PageHeader
+        icon={<LayoutDashboardIcon className="w-5 h-5 text-indigo-600" />}
+        title={`Welcome, ${user?.name}`}
+        description="Overview of your notes, tasks, and what’s coming up."
+        subContent={
+          <p className="text-2xl font-semibold text-gray-600">
             {formatDate(new Date())}
-          </div>
-        </div>
+          </p>
+        }
+      />
 
-        <TaskStats
-          taskStats={stats}
-          notes={noteStats.total}
-          upcomingTasks={homeData.upcoming.length}
-        />
+      <TaskStats
+        taskStats={stats}
+        notes={noteStats.total}
+        upcomingTasks={homeData.upcoming.length}
+      />
 
-        <section className="mb-6 flex flex-row gap-4">
-          <TaskStatistics
-            taskStats={stats}
-            loading={loading}
-          />
+      <section className="flex flex-row gap-4">
+        <TaskStatistics taskStats={stats} loading={loading} />
+        <TaskActivity data={stats.weeklyStats} loading={loading} />
+      </section>
 
-          <TaskActivity
-            data={stats.weeklyStats}
-            loading={loading}
-          />
-        </section>
-
-        <section className="grid grid-cols-1 gap-4 lg:grid-cols-3">
-          <RecentTasks tasks={homeData.recent} />
-          <RecentNotes notes={noteStats.recent} />
-          <UpcomingTasks upcomingTasks={homeData.upcoming} />
-        </section>
-      </main>
+      <section className="grid grid-cols-1 gap-4 lg:grid-cols-3">
+        <RecentTasks tasks={homeData.recent} />
+        <RecentNotes notes={noteStats.recent} />
+        <UpcomingTasks upcomingTasks={homeData.upcoming} />
+      </section>
     </div>
   );
 };

@@ -58,7 +58,7 @@ export function TaskStatistics({
 
       <div className="grid grid-cols-2 gap-4">
         {/* Status Chart */}
-        <div className="mt-4">
+        <div className="mt-1">
           <div className="flex items-center justify-between text-sm font-semibold text-gray-600">
             <span>Status</span>
           </div>
@@ -74,13 +74,13 @@ export function TaskStatistics({
         </div>
 
         {/* Priority Chart */}
-        <div className="mt-4">
+        <div className="mt-1">
           <div className="flex items-center justify-between text-sm font-semibold text-gray-600">
             <span>Priority</span>
           </div>
 
           {/* Donut Chart */}
-          <div className="mt-3 flex items-center justify-center">
+          <div className="mt-1 flex items-center justify-center">
             {isTaskPriorityData ? (
               <CustomActiveShapePieChart data={taskPriorityData} />
             ) : (

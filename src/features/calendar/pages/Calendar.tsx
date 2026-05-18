@@ -18,7 +18,7 @@ import { useTaskStore } from "../../tasks/store/useTaskStore";
 import CalendarGrid from "../components/CalendarGrid";
 import PageLoader from "../../../shared/components/loaders/PageLoader";
 
-export default function Roadmap() {
+export default function Calendar() {
   const { tasks, getTaskCalendar, loading } = useTaskStore();
   const [currentMonth, setCurrentMonth] = useState(new Date());
 

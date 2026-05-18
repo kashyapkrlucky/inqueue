@@ -2,25 +2,72 @@ import PageLoader from "../../../shared/components/loaders/PageLoader";
 import CustomToast from "../../../shared/components/ui/CustomToast";
 import { useTaskStore } from "../../tasks/store/useTaskStore";
 import { BoardColumn } from "../components/BoardColumn";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import { Button } from "../../../shared/components/form/Button";
 import CreateTask from "../../tasks/components/CreateTask";
 import { PlusIcon } from "lucide-react";
 import Modal from "../../../shared/components/ui/Modal";
 import type { ITask } from "../../tasks/types";
+import { BoardFilters } from "../components/BoardFilters";
+import { NoItems } from "../../../shared/components/content/NoItems";
+import { KanbanIcon } from "lucide-react";
+import { PageHeader } from "../../../shared/components/ui/PageHeader";
 
 export default function Board() {
-  const { tasks, getTasks, loading, error, addTask } = useTaskStore();
-
+  const { tasks, loading, error, addTask, getTaskCalendar, deleteTask, updateTask } =
+    useTaskStore();
   const [isTaskModalOpen, setIsTaskModalOpen] = useState(false);
+  const [draggedOverColumn, setDraggedOverColumn] = useState<string | null>(null);
+  const [currentFilter, setCurrentFilter] = useState<"today" | "week" | "month">("today");
 
-  const onAddTask = (task: Partial<ITask>) => {
+  const onAddTask = useCallback((task: Partial<ITask>) => {
     addTask(task);
-  };
+    setIsTaskModalOpen(false);
+  }, [addTask]);
 
+  const onDeleteTask = useCallback((taskId: string) => {
+    deleteTask(taskId);
+  }, [deleteTask]);
+
+  const onUpdateTask = useCallback((task: ITask) => {
+    updateTask(task._id, task);
+  }, [updateTask]);
+
+  const getTasksByDate = useCallback((start: string, end: string) => {
+    getTaskCalendar(start, end);
+  }, [getTaskCalendar]);
+
+  const handleDragStart = useCallback(() => {
+    // Drag start handled by BoardTaskCard
+  }, []);
+
+  const handleDragEnd = useCallback(() => {
+    setDraggedOverColumn(null);
+  }, []);
+
+  const handleDragOver = useCallback((status: string) => {
+    setDraggedOverColumn(status);
+  }, []);
+
+  const handleDrop = useCallback((taskId: string, newStatus: string) => {
+    const task = tasks.find(t => t._id === taskId);
+    if (task && task.status !== newStatus) {
+      updateTask(taskId, { ...task, status: newStatus as "todo" | "in_progress" | "done" });
+    }
+    setDraggedOverColumn(null);
+  }, [tasks, updateTask]);
+
+  // Load initial tasks for today
   useEffect(() => {
-    getTasks();
-  }, [getTasks]);
+    const today = new Date();
+    const startOfDay = new Date(today.getFullYear(), today.getMonth(), today.getDate());
+    const endOfDay = new Date(today.getFullYear(), today.getMonth(), today.getDate(), 23, 59, 59);
+    getTaskCalendar(startOfDay.toISOString(), endOfDay.toISOString());
+  }, [getTaskCalendar]);
+
+  const todoTasks = tasks.filter((task) => task.status === "todo");
+  const inProgressTasks = tasks.filter((task) => task.status === "in_progress");
+  const doneTasks = tasks.filter((task) => task.status === "done");
 
   if (loading) {
     return <PageLoader />;
@@ -31,42 +78,79 @@ export default function Board() {
   }
 
   return (
-    <div className="max-w-7xl mx-auto p-4 h-screen flex flex-col">
-      <div className="mb-6 flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
-        <div>
-          <h1 className="text-2xl font-bold tracking-tight text-gray-900">
-            Board
-          </h1>
-          <p className="mt-1 text-sm text-gray-500">
-            Overview of your notes, tasks, and what’s coming up.
-          </p>
+    <div className="max-w-7xl mx-auto p-6 h-screen flex flex-col gap-4">
+      <PageHeader
+        icon={<KanbanIcon className="w-5 h-5 text-indigo-600" />}
+        title="Board"
+        description="Manage and track your tasks across different stages"
+        subContent={
+          <div className="flex items-center gap-4">
+            <Button
+              icon={<PlusIcon className="h-4 w-4" />}
+              onClick={() => setIsTaskModalOpen(true)}
+            >
+              Add Task
+            </Button>
+            <BoardFilters 
+              getTasksByDate={getTasksByDate} 
+              currentFilter={currentFilter}
+              onFilterChange={setCurrentFilter}
+            />
+          </div>
+        }
+      />
+
+      {tasks.length === 0 && !loading ? (
+        <div className="flex-1 flex items-center justify-center">
+          <NoItems
+            title="No tasks found"
+            description="Create a task to get started or change the date filter"
+            icon={<KanbanIcon className="w-6 h-6" />}
+          />
         </div>
-        <div className="text-2xl font-semibold text-gray-600">
-          <Button
-            icon={<PlusIcon className="h-4 w-4" />}
-            onClick={() => setIsTaskModalOpen(true)}
-          >
-            Add Task
-          </Button>
+      ) : (
+        <div className="flex-1 flex flex-row overflow-hidden divide-x divide-gray-200">
+          <BoardColumn
+            title="To Do"
+            tasks={todoTasks}
+            bgColor="bg-gray-500"
+            onDeleteTask={onDeleteTask}
+            onUpdateTask={onUpdateTask}
+            onDragStart={handleDragStart}
+            onDragEnd={handleDragEnd}
+            onDrop={handleDrop}
+            onDragOver={handleDragOver}
+            status="todo"
+            isDraggingOver={draggedOverColumn === "todo"}
+          />
+          <BoardColumn
+            title="In Progress"
+            tasks={inProgressTasks}
+            bgColor="bg-blue-500"
+            onDeleteTask={onDeleteTask}
+            onUpdateTask={onUpdateTask}
+            onDragStart={handleDragStart}
+            onDragEnd={handleDragEnd}
+            onDrop={handleDrop}
+            onDragOver={handleDragOver}
+            status="in_progress"
+            isDraggingOver={draggedOverColumn === "in_progress"}
+          />
+          <BoardColumn
+            title="Done"
+            tasks={doneTasks}
+            bgColor="bg-emerald-500"
+            onDeleteTask={onDeleteTask}
+            onUpdateTask={onUpdateTask}
+            onDragStart={handleDragStart}
+            onDragEnd={handleDragEnd}
+            onDrop={handleDrop}
+            onDragOver={handleDragOver}
+            status="done"
+            isDraggingOver={draggedOverColumn === "done"}
+          />
         </div>
-      </div>
-      <div className="flex-1 flex flex-row overflow-hidden divide-x divide-gray-200">
-        <BoardColumn
-          title="To Do"
-          tasks={tasks.filter((task) => task.status === "todo")}
-          bgColor="bg-gray-500"
-        />
-        <BoardColumn
-          title="In Progress"
-          tasks={tasks.filter((task) => task.status === "in_progress")}
-          bgColor="bg-blue-500"
-        />
-        <BoardColumn
-          title="Done"
-          tasks={tasks.filter((task) => task.status === "done")}
-          bgColor="bg-emerald-500"
-        />
-      </div>
+      )}
 
       <Modal
         title="Create Task"

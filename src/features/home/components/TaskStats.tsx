@@ -11,7 +11,7 @@ interface TaskStatsProps {
 
 export function TaskStats({ taskStats, notes, upcomingTasks }: TaskStatsProps) {
     return (
-        <section className="mb-6 grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-4">
+        <section className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-4">
           <div className="rounded-2xl bg-white p-4 shadow-sm">
             <div className="flex items-start justify-between gap-3">
               <div>

@@ -47,7 +47,7 @@ export function TaskActivity({ data, loading }: TaskActivityProps) {
         iconColor="text-indigo-700"
       />
 
-      <div className="mt-5 relative">
+      <div className="mt-1 relative">
         <CustomAreaChart data={dayData} />
       </div>
     </div>
