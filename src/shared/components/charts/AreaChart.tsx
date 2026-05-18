@@ -32,13 +32,13 @@ export default function CustomAreaChart({
       onContextMenu={(_, e) => e.preventDefault()}
     >
       <CartesianGrid strokeDasharray="3 3" />
-      <XAxis dataKey="name" angle={-45} startOffset={20} />
+      <XAxis dataKey="name" stroke="var(--color-border-2)" angle={-45} startOffset={20} />
       <YAxis
         dataKey="tasks"
         width="auto"
         tickCount={5}
         domain={[0, "dataMax + 5"]}
-        stroke="var(--color-text-3)"
+        stroke="var(--color-border-2)"
       />
       <Tooltip
         content={

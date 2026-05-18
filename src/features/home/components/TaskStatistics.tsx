@@ -20,12 +20,11 @@ interface dateItem {
   fill: string;
 }
 
-export function TaskStatistics({
-  taskStats,
-  loading,
-}: TaskStatisticsProps) {
-  const isTaskData = taskStats.todo > 0 || taskStats.in_progress > 0 || taskStats.done > 0;
-  const isTaskPriorityData = taskStats.low > 0 || taskStats.medium > 0 || taskStats.high > 0;
+export function TaskStatistics({ taskStats, loading }: TaskStatisticsProps) {
+  const isTaskData =
+    taskStats.todo > 0 || taskStats.in_progress > 0 || taskStats.done > 0;
+  const isTaskPriorityData =
+    taskStats.low > 0 || taskStats.medium > 0 || taskStats.high > 0;
   const taskStatsData: dateItem[] = [
     { name: "To do", value: taskStats.todo, fill: "#9ca3af" },
     { name: "In progress", value: taskStats.in_progress, fill: "#6366f1" },
@@ -58,35 +57,23 @@ export function TaskStatistics({
 
       <div className="grid grid-cols-2 gap-4">
         {/* Status Chart */}
-        <div className="mt-1">
-          <div className="flex items-center justify-between text-sm font-semibold text-gray-600">
-            <span>Status</span>
-          </div>
-
-          {/* Donut Chart */}
-          <div className="mt-3 flex items-center justify-center">
-            {isTaskData ? (
-              <CustomActiveShapePieChart data={taskStatsData} />
-            ) : (
-              <div className="text-sm text-gray-500">No tasks</div>
-            )}
-          </div>
+        <div className="mt-3 flex flex-col items-center justify-center">
+          {isTaskData ? (
+            <CustomActiveShapePieChart data={taskStatsData} />
+          ) : (
+            <div className="text-sm text-gray-500">No tasks</div>
+          )}
+          <span>Status</span>
         </div>
 
         {/* Priority Chart */}
-        <div className="mt-1">
-          <div className="flex items-center justify-between text-sm font-semibold text-gray-600">
-            <span>Priority</span>
-          </div>
-
-          {/* Donut Chart */}
-          <div className="mt-1 flex items-center justify-center">
-            {isTaskPriorityData ? (
-              <CustomActiveShapePieChart data={taskPriorityData} />
-            ) : (
-              <div className="text-sm text-gray-500">No tasks</div>
-            )}
-          </div>
+        <div className="mt-3 flex flex-col items-center justify-center">
+          {isTaskPriorityData ? (
+            <CustomActiveShapePieChart data={taskPriorityData} />
+          ) : (
+            <div className="text-sm text-gray-500">No tasks</div>
+          )}
+          <span>Priority</span>
         </div>
       </div>
     </div>
