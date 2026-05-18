@@ -2,7 +2,7 @@ import { useState, useEffect, useMemo, useCallback } from "react";
 import {
   ChevronLeft,
   ChevronRight,
-  Calendar as CalendarIcon,
+  CalendarRangeIcon,
 } from "lucide-react";
 import {
   format,
@@ -17,6 +17,8 @@ import Text from "../../../shared/components/content/Text";
 import { useTaskStore } from "../../tasks/store/useTaskStore";
 import CalendarGrid from "../components/CalendarGrid";
 import PageLoader from "../../../shared/components/loaders/PageLoader";
+import { PageHeader } from "../../../shared/components/ui/PageHeader";
+import { Button } from "../../../shared/components/form/Button";
 
 export default function Calendar() {
   const { tasks, getTaskCalendar, loading } = useTaskStore();
@@ -69,39 +71,26 @@ export default function Calendar() {
   }
 
   return (
-    <div className="h-screen flex flex-col bg-gray-50">
+    <div className="max-w-7xl mx-auto p-6 h-screen flex flex-col gap-4">
       {/* Header */}
-      <div className="flex items-center justify-between bg-white border-b border-gray-200 px-6 py-4 shadow-sm">
-        <div className="flex items-center gap-4">
-          <div className="flex items-center justify-center w-10 h-10 bg-blue-50 rounded-lg">
-            <CalendarIcon className="w-5 h-5 text-blue-600" />
-          </div>
-          <div>
+      <PageHeader
+        icon={<CalendarRangeIcon className="w-5 h-5 text-indigo-600" />}
+        title="Task Calendar"
+        description="Manage and track your tasks across different stages"
+        subContent={
+          <>
+            <Button variant="ghost" onClick={handlePreviousMonth}>
+              <ChevronLeft className="w-5 h-5 text-gray-600" />
+            </Button>
             <Text variant="h1" className="text-xl">
               {format(currentMonth, "MMMM yyyy")}
             </Text>
-            <Text variant="body-xs" color="muted">
-              Task Calendar
-            </Text>
-          </div>
-        </div>
-
-        <div className="flex items-center gap-2">
-          <button
-            onClick={handlePreviousMonth}
-            className="p-2 hover:bg-gray-100 rounded-lg transition-colors"
-          >
-            <ChevronLeft className="w-5 h-5 text-gray-600" />
-          </button>
-          <button
-            onClick={handleNextMonth}
-            className="p-2 hover:bg-gray-100 rounded-lg transition-colors"
-          >
-            <ChevronRight className="w-5 h-5 text-gray-600" />
-          </button>
-        </div>
-      </div>
-
+            <Button variant="ghost" onClick={handleNextMonth}>
+              <ChevronRight className="w-5 h-5 text-gray-600" />
+            </Button>
+          </>
+        }
+      />
       {/* Calendar Grid */}
       <div className="flex-1 flex overflow-hidden">
         <CalendarGrid

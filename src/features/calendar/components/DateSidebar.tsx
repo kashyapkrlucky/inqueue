@@ -21,7 +21,7 @@ export function DateSidebar({ date, tasks, onClose }: DateSidebarProps) {
   if (!date) return null;
 
   return (
-    <div className="w-96 bg-white border-l border-gray-200 flex flex-col h-full">
+    <div className="w-96 bg-white border-l border-gray-200 flex flex-col h-full rounded-xl">
       {/* Header */}
       <div className="p-6 border-b border-gray-100">
         <div className="flex items-center justify-between mb-4">
