@@ -20,7 +20,7 @@ import PageLink from "../../../shared/components/content/PageLink";
 
 export default function Login() {
   const navigate = useNavigate();
-  const { onGuestLogin, isAuthenticated, loading } = useAuthStore();
+  const { onGuestLogin, isAuthenticated, loading, isGuestLoading } = useAuthStore();
 
   useEffect(() => {
     if (isAuthenticated) {
@@ -75,12 +75,12 @@ export default function Login() {
           </div>
 
           <Button
-            disabled={loading}
+            disabled={isGuestLoading}
             variant="outline"
             onClick={handleGuestLogin}
           >
             <span className="flex items-center justify-center gap-2">
-              {loading ? (
+              {isGuestLoading ? (
                 <Loader2Icon className="h-4 w-4 animate-spin" />
               ) : (
                 <CircleUserRoundIcon className="w-4 h-4" />

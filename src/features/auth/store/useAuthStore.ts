@@ -13,6 +13,7 @@ export interface AuthState {
   token: string | null;
   isAuthenticated: boolean;
   loading: boolean;
+  isGuestLoading: boolean;
   error: string | null;
   logout: () => void;
   clearError: () => void;
@@ -29,6 +30,7 @@ export const useAuthStore = create<AuthState>((set) => ({
   token: getStoredToken(TOKEN_KEY),
   isAuthenticated: !!getStoredToken(TOKEN_KEY),
   loading: false,
+  isGuestLoading: false,
   error: null,
 
   clearError: () => {
@@ -75,7 +77,7 @@ export const useAuthStore = create<AuthState>((set) => ({
 
   onGuestLogin: async () => {
     try {
-      set({ loading: true });
+      set({ isGuestLoading: true });
       const baseUrl = import.meta.env.VITE_BASE_URL;
       const {
         data: { data },
@@ -88,7 +90,7 @@ export const useAuthStore = create<AuthState>((set) => ({
     } catch {
       return null;
     } finally {
-      set({ loading: false });
+      set({ isGuestLoading: false });
     }
   },
   getLoggedInUser: () => {
