@@ -1,5 +1,5 @@
 import { create } from "zustand";
-import type { ITask, ITaskPriority, ITaskStatus } from "../types";
+import type { ITask, ITaskPriority, ITaskStatus, CreateTaskInput } from "../types";
 import axios from "../../../lib/axios";
 
 export type TaskFilter = {
@@ -25,7 +25,7 @@ interface TaskState {
   error: string | null;
   setTasks: (task: ITask) => void;
   getTasks: () => Promise<void>;
-  addTask: (task: Partial<ITask>) => Promise<void>;
+  addTask: (task: CreateTaskInput) => Promise<void>;
   updateTask: (taskId: string, task: Partial<ITask>) => Promise<void>;
   deleteTask: (taskId: string) => Promise<void>;
   stats: TaskStats;
@@ -66,7 +66,7 @@ export const useTaskStore = create<TaskState>((set) => ({
       set({ loading: true });
       const {
         data: { data },
-      } = await axios.get("/v1/public/tasks");
+      } = await axios.get("/v1/modules/tasks");
       set({ tasks: data });
     } catch (error) {
       set({
@@ -82,7 +82,7 @@ export const useTaskStore = create<TaskState>((set) => ({
       set({ loading: true });
       const {
         data: { data },
-      } = await axios.get("/v1/public/tasks/stats");
+      } = await axios.get("/v1/modules/tasks/stats");
       set({ stats: data });
     } catch (error) {
       set({
@@ -98,7 +98,7 @@ export const useTaskStore = create<TaskState>((set) => ({
       set({ loading: true });
       const {
         data: { data },
-      } = await axios.get("/v1/public/tasks/recent");
+      } = await axios.get("/v1/modules/tasks/recent");
       set({ homeData: data });
     } catch (error) {
       set({
@@ -114,7 +114,7 @@ export const useTaskStore = create<TaskState>((set) => ({
       set({ loading: true });
       const {
         data: { data },
-      } = await axios.post("/v1/public/tasks", task);
+      } = await axios.post("/v1/modules/tasks", task);
       set((state) => ({ tasks: [data, ...state.tasks] }));
     } catch (error) {
       set({
@@ -129,7 +129,7 @@ export const useTaskStore = create<TaskState>((set) => ({
     try {
       console.log("Updating task:", taskId, task);
       set({ loading: true });
-      await axios.patch<Partial<ITask>>(`/v1/public/tasks/${taskId}`, task);
+      await axios.patch<Partial<ITask>>(`/v1/modules/tasks/${taskId}`, task);
       set((state) => ({
         tasks: state.tasks.map((t) =>
           t._id === taskId ? { ...t, ...task } : t,
@@ -147,7 +147,7 @@ export const useTaskStore = create<TaskState>((set) => ({
   deleteTask: async (taskId: string) => {
     try {
       set({ loading: true });
-      await axios.delete("/v1/public/tasks/" + taskId);
+      await axios.delete("/v1/modules/tasks/" + taskId);
       set((state) => ({
         tasks: state.tasks.filter((t) => t._id !== taskId),
       }));
@@ -165,7 +165,7 @@ export const useTaskStore = create<TaskState>((set) => ({
       set({ loading: true });
       const {
         data: { data },
-      } = await axios.post("/v1/public/tasks/calendar", {
+      } = await axios.post("/v1/modules/tasks/calendar", {
         startDate,
         endDate,
       });

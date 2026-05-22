@@ -60,7 +60,7 @@ export const useAuthStore = create<AuthState>((set) => ({
       set({ loading: true });
       const {
         data: { data },
-      } = await axios.post("/v1/public/session", {
+      } = await axios.post("/v1/modules/session", {
         code,
       });
       const { user, token } = data;
@@ -81,7 +81,7 @@ export const useAuthStore = create<AuthState>((set) => ({
       const baseUrl = import.meta.env.VITE_BASE_URL;
       const {
         data: { data },
-      } = await axios.post("/v1/public/guest", { clientUrl: baseUrl });
+      } = await axios.post("/v1/modules/guest", { clientUrl: baseUrl });
       const { user, token } = data;
       set({ user, token, isAuthenticated: true });
       setStoredToken(USER_KEY, JSON.stringify(user));

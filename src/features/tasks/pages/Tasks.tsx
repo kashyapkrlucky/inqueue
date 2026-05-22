@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
 import { ListTodoIcon, Plus } from "lucide-react";
 import { useTaskStore } from "../store/useTaskStore";
-import type { ITask, ITaskStatus, ITaskPriority } from "../types";
+import type { ITaskStatus, ITaskPriority, CreateTaskInput } from "../types";
 import CreateTask from "../components/CreateTask";
 import { getTaskPriority, getTaskStatus } from "../utils";
 import { TaskCard } from "../components/TaskCard";
@@ -28,7 +28,7 @@ export default function Tasks() {
 
   const [isTaskModalOpen, setIsTaskModalOpen] = useState(false);
 
-  const onAddTask = (task: Partial<ITask>) => {
+  const onAddTask = (task: CreateTaskInput) => {
     addTask(task);
   };
 

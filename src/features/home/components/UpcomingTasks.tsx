@@ -1,6 +1,5 @@
 import { ArrowUpRightIcon, CalendarIcon, ClockIcon } from "lucide-react";
 import type { ITask } from "../../tasks/types";
-import { formatDate } from "../../../shared/utils";
 import InfoCard from "../../../shared/components/content/InfoCard";
 import { NoItems } from "../../../shared/components/content/NoItems";
 interface UpcomingTasksProps {
@@ -35,7 +34,7 @@ export function UpcomingTasks({ upcomingTasks }: UpcomingTasksProps) {
                   </div>
                   <div className="mt-1 flex items-center gap-2 text-xs text-gray-500">
                     <ClockIcon className="h-3.5 w-3.5" />
-                    Due {task?.dueDate ? formatDate(task?.dueDate) : "—"}
+                    Due {task?.dueDate && new Date(task.dueDate).toLocaleDateString() || "—"}
                   </div>
                 </div>
                 <ArrowUpRightIcon className="mt-0.5 h-4 w-4 flex-shrink-0 text-gray-400" />

@@ -1,31 +1,44 @@
 import { useState } from "react";
-import type { ITaskPriority, ITaskStatus, ITask } from "../types";
+import type { ITaskPriority, ITaskStatus, CreateTaskInput } from "../types";
 import { priorityConfig, statusConfig } from "../utils";
 import { Button } from "../../../shared/components/form/Button";
 import Textarea from "../../../shared/components/form/Textarea";
 import Select from "../../../shared/components/form/Select";
+import Input from "../../../shared/components/form/Input";
+import CustomToast from "../../../shared/components/ui/CustomToast";
 
 export default function CreateTask({
   onAddTask,
   onClose,
 }: {
-  onAddTask: (task: Partial<ITask>) => void;
+  onAddTask: (task: CreateTaskInput) => void;
   onClose: () => void;
 }) {
   const [content, setContent] = useState("");
   const [status, setStatus] = useState("todo");
   const [priority, setPriority] = useState("medium");
+  const [dueDate, setDueDate] = useState("");
 
   const onSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    if (!content) {
+      CustomToast("error", "Content is required");
+      return;
+    }
+    if (!dueDate) {
+      CustomToast("error", "Due date is required");
+      return;
+    }
     await onAddTask({
       content,
       status: status as ITaskStatus,
       priority: priority as ITaskPriority,
+      dueDate: new Date(dueDate),
     });
     setContent("");
     setStatus("todo");
     setPriority("medium");
+    setDueDate("");
     onClose();
   };
   return (
@@ -64,6 +77,8 @@ export default function CreateTask({
             </option>
           ))}
         </Select>
+
+        <Input type="date" label="Due Date" name="dueDate" value={dueDate} onChange={(e) => setDueDate(e.target.value)} />
       </section>
       <footer className="flex items-center justify-end gap-2 mt-4">
         <Button variant="ghost" onClick={onClose}>

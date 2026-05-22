@@ -7,7 +7,7 @@ import { Button } from "../../../shared/components/form/Button";
 import CreateTask from "../../tasks/components/CreateTask";
 import { PlusIcon } from "lucide-react";
 import Modal from "../../../shared/components/ui/Modal";
-import type { ITask } from "../../tasks/types";
+import type { CreateTaskInput, ITask } from "../../tasks/types";
 import { BoardFilters } from "../components/BoardFilters";
 import { NoItems } from "../../../shared/components/content/NoItems";
 import { KanbanIcon } from "lucide-react";
@@ -20,7 +20,7 @@ export default function Board() {
   const [draggedOverColumn, setDraggedOverColumn] = useState<string | null>(null);
   const [currentFilter, setCurrentFilter] = useState<"today" | "week" | "month">("today");
 
-  const onAddTask = useCallback((task: Partial<ITask>) => {
+  const onAddTask = useCallback((task: CreateTaskInput) => {
     addTask(task);
     setIsTaskModalOpen(false);
   }, [addTask]);

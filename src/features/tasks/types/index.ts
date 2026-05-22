@@ -18,7 +18,7 @@ export interface ITask extends BaseEntity {
   /** Priority of the task (e.g., low, medium, high) */
   priority?: ITaskPriority;
   /** Due date for the task */
-  dueDate?: Date;
+  dueDate: Date;
 }
 
 export type NewTask = {
@@ -26,6 +26,13 @@ export type NewTask = {
   status?: ITaskStatus;
   priority?: ITaskPriority;
   dueDate?: Date;
+};
+
+export type CreateTaskInput = {
+  content: string;
+  status: ITaskStatus;
+  priority: ITaskPriority;
+  dueDate: Date;
 };
 
 export type TaskUpdate = Partial<Omit<ITask, '_id'>>;

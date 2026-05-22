@@ -44,7 +44,7 @@ export default function CustomToast(type: string, message: string) {
       >
         <div className="flex-1 flex flex-row gap-4 p-4">
           {toastIcon}
-          <p className="text-base text-gray-500">{message}</p>
+          <p className="text-base">{message}</p>
         </div>
         <div className="flex border-l border-gray-200">
           <Button variant="ghost" onClick={() => toast.dismiss(t.id)}>
