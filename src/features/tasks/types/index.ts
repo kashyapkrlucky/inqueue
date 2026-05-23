@@ -30,8 +30,8 @@ export type NewTask = {
 
 export type CreateTaskInput = {
   content: string;
-  status: ITaskStatus;
-  priority: ITaskPriority;
+  status?: ITaskStatus | 'todo';
+  priority?: ITaskPriority | 'medium';
   dueDate: Date;
 };
 

@@ -6,6 +6,7 @@ import { Toaster } from "react-hot-toast";
 import { getCodeFromURL } from "../shared/utils";
 import PageLoader from "../shared/components/loaders/PageLoader";
 import useAuthStore from "../features/auth/store/useAuthStore";
+import ChatBot from "../shared/components/layout/ChatBot";
 
 export default function AppLayout() {
   const navigate = useNavigate();
@@ -46,7 +47,8 @@ export default function AppLayout() {
       <main className="flex-1 overflow-y-auto">
         <Outlet />
       </main>
-      <Toaster position="bottom-right" reverseOrder={false} />
+      <ChatBot />
+      <Toaster position="bottom-left" reverseOrder={false} />
     </div>
   );
 }
