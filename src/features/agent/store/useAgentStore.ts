@@ -36,6 +36,7 @@ export const useAgentStore = create<AgentState>((set, get) => ({
   messages: [],
   sendMessage: async (message) => {
     try {
+      set({ loading: true });
       get().addMessage({
         id: Date.now().toString(),
         text: message,
@@ -56,6 +57,8 @@ export const useAgentStore = create<AgentState>((set, get) => ({
       });
     } catch {
       set({ error: "Failed to send message" });
+    } finally {
+      set({ loading: false });
     }
   },
   addMessage: (message: Message) =>
