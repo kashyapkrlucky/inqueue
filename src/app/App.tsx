@@ -11,6 +11,7 @@ const Login = lazy(() => import("../features/auth/pages/Login"));
 const Notes = lazy(() => import("../features/notes/pages/Notes"));
 const Tasks = lazy(() => import("../features/tasks/pages/Tasks"));
 const Calendar = lazy(() => import("../features/calendar/pages/Calendar"));
+const Agent = lazy(() => import("../features/agent/pages/Agent"));
 const Board = lazy(() => import("../features/board/pages/Board"));
 const NotFound = lazy(() => import("./NotFound"));
 
@@ -53,6 +54,11 @@ const routeConfig: RouteConfig[] = [
       {
         path: "/calendar",
         element: <Calendar />,
+        protected: true,
+      },
+      {
+        path: "/ask-tia",
+        element: <Agent />,
         protected: true,
       },
     ],

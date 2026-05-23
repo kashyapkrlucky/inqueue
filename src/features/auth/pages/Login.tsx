@@ -17,6 +17,7 @@ import {
   TEXT_AND,
 } from "../constants";
 import PageLink from "../../../shared/components/content/PageLink";
+import PageLoader from "../../../shared/components/loaders/PageLoader";
 
 export default function Login() {
   const navigate = useNavigate();
@@ -40,6 +41,10 @@ export default function Login() {
   const onAtlasLogin = () => {
     window.location.href = `${import.meta.env.VITE_API_URL}/login?client_id=${import.meta.env.VITE_CLIENT_ID}`;
   };
+
+  if(loading) {
+    return <PageLoader/>
+  }
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100 flex items-center justify-center p-4">

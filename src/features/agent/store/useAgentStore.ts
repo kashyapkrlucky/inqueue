@@ -33,15 +33,7 @@ interface AgentState {
 export const useAgentStore = create<AgentState>((set, get) => ({
   loading: false,
   error: null,
-
-  messages: [
-    {
-      id: "1",
-      text: "Hi! I'm Tia. How can I help you today?",
-      isUser: false,
-      timestamp: new Date(),
-    },
-  ],
+  messages: [],
   sendMessage: async (message) => {
     try {
       get().addMessage({

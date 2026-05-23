@@ -1,5 +1,6 @@
 import { Link, NavLink, useNavigate } from "react-router-dom";
 import {
+  BotMessageSquareIcon,
   CalendarRangeIcon,
   KanbanIcon,
   LayoutDashboardIcon,
@@ -83,6 +84,21 @@ export default function Sidebar() {
             <span className="absolute left-0 w-1 h-8 rounded-r-full bg-indigo-500 opacity-0 group-[.active]:opacity-100 transition-all duration-200" />
           </NavLink>
         ))}
+
+        <NavLink
+          to="/ask-tia"
+          className={({ isActive }) =>
+            `group relative flex items-center justify-center p-3 rounded-xl transition-all duration-200 ${
+              isActive
+                ? "bg-indigo-500 text-white shadow-sm"
+                : "bg-indigo-300 text-white"
+            }`
+          }
+          title="Agent"
+        >
+          <BotMessageSquareIcon className="w-5 h-5" />
+          <span className="absolute left-0 w-1 h-8 rounded-r-full bg-indigo-500 opacity-0 group-[.active]:opacity-100 transition-all duration-200" />
+        </NavLink>
       </div>
 
       {/* Profile */}

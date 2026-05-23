@@ -18,7 +18,7 @@ export function UpcomingTasks({ upcomingTasks }: UpcomingTasksProps) {
         iconColor="text-orange-700"
       />
 
-      <div className="mt-4 space-y-2">
+      <div className="mt-4 space-y-2  h-[240px] overflow-y-auto ">
         {upcomingTasks.length === 0 ? (
           <NoItems title="No upcoming due tasks" />
         ) : (

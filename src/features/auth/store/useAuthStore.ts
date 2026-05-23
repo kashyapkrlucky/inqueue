@@ -29,7 +29,7 @@ export const useAuthStore = create<AuthState>((set) => ({
   user: getStoredToken(USER_KEY) ? JSON.parse(getStoredToken(USER_KEY)!) : null,
   token: getStoredToken(TOKEN_KEY),
   isAuthenticated: !!getStoredToken(TOKEN_KEY),
-  loading: false,
+  loading: true,
   isGuestLoading: false,
   error: null,
 
@@ -43,7 +43,6 @@ export const useAuthStore = create<AuthState>((set) => ({
       const token = getStoredToken(TOKEN_KEY);
       const user = getStoredToken(USER_KEY);
       if (token && user) {
-        // Optionally validate token with backend here
         set({ token, isAuthenticated: true, user: JSON.parse(user) });
       }
       set({ loading: false });

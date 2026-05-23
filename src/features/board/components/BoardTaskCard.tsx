@@ -1,5 +1,5 @@
 import {
-  CalendarIcon,
+  // CalendarIcon,
   ClockIcon,
   SquarePenIcon,
   Trash2Icon,
@@ -17,12 +17,20 @@ interface BoardTaskCardProps {
   onDragEnd: () => void;
 }
 
-export const BoardTaskCard = ({ task, onDeleteTask, onUpdateTask, onDragStart, onDragEnd }: BoardTaskCardProps) => {
+export const BoardTaskCard = ({
+  task,
+  onDeleteTask,
+  onUpdateTask,
+  onDragStart,
+  onDragEnd,
+}: BoardTaskCardProps) => {
   const createdAt = task.createdAt;
   const dueDate = task.dueDate;
+  const isDone = task.status === "done";
   const isOverdue =
     (dueDate ? new Date(dueDate) : new Date(createdAt)) < new Date();
-  const priorityConfig = PRIORITY_CONFIG[task.priority as keyof typeof PRIORITY_CONFIG];
+  const priorityConfig =
+    PRIORITY_CONFIG[task.priority as keyof typeof PRIORITY_CONFIG];
 
   const handleDragStart = (e: React.DragEvent) => {
     e.dataTransfer.effectAllowed = "move";
@@ -36,7 +44,7 @@ export const BoardTaskCard = ({ task, onDeleteTask, onUpdateTask, onDragStart, o
 
   return (
     <div
-      className="group w-full flex flex-row gap-3 rounded-xl bg-white shadow-sm hover:shadow-md transition-all duration-200 p-4 select-none border border-gray-200/50 hover:border-indigo-200 hover:border-2 cursor-move"
+      className="group w-full flex flex-row gap-3 rounded-xl bg-white shadow-sm hover:shadow-md transition-all duration-200 p-4 select-none border-2 border-gray-200/50 hover:border-indigo-200 cursor-move"
       key={task._id}
       draggable
       onDragStart={handleDragStart}
@@ -44,28 +52,30 @@ export const BoardTaskCard = ({ task, onDeleteTask, onUpdateTask, onDragStart, o
     >
       <div className="flex-1 flex flex-col gap-3 min-w-0">
         <div className="flex flex-col items-start gap-2">
-          <p className="truncate text-sm font-semibold text-gray-900 leading-tight">
+          <p className="text-sm font-semibold text-gray-900 leading-tight">
             {task.content || "Untitled task"}
           </p>
+        </div>
+
+        <div className="flex flex-row items-center gap-4 text-xs text-gray-500">
           <span
             className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold text-white shadow-sm ${priorityConfig?.color}`}
           >
             {priorityConfig?.label}
           </span>
-        </div>
-
-        <div className="flex flex-row items-center gap-4 text-xs text-gray-500">
-          <span className="inline-flex items-center gap-1.5">
+          {/* <span className="inline-flex items-center gap-1.5">
             <CalendarIcon className="h-3.5 w-3.5 text-gray-400" />
             <span>{formatDate(new Date(createdAt))}</span>
-          </span>
+          </span> */}
 
           <span
-            className={`inline-flex items-center gap-1.5 ${isOverdue ? "text-red-600 font-semibold" : ""}`}
+            className={`inline-flex items-center gap-1.5 ${(isOverdue && !isDone) ? "text-red-600 font-semibold" : ""}`}
           >
-            <ClockIcon className={`h-3.5 w-3.5 ${isOverdue ? "text-red-500" : "text-gray-400"}`} />
+            <ClockIcon
+              className={`h-3.5 w-3.5 ${(isOverdue && !isDone) ? "text-red-500" : "text-gray-400"}`}
+            />
             <span>
-              Due{" "}
+              Due on{" "}
               {dueDate
                 ? formatDate(new Date(dueDate))
                 : formatDate(new Date(createdAt))}

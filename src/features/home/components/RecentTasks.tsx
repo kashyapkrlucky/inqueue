@@ -29,7 +29,7 @@ export function RecentTasks({ tasks }: RecentTasksProps) {
                 key={t._id ?? `${t.content}-${String(t.updatedAt)}`}
                 className="flex items-center justify-between gap-3 rounded-xl border border-gray-200 p-3 transition hover:bg-gray-50"
               >
-                <div className="flex flex-row items-center gap-2">
+                <div className="flex-1 flex flex-row items-center gap-2">
                   <span
                     className={`inline-flex h-3 w-3 rounded-full ${
                       status === "done"
@@ -39,7 +39,7 @@ export function RecentTasks({ tasks }: RecentTasksProps) {
                           : "bg-gray-500 text-gray-700"
                     }`}
                   />
-                  <span className="truncate max-w-[200px] text-xs text-gray-900">
+                  <span className="truncate max-w-[180px] text-xs text-gray-900">
                     {t?.content}
                   </span>
                 </div>

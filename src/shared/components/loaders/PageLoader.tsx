@@ -1,6 +1,6 @@
 export default function PageLoader({ theme }: { theme?: string }) {
     return (
-        <div className="w-full h-full flex items-center justify-center min-h-[200px]">
+        <div className="fixed top-0 left-0 w-full h-full flex items-center justify-center z-50">
             <div className="flex flex-col items-center gap-3">
                 <div className={`animate-spin rounded-full h-8 w-8 border-2 ${theme === "light" 
                     ? "border-white/30 border-t-white" 
