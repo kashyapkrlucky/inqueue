@@ -27,24 +27,24 @@ export function RecentTasks({ tasks }: RecentTasksProps) {
             return (
               <div
                 key={t._id ?? `${t.content}-${String(t.updatedAt)}`}
-                className="flex items-center justify-between gap-3 rounded-xl border border-gray-200 p-3 transition hover:bg-gray-50"
+                className="group flex items-center justify-between gap-2.5 rounded-lg border border-gray-100 bg-white p-2.5 transition-all duration-200 hover:border-gray-300 hover:bg-gray-50"
               >
                 <div className="flex-1 flex flex-row items-center gap-2">
                   <span
-                    className={`inline-flex h-3 w-3 rounded-full ${
+                    className={`inline-flex h-2.5 w-2.5 rounded-full ${
                       status === "done"
-                        ? "bg-emerald-500 text-emerald-700"
+                        ? "bg-emerald-500"
                         : status === "in_progress"
-                          ? "bg-indigo-500 text-indigo-700"
-                          : "bg-gray-500 text-gray-700"
+                          ? "bg-indigo-500"
+                          : "bg-gray-400"
                     }`}
                   />
-                  <span className="truncate max-w-[180px] text-xs text-gray-900">
+                  <span className="truncate max-w-[180px] text-xs font-medium text-gray-900">
                     {t?.content}
                   </span>
                 </div>
                 <span className="inline-flex items-center gap-1 text-xs text-gray-500">
-                  <CalendarIcon className="h-3.5 w-3.5" />
+                  <CalendarIcon className="h-3 w-3" />
                   {created ? formatDate(created) : "—"}
                 </span>
               </div>
