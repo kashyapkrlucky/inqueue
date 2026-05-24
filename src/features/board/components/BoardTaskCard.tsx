@@ -4,15 +4,18 @@ import {
   SquarePenIcon,
   Trash2Icon,
 } from "lucide-react";
-import type { ITask } from "../../tasks/types";
+import type { ITask, UpdateTaskInput } from "../../tasks/types";
 import { formatDate } from "../../../shared/utils";
 import { MoreMenu } from "../../../shared/components/ui/MoreMenu";
 import { PRIORITY_CONFIG } from "../../tasks/types";
+import Modal from "../../../shared/components/ui/Modal";
+import CreateTask from "../../tasks/components/CreateTask";
+import { useState } from "react";
 
 interface BoardTaskCardProps {
   task: ITask;
   onDeleteTask: (taskId: string) => void;
-  onUpdateTask: (task: ITask) => void;
+  onUpdateTask: (taskId: string, task: UpdateTaskInput) => void;
   onDragStart: (taskId: string) => void;
   onDragEnd: () => void;
 }
@@ -27,6 +30,8 @@ export const BoardTaskCard = ({
   const createdAt = task.createdAt;
   const dueDate = task.dueDate;
   const isDone = task.status === "done";
+
+  const [isEditOpen, setIsEditOpen] = useState(false);
   const isOverdue =
     (dueDate ? new Date(dueDate) : new Date(createdAt)) < new Date();
   const priorityConfig =
@@ -44,7 +49,7 @@ export const BoardTaskCard = ({
 
   return (
     <div
-      className="group w-full flex flex-row gap-3 rounded-xl bg-white shadow-sm hover:shadow-md transition-all duration-200 p-4 select-none border-2 border-gray-200/50 hover:border-indigo-200 cursor-move"
+      className="group w-full flex flex-row gap-1 rounded-xl bg-white shadow-sm hover:shadow-md transition-all duration-200 p-4 select-none border-2 border-white hover:border-indigo-200 cursor-move"
       key={task._id}
       draggable
       onDragStart={handleDragStart}
@@ -63,11 +68,6 @@ export const BoardTaskCard = ({
           >
             {priorityConfig?.label}
           </span>
-          {/* <span className="inline-flex items-center gap-1.5">
-            <CalendarIcon className="h-3.5 w-3.5 text-gray-400" />
-            <span>{formatDate(new Date(createdAt))}</span>
-          </span> */}
-
           <span
             className={`inline-flex items-center gap-1.5 ${(isOverdue && !isDone) ? "text-red-600 font-semibold" : ""}`}
           >
@@ -91,7 +91,7 @@ export const BoardTaskCard = ({
               label: "Edit",
               icon: <SquarePenIcon className="h-4 w-4 text-gray-500" />,
               onClick: () => {
-                onUpdateTask(task);
+                setIsEditOpen(true);
               },
             },
             {
@@ -104,6 +104,14 @@ export const BoardTaskCard = ({
           ]}
         />
       </div>
+
+      <Modal
+        title="Edit Task"
+        isOpen={isEditOpen}
+        onClose={() => setIsEditOpen(false)}
+      >
+        <CreateTask task={task} onAddTask={() => {}} onUpdateTask={onUpdateTask} onClose={() => setIsEditOpen(false)} />
+      </Modal>
     </div>
   );
 };

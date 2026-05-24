@@ -38,9 +38,12 @@
   --font-size-xxxl: 24px;
 
   /* Font families */
-  --font-family-code: 'Roboto Mono', Consolas, 'Liberation Mono', 'Courier New', Courier, monospace;
-  --font-family-base: 'Source Sans Pro', 'Hiragino Sans GB', Arial, sans-serif;
-  --font-family-logo: 'Oswald', 'Source Sans Pro', 'Helvetica Neue', Arial, sans-serif;
+  --font-family-code:
+    "Roboto Mono", Consolas, "Liberation Mono", "Courier New", Courier,
+    monospace;
+  --font-family-base: "Source Sans Pro", "Hiragino Sans GB", Arial, sans-serif;
+  --font-family-logo:
+    "Oswald", "Source Sans Pro", "Helvetica Neue", Arial, sans-serif;
 
   /* Z-index values */
   --z-index-sidebar-content: 1020;
@@ -48,11 +51,8 @@
   --z-index-main-nav: 1040;
 }
 
-
-
-
 :root,
-[data-mode='light'] {
+[data-mode="light"] {
   color-scheme: light;
 
   /* Semantic colors */
@@ -105,7 +105,7 @@
   --color-code-9: #007070; /* Teal */
 }
 
-[data-mode='dark'] {
+[data-mode="dark"] {
   color-scheme: dark;
 
   /* Semantic colors */
@@ -158,8 +158,6 @@
   --color-code-9: #79d0cf;
 }
 
-
 .hide-scrollbar::-webkit-scrollbar {
   display: none;
 }
-  

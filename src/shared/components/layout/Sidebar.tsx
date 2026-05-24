@@ -55,9 +55,9 @@ export default function Sidebar() {
   };
 
   return (
-    <nav className="w-16 md:w-20 bg-white border-r border-gray-200/50 flex flex-col shadow-sm">
+    <nav className="w-16 md:w-20 bg-white border-r border-gray-200 flex flex-col p-4">
       {/* Logo */}
-      <div className="p-4 border-b border-gray-100">
+      <div className="p-4 border-b border-gray-200">
         <Link to="/" className="flex items-center justify-center">
           <span className="text-xl font-bold text-indigo-600 tracking-tight">
             {APP_NAME}
@@ -66,7 +66,21 @@ export default function Sidebar() {
       </div>
 
       {/* Navigation */}
-      <div className="flex-1 flex flex-col py-4 px-2 gap-1">
+      <div className="flex-1 flex flex-col py-4 gap-2">
+        <NavLink
+          to="/ask-tia"
+          className={({ isActive }) =>
+            `group relative flex items-center justify-center p-3 rounded-xl transition-all duration-200 ${
+              isActive
+                ? "bg-indigo-700 text-white shadow-sm"
+                : "bg-indigo-500 text-white"
+            }`
+          }
+          title="Agent"
+        >
+          <BotMessageSquareIcon className="w-5 h-5" />
+          <span className="absolute left-0 w-1 h-8 rounded-r-full bg-indigo-500 opacity-0 group-[.active]:opacity-100 transition-all duration-200" />
+        </NavLink>
         {navItems.map((item) => (
           <NavLink
             key={item.to}
@@ -74,7 +88,7 @@ export default function Sidebar() {
             className={({ isActive }) =>
               `group relative flex items-center justify-center p-3 rounded-xl transition-all duration-200 ${
                 isActive
-                  ? "bg-indigo-50 text-indigo-600 shadow-sm"
+                  ? "bg-gray-50 text-indigo-600 shadow-sm"
                   : "text-gray-500 hover:bg-gray-50 hover:text-gray-900"
               }`
             }
@@ -84,32 +98,14 @@ export default function Sidebar() {
             <span className="absolute left-0 w-1 h-8 rounded-r-full bg-indigo-500 opacity-0 group-[.active]:opacity-100 transition-all duration-200" />
           </NavLink>
         ))}
-
-        <NavLink
-          to="/ask-tia"
-          className={({ isActive }) =>
-            `group relative flex items-center justify-center p-3 rounded-xl transition-all duration-200 ${
-              isActive
-                ? "bg-indigo-500 text-white shadow-sm"
-                : "bg-indigo-300 text-white"
-            }`
-          }
-          title="Agent"
-        >
-          <BotMessageSquareIcon className="w-5 h-5" />
-          <span className="absolute left-0 w-1 h-8 rounded-r-full bg-indigo-500 opacity-0 group-[.active]:opacity-100 transition-all duration-200" />
-        </NavLink>
       </div>
 
       {/* Profile */}
-      <div className="p-3 border-t border-gray-100">
-        <div
-          className="relative"
-          ref={dropdownRef}
-        >
+      <div className="border-t border-gray-200">
+        <div className="relative" ref={dropdownRef}>
           <button
             onClick={() => setIsProfileOpen(!isProfileOpen)}
-            className="w-full flex items-center justify-center p-2 rounded-xl hover:bg-gray-50 transition-all duration-200 group"
+            className="w-full flex items-center justify-center py-2 rounded-xl hover:bg-gray-50 transition-all duration-200 group"
             aria-haspopup="true"
             aria-expanded={isProfileOpen}
           >
@@ -117,7 +113,9 @@ export default function Sidebar() {
               src={getAvatarUrl()}
               alt={user?.name || "User profile"}
               className={`w-10 h-10 rounded-full object-cover ring-2 ring-transparent transition-all duration-200 ${
-                isProfileOpen ? "ring-indigo-500 shadow-md" : "group-hover:ring-gray-200"
+                isProfileOpen
+                  ? "ring-indigo-500 shadow-md"
+                  : "group-hover:ring-indigo-600"
               }`}
               onError={(e) => {
                 e.currentTarget.src = "/user.png";
@@ -133,7 +131,7 @@ export default function Sidebar() {
                   <img
                     src={getAvatarUrl()}
                     alt={user?.name || "User profile"}
-                    className="w-12 h-12 rounded-full object-cover ring-2 ring-indigo-100"
+                    className="w-12 h-12 rounded-full object-cover ring-2 ring-indigo-600"
                     onError={(e) => {
                       e.currentTarget.src = "/user.png";
                     }}
@@ -142,11 +140,13 @@ export default function Sidebar() {
                     <p className="text-sm font-semibold text-gray-900 truncate">
                       {user?.name || "Guest"}
                     </p>
-                    <p className="text-xs text-gray-500 truncate">@{user?.username || "guest"}</p>
+                    <p className="text-xs text-gray-500 truncate">
+                      @{user?.username || "guest"}
+                    </p>
                   </div>
                 </div>
               </div>
-              
+
               <div className="p-2">
                 <Button
                   variant="danger"

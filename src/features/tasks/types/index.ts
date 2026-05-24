@@ -35,6 +35,13 @@ export type CreateTaskInput = {
   dueDate: Date;
 };
 
+export type UpdateTaskInput = {
+  content?: string;
+  status?: ITaskStatus;
+  priority?: ITaskPriority;
+  dueDate?: Date;
+};
+
 export type TaskUpdate = Partial<Omit<ITask, '_id'>>;
 
 

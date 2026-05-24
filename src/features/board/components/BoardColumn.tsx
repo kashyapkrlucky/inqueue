@@ -1,4 +1,4 @@
-import type { ITask } from "../../tasks/types";
+import type { ITask, UpdateTaskInput } from "../../tasks/types";
 import { BoardTaskCard } from "./BoardTaskCard";
 
 interface BoardColumnProps {
@@ -6,7 +6,7 @@ interface BoardColumnProps {
   tasks: ITask[];
   bgColor: string;
   onDeleteTask: (taskId: string) => void;
-  onUpdateTask: (task: ITask) => void;
+  onUpdateTask: (taskId: string, task: UpdateTaskInput) => void;
   onDragStart: (taskId: string) => void;
   onDragEnd: () => void;
   onDrop: (taskId: string, newStatus: string) => void;

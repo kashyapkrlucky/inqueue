@@ -32,7 +32,7 @@ export function TaskActivity({ data, loading }: TaskActivityProps) {
   });
 
   return (
-    <div className="w-1/3 rounded-2xl bg-white p-5 shadow-sm">
+    <div className="rounded-2xl bg-white p-5 shadow-sm">
       <InfoCard
         title="Task activity"
         description="Completed per day (last 7)"

@@ -127,6 +127,7 @@ export default function Tasks() {
       >
         <CreateTask
           onAddTask={onAddTask}
+          onUpdateTask={() => {}}
           onClose={() => setIsTaskModalOpen(false)}
         />
       </Modal>

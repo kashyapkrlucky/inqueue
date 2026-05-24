@@ -61,16 +61,17 @@ const Home = () => {
         upcomingTasks={homeData.upcoming.length}
       />
 
-      <section className="flex flex-row gap-4">
+      <section className="grid grid-cols-1 gap-4 lg:grid-cols-3">
+        <UpcomingTasks upcomingTasks={homeData.upcoming} />
+        <RecentTasks tasks={homeData.recent} />
+        <RecentNotes notes={noteStats.recent} />
+      </section>
+
+      <section className="grid grid-cols-1 gap-4 lg:grid-cols-3">
         <TaskStatistics taskStats={stats} loading={loading} />
         <TaskActivity data={stats.weeklyStats} loading={loading} />
       </section>
 
-      <section className="grid grid-cols-1 gap-4 lg:grid-cols-3">
-        <RecentTasks tasks={homeData.recent} />
-        <RecentNotes notes={noteStats.recent} />
-        <UpcomingTasks upcomingTasks={homeData.upcoming} />
-      </section>
     </div>
   );
 };

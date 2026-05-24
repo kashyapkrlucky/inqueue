@@ -1,4 +1,3 @@
-import PageLoader from "../../../shared/components/loaders/PageLoader";
 import CustomToast from "../../../shared/components/ui/CustomToast";
 import { useTaskStore } from "../../tasks/store/useTaskStore";
 import { BoardColumn } from "../components/BoardColumn";
@@ -7,11 +6,12 @@ import { Button } from "../../../shared/components/form/Button";
 import CreateTask from "../../tasks/components/CreateTask";
 import { PlusIcon } from "lucide-react";
 import Modal from "../../../shared/components/ui/Modal";
-import type { CreateTaskInput, ITask } from "../../tasks/types";
+import type { CreateTaskInput, UpdateTaskInput } from "../../tasks/types";
 import { BoardFilters } from "../components/BoardFilters";
 import { NoItems } from "../../../shared/components/content/NoItems";
 import { KanbanIcon } from "lucide-react";
 import { PageHeader } from "../../../shared/components/ui/PageHeader";
+import InlineLoader from "../../../shared/components/loaders/InlineLoader";
 
 export default function Board() {
   const { tasks, loading, error, addTask, getTaskCalendar, deleteTask, updateTask } =
@@ -29,8 +29,8 @@ export default function Board() {
     deleteTask(taskId);
   }, [deleteTask]);
 
-  const onUpdateTask = useCallback((task: ITask) => {
-    updateTask(task._id, task);
+  const onUpdateTask = useCallback((taskId: string, task: UpdateTaskInput) => {
+    updateTask(taskId, task);
   }, [updateTask]);
 
   const getTasksByDate = useCallback((start: string, end: string) => {
@@ -69,10 +69,6 @@ export default function Board() {
   const inProgressTasks = tasks.filter((task) => task.status === "in_progress");
   const doneTasks = tasks.filter((task) => task.status === "done");
 
-  if (loading) {
-    return <PageLoader />;
-  }
-
   if (error) {
     CustomToast("error", error);
   }
@@ -85,6 +81,7 @@ export default function Board() {
         description="Manage and track your tasks across different stages"
         subContent={
           <div className="flex items-center gap-4">
+            {loading && <InlineLoader/>}
             <Button
               icon={<PlusIcon className="h-4 w-4" />}
               onClick={() => setIsTaskModalOpen(true)}
@@ -158,7 +155,9 @@ export default function Board() {
         onClose={() => setIsTaskModalOpen(false)}
       >
         <CreateTask
+          task={undefined}
           onAddTask={onAddTask}
+          onUpdateTask={onUpdateTask}
           onClose={() => setIsTaskModalOpen(false)}
         />
       </Modal>

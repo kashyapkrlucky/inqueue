@@ -1,5 +1,11 @@
 import { useState } from "react";
-import type { ITaskPriority, ITaskStatus, CreateTaskInput } from "../types";
+import type {
+  ITaskPriority,
+  ITaskStatus,
+  CreateTaskInput,
+  UpdateTaskInput,
+  ITask,
+} from "../types";
 import { priorityConfig, statusConfig } from "../utils";
 import { Button } from "../../../shared/components/form/Button";
 import Textarea from "../../../shared/components/form/Textarea";
@@ -8,16 +14,22 @@ import Input from "../../../shared/components/form/Input";
 import CustomToast from "../../../shared/components/ui/CustomToast";
 
 export default function CreateTask({
+  task,
   onAddTask,
+  onUpdateTask,
   onClose,
 }: {
+  task?: ITask | undefined;
   onAddTask: (task: CreateTaskInput) => void;
+  onUpdateTask: (id: string, task: UpdateTaskInput) => void;
   onClose: () => void;
 }) {
-  const [content, setContent] = useState("");
-  const [status, setStatus] = useState("todo");
-  const [priority, setPriority] = useState("medium");
-  const [dueDate, setDueDate] = useState("");
+  const [content, setContent] = useState(task?.content || "");
+  const [status, setStatus] = useState(task?.status || "todo");
+  const [priority, setPriority] = useState(task?.priority || "medium");
+  const [dueDate, setDueDate] = useState(
+    task?.dueDate ? new Date(task.dueDate).toISOString().split("T")[0] : "",
+  );
 
   const onSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -29,12 +41,21 @@ export default function CreateTask({
       CustomToast("error", "Due date is required");
       return;
     }
-    await onAddTask({
-      content,
-      status: status as ITaskStatus,
-      priority: priority as ITaskPriority,
-      dueDate: new Date(dueDate),
-    });
+    if (task) {
+      onUpdateTask(task._id, {
+        content,
+        status: status as ITaskStatus,
+        priority: priority as ITaskPriority,
+        dueDate: new Date(dueDate),
+      });
+    } else {
+      onAddTask({
+        content,
+        status: status as ITaskStatus,
+        priority: priority as ITaskPriority,
+        dueDate: new Date(dueDate),
+      });
+    }
     setContent("");
     setStatus("todo");
     setPriority("medium");
@@ -55,7 +76,7 @@ export default function CreateTask({
           id="status"
           label="Status"
           value={status}
-          onChange={(e) => setStatus(e.target.value)}
+          onChange={(e) => setStatus(e.target.value as ITaskStatus)}
           onClick={(e) => e.stopPropagation()}
         >
           {Object.entries(statusConfig).map(([key, config]) => (
@@ -68,7 +89,7 @@ export default function CreateTask({
           id="priority"
           label="Priority"
           value={priority}
-          onChange={(e) => setPriority(e.target.value)}
+          onChange={(e) => setPriority(e.target.value as ITaskPriority)}
           onClick={(e) => e.stopPropagation()}
         >
           {Object.entries(priorityConfig).map(([key, config]) => (
@@ -78,14 +99,20 @@ export default function CreateTask({
           ))}
         </Select>
 
-        <Input type="date" label="Due Date" name="dueDate" value={dueDate} onChange={(e) => setDueDate(e.target.value)} />
+        <Input
+          type="date"
+          label="Due Date"
+          name="dueDate"
+          value={dueDate}
+          onChange={(e) => setDueDate(e.target.value)}
+        />
       </section>
       <footer className="flex items-center justify-end gap-2 mt-4">
         <Button variant="ghost" onClick={onClose}>
           Cancel
         </Button>
         <Button type="submit" variant="primary">
-          Create
+          {task ? "Update" : "Create"}
         </Button>
       </footer>
     </form>

@@ -1,5 +1,5 @@
 import { create } from "zustand";
-import type { ITask, ITaskPriority, ITaskStatus, CreateTaskInput } from "../types";
+import type { ITask, ITaskPriority, ITaskStatus, CreateTaskInput, UpdateTaskInput } from "../types";
 import axios from "../../../lib/axios";
 
 export type TaskFilter = {
@@ -26,7 +26,7 @@ interface TaskState {
   setTasks: (task: ITask) => void;
   getTasks: () => Promise<void>;
   addTask: (task: CreateTaskInput) => Promise<void>;
-  updateTask: (taskId: string, task: Partial<ITask>) => Promise<void>;
+  updateTask: (taskId: string, task: UpdateTaskInput) => Promise<void>;
   deleteTask: (taskId: string) => Promise<void>;
   stats: TaskStats;
   getStats: () => Promise<void>;
@@ -125,11 +125,11 @@ export const useTaskStore = create<TaskState>((set) => ({
       set({ loading: false });
     }
   },
-  updateTask: async (taskId: string, task: Partial<ITask>) => {
+  updateTask: async (taskId: string, task: UpdateTaskInput) => {
     try {
       console.log("Updating task:", taskId, task);
       set({ loading: true });
-      await axios.patch<Partial<ITask>>(`/v1/modules/tasks/${taskId}`, task);
+      await axios.patch<UpdateTaskInput>(`/v1/modules/tasks/${taskId}`, task);
       set((state) => ({
         tasks: state.tasks.map((t) =>
           t._id === taskId ? { ...t, ...task } : t,
