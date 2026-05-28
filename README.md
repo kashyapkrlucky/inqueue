@@ -6,7 +6,7 @@ InQueue is a task management application that allows users to organize their tas
 
 # Screenshots
 
-<img src="./screens/dashboard.png" alt="Home Page" width="400" />
+<img src="./screens/dashboard.png" alt="Home Page" style="width: 100%;" />
 
 ## Authentication Architecture Plan
 
