@@ -1,4 +1,12 @@
-# inqueue-react
+# InQueue
+
+## Overview
+
+InQueue is a task management application that allows users to organize their tasks efficiently. The app supports both guest and authenticated user experiences, with a focus on a seamless and intuitive interface.
+
+# Screenshots
+
+<img src="./screens/dashboard.png" alt="Home Page" width="400" />
 
 ## Authentication Architecture Plan
 

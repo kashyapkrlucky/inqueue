@@ -22,9 +22,10 @@ interface TaskStats {
 interface TaskState {
   loading: boolean;
   tasks: ITask[];
+  totalPages: number;
   error: string | null;
   setTasks: (task: ITask) => void;
-  getTasks: () => Promise<void>;
+  getTasks: (page: number, limit: number) => Promise<void>;
   addTask: (task: CreateTaskInput) => Promise<void>;
   updateTask: (taskId: string, task: UpdateTaskInput) => Promise<void>;
   deleteTask: (taskId: string) => Promise<void>;
@@ -38,6 +39,7 @@ interface TaskState {
 export const useTaskStore = create<TaskState>((set) => ({
   loading: false,
   tasks: [],
+  totalPages: 1,
   error: null,
   stats: {
     total: 0,
@@ -61,13 +63,14 @@ export const useTaskStore = create<TaskState>((set) => ({
       };
     });
   },
-  getTasks: async () => {
+  getTasks: async (page: number = 1, limit: number = 10) => {
     try {
       set({ loading: true });
       const {
-        data: { data },
-      } = await axios.get("/v1/modules/tasks");
-      set({ tasks: data });
+        data: { data, totalPages },
+      } = await axios.get(`/v1/modules/tasks?page=${page}&limit=${limit}`);
+
+      set({ tasks: data, totalPages });
     } catch (error) {
       set({
         error:

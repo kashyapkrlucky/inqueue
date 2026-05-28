@@ -12,6 +12,7 @@ import { NoItems } from "../../../shared/components/content/NoItems";
 import { KanbanIcon } from "lucide-react";
 import { PageHeader } from "../../../shared/components/ui/PageHeader";
 import InlineLoader from "../../../shared/components/loaders/InlineLoader";
+import PageLoader from "../../../shared/components/loaders/PageLoader";
 
 export default function Board() {
   const { tasks, loading, error, addTask, getTaskCalendar, deleteTask, updateTask } =
@@ -19,6 +20,8 @@ export default function Board() {
   const [isTaskModalOpen, setIsTaskModalOpen] = useState(false);
   const [draggedOverColumn, setDraggedOverColumn] = useState<string | null>(null);
   const [currentFilter, setCurrentFilter] = useState<"today" | "week" | "month">("today");
+  const [isPageLoading, setIsPageLoading] = useState(true);
+ 
 
   const onAddTask = useCallback((task: CreateTaskInput) => {
     addTask(task);
@@ -63,6 +66,7 @@ export default function Board() {
     const startOfDay = new Date(today.getFullYear(), today.getMonth(), today.getDate());
     const endOfDay = new Date(today.getFullYear(), today.getMonth(), today.getDate(), 23, 59, 59);
     getTaskCalendar(startOfDay.toISOString(), endOfDay.toISOString());
+    setIsPageLoading(false);
   }, [getTaskCalendar]);
 
   const todoTasks = tasks.filter((task) => task.status === "todo");
@@ -71,6 +75,10 @@ export default function Board() {
 
   if (error) {
     CustomToast("error", error);
+  }
+
+  if (isPageLoading) {
+    return <PageLoader />;
   }
 
   return (

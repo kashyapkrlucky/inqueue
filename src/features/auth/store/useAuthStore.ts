@@ -29,7 +29,7 @@ export const useAuthStore = create<AuthState>((set) => ({
   user: getStoredToken(USER_KEY) ? JSON.parse(getStoredToken(USER_KEY)!) : null,
   token: getStoredToken(TOKEN_KEY),
   isAuthenticated: !!getStoredToken(TOKEN_KEY),
-  loading: true,
+  loading: false,
   isGuestLoading: false,
   error: null,
 

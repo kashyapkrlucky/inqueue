@@ -36,7 +36,7 @@ export default function AppLayout() {
       navigate("/login");
     }
   }, [isAuthenticated, loading, isOAuthChecked, navigate]);
-
+  
   if (loading && !isOAuthChecked) {
     return <PageLoader />;
   }

@@ -12,9 +12,12 @@ import ListLoading from "../../../shared/components/ui/ListLoading";
 import Modal from "../../../shared/components/ui/Modal";
 import { PageHeader } from "../../../shared/components/ui/PageHeader";
 import { TaskFilters } from "../components/TaskFilters";
+import Pagination from "../../../shared/components/ui/Pagination";
 
 export default function Tasks() {
-  const { tasks, getTasks, loading, error, addTask } = useTaskStore();
+  const { tasks, getTasks, loading, error, addTask, totalPages } = useTaskStore();
+  const [currentPage, setCurrentPage] = useState(1);
+  const [itemsPerPage] = useState(8);
   const [expandedTask, setExpandedTask] = useState<string | null>(null);
   const [query, setQuery] = useState("");
   const [statusFilter, setStatusFilter] = useState<ITaskStatus | "all">("all");
@@ -33,8 +36,8 @@ export default function Tasks() {
   };
 
   useEffect(() => {
-    getTasks();
-  }, [getTasks]);
+    getTasks(currentPage, itemsPerPage);
+  }, [getTasks, currentPage, itemsPerPage]);
 
   useEffect(() => {
     document.body.style.overflow = "hidden";
@@ -70,7 +73,7 @@ export default function Tasks() {
   }
 
   return (
-    <div className="max-w-7xl mx-auto p-6 h-screen flex flex-col gap-4 overflow-hidden">
+    <div className="max-w-7xl mx-auto p-6 pb-0 h-screen flex flex-col gap-4 overflow-hidden">
       <PageHeader
         icon={<ListTodoIcon className="w-5 h-5 text-indigo-600" />}
         title={`My Tasks`}
@@ -95,7 +98,7 @@ export default function Tasks() {
         handleResetFilters={handleResetFilters}
       />
 
-      <section className="flex-1 py-4 overflow-y-auto">
+      <section className="flex-1 pt-4 overflow-y-auto">
         <ListLoading
           isLoading={loading}
           items={filteredTasks}
@@ -120,6 +123,11 @@ export default function Tasks() {
         </ListLoading>
       </section>
 
+      <Pagination
+        currentPage={currentPage}
+        totalPages={totalPages}
+        onPageChange={setCurrentPage}
+      />
       <Modal
         title="Create Task"
         isOpen={isTaskModalOpen}
