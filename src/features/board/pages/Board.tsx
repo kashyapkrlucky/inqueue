@@ -2,11 +2,7 @@ import CustomToast from "../../../shared/components/ui/CustomToast";
 import { useTaskStore } from "../../tasks/store/useTaskStore";
 import { BoardColumn } from "../components/BoardColumn";
 import { useEffect, useState, useCallback } from "react";
-import { Button } from "../../../shared/components/form/Button";
 import CreateTask from "../../tasks/components/CreateTask";
-import { PlusIcon } from "lucide-react";
-import Modal from "../../../shared/components/ui/Modal";
-import type { CreateTaskInput, UpdateTaskInput } from "../../tasks/types";
 import { BoardFilters } from "../components/BoardFilters";
 import { NoItems } from "../../../shared/components/content/NoItems";
 import { KanbanIcon } from "lucide-react";
@@ -15,26 +11,12 @@ import InlineLoader from "../../../shared/components/loaders/InlineLoader";
 import PageLoader from "../../../shared/components/loaders/PageLoader";
 
 export default function Board() {
-  const { tasks, loading, error, addTask, getTaskCalendar, deleteTask, updateTask } =
+  const { tasks, loading, error, getTaskCalendar, updateTask } =
     useTaskStore();
-  const [isTaskModalOpen, setIsTaskModalOpen] = useState(false);
   const [draggedOverColumn, setDraggedOverColumn] = useState<string | null>(null);
   const [currentFilter, setCurrentFilter] = useState<"today" | "week" | "month">("today");
   const [isPageLoading, setIsPageLoading] = useState(true);
  
-
-  const onAddTask = useCallback((task: CreateTaskInput) => {
-    addTask(task);
-    setIsTaskModalOpen(false);
-  }, [addTask]);
-
-  const onDeleteTask = useCallback((taskId: string) => {
-    deleteTask(taskId);
-  }, [deleteTask]);
-
-  const onUpdateTask = useCallback((taskId: string, task: UpdateTaskInput) => {
-    updateTask(taskId, task);
-  }, [updateTask]);
 
   const getTasksByDate = useCallback((start: string, end: string) => {
     getTaskCalendar(start, end);
@@ -90,12 +72,7 @@ export default function Board() {
         subContent={
           <div className="flex items-center gap-4">
             {loading && <InlineLoader/>}
-            <Button
-              icon={<PlusIcon className="h-4 w-4" />}
-              onClick={() => setIsTaskModalOpen(true)}
-            >
-              Add Task
-            </Button>
+            <CreateTask/>
             <BoardFilters 
               getTasksByDate={getTasksByDate} 
               currentFilter={currentFilter}
@@ -119,8 +96,6 @@ export default function Board() {
             title="To Do"
             tasks={todoTasks}
             bgColor="bg-gray-500"
-            onDeleteTask={onDeleteTask}
-            onUpdateTask={onUpdateTask}
             onDragStart={handleDragStart}
             onDragEnd={handleDragEnd}
             onDrop={handleDrop}
@@ -132,8 +107,6 @@ export default function Board() {
             title="In Progress"
             tasks={inProgressTasks}
             bgColor="bg-blue-500"
-            onDeleteTask={onDeleteTask}
-            onUpdateTask={onUpdateTask}
             onDragStart={handleDragStart}
             onDragEnd={handleDragEnd}
             onDrop={handleDrop}
@@ -145,8 +118,6 @@ export default function Board() {
             title="Done"
             tasks={doneTasks}
             bgColor="bg-emerald-500"
-            onDeleteTask={onDeleteTask}
-            onUpdateTask={onUpdateTask}
             onDragStart={handleDragStart}
             onDragEnd={handleDragEnd}
             onDrop={handleDrop}
@@ -157,18 +128,7 @@ export default function Board() {
         </div>
       )}
 
-      <Modal
-        title="Create Task"
-        isOpen={isTaskModalOpen}
-        onClose={() => setIsTaskModalOpen(false)}
-      >
-        <CreateTask
-          task={undefined}
-          onAddTask={onAddTask}
-          onUpdateTask={onUpdateTask}
-          onClose={() => setIsTaskModalOpen(false)}
-        />
-      </Modal>
+      {/*  */}
     </div>
   );
 }

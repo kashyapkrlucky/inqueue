@@ -4,32 +4,38 @@ import {
   SquarePenIcon,
   Trash2Icon,
 } from "lucide-react";
-import type { ITask, UpdateTaskInput } from "../../tasks/types";
+import type { ITask } from "../../tasks/types";
 import { formatDate } from "../../../shared/utils";
 import { MoreMenu } from "../../../shared/components/ui/MoreMenu";
 import { PRIORITY_CONFIG } from "../../tasks/types";
 import Modal from "../../../shared/components/ui/Modal";
-import CreateTask from "../../tasks/components/CreateTask";
-import { useState } from "react";
+import { useCallback, useState } from "react";
+import { useTaskStore } from "../../tasks/store/useTaskStore";
+import EditTask from "../../tasks/components/EditTask";
 
 interface BoardTaskCardProps {
   task: ITask;
-  onDeleteTask: (taskId: string) => void;
-  onUpdateTask: (taskId: string, task: UpdateTaskInput) => void;
   onDragStart: (taskId: string) => void;
   onDragEnd: () => void;
 }
 
 export const BoardTaskCard = ({
   task,
-  onDeleteTask,
-  onUpdateTask,
   onDragStart,
   onDragEnd,
 }: BoardTaskCardProps) => {
   const createdAt = task.createdAt;
   const dueDate = task.dueDate;
   const isDone = task.status === "done";
+
+  const { deleteTask } = useTaskStore();
+
+  const onDeleteTask = useCallback(
+    (taskId: string) => {
+      deleteTask(taskId);
+    },
+    [deleteTask],
+  );
 
   const [isEditOpen, setIsEditOpen] = useState(false);
   const isOverdue =
@@ -69,10 +75,10 @@ export const BoardTaskCard = ({
             {priorityConfig?.label}
           </span>
           <span
-            className={`inline-flex items-center gap-1.5 ${(isOverdue && !isDone) ? "text-red-600 font-semibold" : ""}`}
+            className={`inline-flex items-center gap-1.5 ${isOverdue && !isDone ? "text-red-600 font-semibold" : ""}`}
           >
             <ClockIcon
-              className={`h-3.5 w-3.5 ${(isOverdue && !isDone) ? "text-red-500" : "text-gray-400"}`}
+              className={`h-3.5 w-3.5 ${isOverdue && !isDone ? "text-red-500" : "text-gray-400"}`}
             />
             <span>
               Due on{" "}
@@ -110,7 +116,7 @@ export const BoardTaskCard = ({
         isOpen={isEditOpen}
         onClose={() => setIsEditOpen(false)}
       >
-        <CreateTask task={task} onAddTask={() => {}} onUpdateTask={onUpdateTask} onClose={() => setIsEditOpen(false)} />
+        <EditTask task={task} />
       </Modal>
     </div>
   );

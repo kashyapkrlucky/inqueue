@@ -1,21 +1,19 @@
 import { useEffect, useMemo, useState } from "react";
-import { ListTodoIcon, Plus } from "lucide-react";
+import { ListTodoIcon } from "lucide-react";
 import { useTaskStore } from "../store/useTaskStore";
-import type { ITaskStatus, ITaskPriority, CreateTaskInput } from "../types";
-import CreateTask from "../components/CreateTask";
+import type { ITaskStatus, ITaskPriority } from "../types";
 import { getTaskPriority, getTaskStatus } from "../utils";
 import { TaskCard } from "../components/TaskCard";
-import { Button } from "../../../shared/components/form/Button";
 import CustomToast from "../../../shared/components/ui/CustomToast";
 import PageLoader from "../../../shared/components/loaders/PageLoader";
 import ListLoading from "../../../shared/components/ui/ListLoading";
-import Modal from "../../../shared/components/ui/Modal";
 import { PageHeader } from "../../../shared/components/ui/PageHeader";
 import { TaskFilters } from "../components/TaskFilters";
 import Pagination from "../../../shared/components/ui/Pagination";
+import CreateTask from "../components/CreateTask";
 
 export default function Tasks() {
-  const { tasks, getTasks, loading, error, addTask, totalPages } = useTaskStore();
+  const { tasks, getTasks, loading, error, totalPages } = useTaskStore();
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage] = useState(8);
   const [expandedTask, setExpandedTask] = useState<string | null>(null);
@@ -28,12 +26,6 @@ export default function Tasks() {
   if (error) {
     CustomToast("error", error);
   }
-
-  const [isTaskModalOpen, setIsTaskModalOpen] = useState(false);
-
-  const onAddTask = (task: CreateTaskInput) => {
-    addTask(task);
-  };
 
   useEffect(() => {
     getTasks(currentPage, itemsPerPage);
@@ -78,14 +70,7 @@ export default function Tasks() {
         icon={<ListTodoIcon className="w-5 h-5 text-indigo-600" />}
         title={`My Tasks`}
         description="Track what matters. Update status, priority, and details in one place."
-        subContent={
-          <Button
-            icon={<Plus className="h-4 w-4" />}
-            onClick={() => setIsTaskModalOpen(true)}
-          >
-            Add Task
-          </Button>
-        }
+        subContent={<CreateTask />}
       />
 
       <TaskFilters
@@ -128,17 +113,6 @@ export default function Tasks() {
         totalPages={totalPages}
         onPageChange={setCurrentPage}
       />
-      <Modal
-        title="Create Task"
-        isOpen={isTaskModalOpen}
-        onClose={() => setIsTaskModalOpen(false)}
-      >
-        <CreateTask
-          onAddTask={onAddTask}
-          onUpdateTask={() => {}}
-          onClose={() => setIsTaskModalOpen(false)}
-        />
-      </Modal>
     </div>
   );
 }

@@ -1,12 +1,10 @@
-import type { ITask, UpdateTaskInput } from "../../tasks/types";
+import type { ITask } from "../../tasks/types";
 import { BoardTaskCard } from "./BoardTaskCard";
 
 interface BoardColumnProps {
   title: string;
   tasks: ITask[];
   bgColor: string;
-  onDeleteTask: (taskId: string) => void;
-  onUpdateTask: (taskId: string, task: UpdateTaskInput) => void;
   onDragStart: (taskId: string) => void;
   onDragEnd: () => void;
   onDrop: (taskId: string, newStatus: string) => void;
@@ -15,7 +13,7 @@ interface BoardColumnProps {
   isDraggingOver: boolean;
 }
 
-export const BoardColumn = ({ title, tasks, bgColor, onDeleteTask, onUpdateTask, onDragStart, onDragEnd, onDrop, onDragOver, status, isDraggingOver }: BoardColumnProps) => {
+export const BoardColumn = ({ title, tasks, bgColor, onDragStart, onDragEnd, onDrop, onDragOver, status, isDraggingOver }: BoardColumnProps) => {
   const handleDragOver = (e: React.DragEvent) => {
     e.preventDefault();
     e.dataTransfer.dropEffect = "move";
@@ -45,8 +43,6 @@ export const BoardColumn = ({ title, tasks, bgColor, onDeleteTask, onUpdateTask,
           <BoardTaskCard 
             key={task._id} 
             task={task} 
-            onDeleteTask={onDeleteTask}
-            onUpdateTask={onUpdateTask}
             onDragStart={onDragStart}
             onDragEnd={onDragEnd}
           />

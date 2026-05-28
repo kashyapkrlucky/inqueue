@@ -50,11 +50,11 @@ export const BoardFilters = ({ getTasksByDate, currentFilter, onFilterChange }: 
   );
 
   return (
-    <div className="inline-flex items-center gap-1 bg-gray-100/80 backdrop-blur-sm rounded-xl p-1.5 border border-gray-200/50">
+    <div className="inline-flex items-center gap-1 bg-gray-100/80 backdrop-blur-sm rounded-xl py-1 md:py-1.5 px-2 border border-gray-200/50">
       <button
         onClick={() => handleFilterChange("today")}
         className={`
-          relative px-4 py-2 text-sm font-semibold rounded-lg transition-all duration-200
+          relative px-4 py-2 text-xs font-semibold rounded-lg transition-all duration-200
           ${currentFilter === "today"
             ? "bg-white text-indigo-600 shadow-md"
             : "text-gray-600 hover:text-gray-900 hover:bg-white/50"
@@ -66,26 +66,26 @@ export const BoardFilters = ({ getTasksByDate, currentFilter, onFilterChange }: 
       <button
         onClick={() => handleFilterChange("week")}
         className={`
-          relative px-4 py-2 text-sm font-semibold rounded-lg transition-all duration-200
+          relative px-4 py-2 text-xs font-semibold rounded-lg transition-all duration-200
           ${currentFilter === "week"
             ? "bg-white text-indigo-600 shadow-md"
             : "text-gray-600 hover:text-gray-900 hover:bg-white/50"
           }
         `}
       >
-        This Week
+        Week
       </button>
       <button
         onClick={() => handleFilterChange("month")}
         className={`
-          relative px-4 py-2 text-sm font-semibold rounded-lg transition-all duration-200
+          relative px-4 py-2 text-xs font-semibold rounded-lg transition-all duration-200
           ${currentFilter === "month"
             ? "bg-white text-indigo-600 shadow-md"
             : "text-gray-600 hover:text-gray-900 hover:bg-white/50"
           }
         `}
       >
-        This Month
+        Month
       </button>
     </div>
   );

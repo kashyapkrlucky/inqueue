@@ -111,15 +111,12 @@ export default function Sidebar() {
           >
             <img
               src={getAvatarUrl()}
-              alt={user?.name || "User profile"}
+              alt={"User profile"}
               className={`w-10 h-10 rounded-full object-cover ring-2 ring-transparent transition-all duration-200 ${
                 isProfileOpen
                   ? "ring-indigo-500 shadow-md"
                   : "group-hover:ring-indigo-600"
               }`}
-              onError={(e) => {
-                e.currentTarget.src = "/user.png";
-              }}
             />
           </button>
 
@@ -138,10 +135,10 @@ export default function Sidebar() {
                   />
                   <div className="flex-1 min-w-0">
                     <p className="text-sm font-semibold text-gray-900 truncate">
-                      {user?.name || "Guest"}
+                      {user?.name || user?.username}
                     </p>
                     <p className="text-xs text-gray-500 truncate">
-                      @{user?.username || "guest"}
+                      @{user?.username}
                     </p>
                   </div>
                 </div>

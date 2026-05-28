@@ -4,6 +4,7 @@ import { asDate, formatDate } from "../../../shared/utils";
 import { getTaskStatus } from "../../tasks/utils";
 import InfoCard from "../../../shared/components/content/InfoCard";
 import { NoItems } from "../../../shared/components/content/NoItems";
+import CreateTask from "../../tasks/components/CreateTask";
 
 interface RecentTasksProps {
   tasks: ITask[];
@@ -19,7 +20,10 @@ export function RecentTasks({ tasks }: RecentTasksProps) {
 
       <div className="mt-4 space-y-2 overflow-y-auto h-[240px] scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-gray-100">
         {tasks.length === 0 ? (
-          <NoItems title="No tasks yet." />
+          <div className="flex flex-col gap-4 justify-center h-full">
+            <NoItems title="No tasks yet." />
+            <CreateTask />
+          </div>
         ) : (
           tasks.map((t) => {
             const created = asDate(t.updatedAt);
