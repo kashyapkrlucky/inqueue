@@ -122,7 +122,7 @@ export default function TaskEditor({
         <Button variant="ghost" onClick={onClose}>
           Cancel
         </Button>
-        <Button type="submit" variant="primary">
+        <Button type="submit" variant="primary" disabled={!content.trim() || !dueDate}>
           {task ? "Update" : "Create"}
         </Button>
       </footer>

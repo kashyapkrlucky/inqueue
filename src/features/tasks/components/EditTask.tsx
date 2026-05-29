@@ -2,7 +2,7 @@ import { useState } from "react";
 import { Button } from "../../../shared/components/form/Button";
 import Modal from "../../../shared/components/ui/Modal";
 import TaskEditor from "./TaskEditor";
-import { PlusIcon } from "lucide-react";
+import { PenBoxIcon } from "lucide-react";
 import type { ITask } from "../types";
 
 export default function EditTask({ task }: { task: ITask }) {
@@ -11,10 +11,12 @@ export default function EditTask({ task }: { task: ITask }) {
   return (
     <>
       <Button
-        icon={<PlusIcon className="h-4 w-4" />}
+        size="xs"
+        variant="ghost"
+        icon={<PenBoxIcon className="h-3 w-3" />}
         onClick={() => setIsTaskModalOpen(true)}
       >
-        Edit Task
+        Edit
       </Button>
       <Modal
         title="Edit Task"

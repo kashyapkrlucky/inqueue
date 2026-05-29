@@ -1,17 +1,10 @@
-import {
-  // CalendarIcon,
-  ClockIcon,
-  SquarePenIcon,
-  Trash2Icon,
-} from "lucide-react";
+import { ClockIcon } from "lucide-react";
 import type { ITask } from "../../tasks/types";
 import { formatDate } from "../../../shared/utils";
 import { MoreMenu } from "../../../shared/components/ui/MoreMenu";
 import { PRIORITY_CONFIG } from "../../tasks/types";
-import Modal from "../../../shared/components/ui/Modal";
-import { useCallback, useState } from "react";
-import { useTaskStore } from "../../tasks/store/useTaskStore";
 import EditTask from "../../tasks/components/EditTask";
+import DeleteTask from "../../tasks/components/DeleteTask";
 
 interface BoardTaskCardProps {
   task: ITask;
@@ -28,16 +21,6 @@ export const BoardTaskCard = ({
   const dueDate = task.dueDate;
   const isDone = task.status === "done";
 
-  const { deleteTask } = useTaskStore();
-
-  const onDeleteTask = useCallback(
-    (taskId: string) => {
-      deleteTask(taskId);
-    },
-    [deleteTask],
-  );
-
-  const [isEditOpen, setIsEditOpen] = useState(false);
   const isOverdue =
     (dueDate ? new Date(dueDate) : new Date(createdAt)) < new Date();
   const priorityConfig =
@@ -68,7 +51,7 @@ export const BoardTaskCard = ({
           </p>
         </div>
 
-        <div className="flex flex-row items-center gap-4 text-xs text-gray-500">
+        <div className="flex flex-col lg:flex-row items-start lg:items-center gap-4 text-xs text-gray-500">
           <span
             className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold text-white shadow-sm ${priorityConfig?.color}`}
           >
@@ -94,30 +77,14 @@ export const BoardTaskCard = ({
         <MoreMenu
           menuItems={[
             {
-              label: "Edit",
-              icon: <SquarePenIcon className="h-4 w-4 text-gray-500" />,
-              onClick: () => {
-                setIsEditOpen(true);
-              },
+              value: <EditTask task={task} />,
             },
             {
-              label: "Delete",
-              icon: <Trash2Icon className="h-4 w-4 text-red-500" />,
-              onClick: () => {
-                onDeleteTask(task._id);
-              },
+              value: <DeleteTask buttonType="text" taskId={task._id} />,
             },
           ]}
         />
       </div>
-
-      <Modal
-        title="Edit Task"
-        isOpen={isEditOpen}
-        onClose={() => setIsEditOpen(false)}
-      >
-        <EditTask task={task} />
-      </Modal>
     </div>
   );
 };

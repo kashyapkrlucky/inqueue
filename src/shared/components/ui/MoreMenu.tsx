@@ -3,9 +3,10 @@ import { useEffect, useRef, useState } from "react";
 
 interface MoreMenuProps {
   menuItems: {
-    label: string;
-    icon: React.ReactNode;
-    onClick: () => void;
+    // label: string;
+    // icon: React.ReactNode;
+    // onClick: () => void;
+    value?: React.ReactNode;
   }[];
 }
 
@@ -37,14 +38,17 @@ export const MoreMenu = ({ menuItems }: MoreMenuProps) => {
       {showMenu && (
         <div className="absolute top-4 right-0 bg-white rounded-lg shadow-lg border border-gray-200 p-2">
           {menuItems.map((item, index) => (
-            <button
-              key={index}
-              className="w-full flex items-center gap-2 px-2 py-1 text-left hover:bg-gray-50"
-              onClick={item.onClick}
-            >
-              {item.icon}
-              <span className="text-xs text-gray-600">{item.label}</span>
-            </button>
+            // <button
+            //   key={index}
+            //   className="w-full flex items-center gap-2 px-2 py-1 text-left hover:bg-gray-50"
+            //   onClick={item.onClick}
+            // >
+            //   {item.icon}
+            //   <span className="text-xs text-gray-600">{item.label}</span>
+            // </button>
+            <div key={index}>
+              {item.value}
+            </div>
           ))}
         </div>
       )}

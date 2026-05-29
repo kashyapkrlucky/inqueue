@@ -82,7 +82,7 @@ export default function Board() {
         }
       />
 
-      {tasks.length === 0 && !loading ? (
+      {tasks.length === 0 && !loading && (
         <div className="flex-1 flex items-center justify-center">
           <NoItems
             title="No tasks found"
@@ -90,45 +90,47 @@ export default function Board() {
             icon={<KanbanIcon className="w-6 h-6" />}
           />
         </div>
-      ) : (
-        <div className="flex-1 flex flex-row overflow-hidden divide-x divide-gray-200">
-          <BoardColumn
-            title="To Do"
-            tasks={todoTasks}
-            bgColor="bg-gray-500"
-            onDragStart={handleDragStart}
-            onDragEnd={handleDragEnd}
-            onDrop={handleDrop}
-            onDragOver={handleDragOver}
-            status="todo"
-            isDraggingOver={draggedOverColumn === "todo"}
-          />
-          <BoardColumn
-            title="In Progress"
-            tasks={inProgressTasks}
-            bgColor="bg-blue-500"
-            onDragStart={handleDragStart}
-            onDragEnd={handleDragEnd}
-            onDrop={handleDrop}
-            onDragOver={handleDragOver}
-            status="in_progress"
-            isDraggingOver={draggedOverColumn === "in_progress"}
-          />
-          <BoardColumn
-            title="Done"
-            tasks={doneTasks}
-            bgColor="bg-emerald-500"
-            onDragStart={handleDragStart}
-            onDragEnd={handleDragEnd}
-            onDrop={handleDrop}
-            onDragOver={handleDragOver}
-            status="done"
-            isDraggingOver={draggedOverColumn === "done"}
-          />
-        </div>
       )}
 
-      {/*  */}
+      {
+        tasks.length > 0 && (
+          <div className="flex-1 flex flex-row overflow-hidden divide-x divide-gray-200">
+            <BoardColumn
+              title="To Do"
+              tasks={todoTasks}
+              bgColor="bg-gray-500"
+              onDragStart={handleDragStart}
+              onDragEnd={handleDragEnd}
+              onDrop={handleDrop}
+              onDragOver={handleDragOver}
+              status="todo"
+              isDraggingOver={draggedOverColumn === "todo"}
+            />
+            <BoardColumn
+              title="In Progress"
+              tasks={inProgressTasks}
+              bgColor="bg-blue-500"
+              onDragStart={handleDragStart}
+              onDragEnd={handleDragEnd}
+              onDrop={handleDrop}
+              onDragOver={handleDragOver}
+              status="in_progress"
+              isDraggingOver={draggedOverColumn === "in_progress"}
+            />
+            <BoardColumn
+              title="Done"
+              tasks={doneTasks}
+              bgColor="bg-emerald-500"
+              onDragStart={handleDragStart}
+              onDragEnd={handleDragEnd}
+              onDrop={handleDrop}
+              onDragOver={handleDragOver}
+              status="done"
+              isDraggingOver={draggedOverColumn === "done"}
+            />
+          </div>
+        )
+      }
     </div>
   );
 }
