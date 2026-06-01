@@ -6,6 +6,7 @@ import {
   LayoutDashboardIcon,
   ListTodoIcon,
   LogOutIcon,
+  MessageCircleQuestionMarkIcon,
   StickyNoteIcon,
 } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
@@ -66,38 +67,54 @@ export default function Sidebar() {
       </div>
 
       {/* Navigation */}
-      <div className="flex-1 flex flex-col py-4 gap-2">
-        <NavLink
-          to="/ask-tia"
-          className={({ isActive }) =>
-            `group relative flex items-center justify-center p-3 rounded-xl transition-all duration-200 ${
-              isActive
-                ? "bg-indigo-700 text-white shadow-sm"
-                : "bg-indigo-500 text-white"
-            }`
-          }
-          title="Agent"
-        >
-          <BotMessageSquareIcon className="w-5 h-5" />
-          <span className="absolute left-0 w-1 h-8 rounded-r-full bg-indigo-500 opacity-0 group-[.active]:opacity-100 transition-all duration-200" />
-        </NavLink>
-        {navItems.map((item) => (
+      <div className="flex-1 flex flex-col justify-between py-4 gap-2">
+        <div className="flex flex-col gap-2">
+          {navItems.map((item) => (
+            <NavLink
+              key={item.to}
+              to={item.to}
+              className={({ isActive }) =>
+                `group relative flex items-center justify-center p-3 rounded-xl transition-all duration-200 ${
+                  isActive
+                    ? "bg-gray-50 text-indigo-600 shadow-sm"
+                    : "text-gray-500 hover:bg-gray-50 hover:text-gray-900"
+                }`
+              }
+              title={item.label}
+            >
+              <item.icon className="w-5 h-5" />
+              <span className="absolute left-0 w-1 h-8 rounded-r-full bg-indigo-500 opacity-0 group-[.active]:opacity-100 transition-all duration-200" />
+            </NavLink>
+          ))}
+        </div>
+        <div className="flex flex-col gap-4">
           <NavLink
-            key={item.to}
-            to={item.to}
+            to="/ask-tia"
             className={({ isActive }) =>
-              `group relative flex items-center justify-center p-3 rounded-xl transition-all duration-200 ${
+              `group relative flex items-center justify-center p-2 border-2 rounded-xl transition-all duration-200 ${
+                isActive
+                  ? "bg-indigo-600 border-indigo-600 text-white"
+                  : "text-indigo-500 border-indigo-500 hover:text-indigo-600"
+              }`
+            }
+            title="Agent"
+          >
+            <BotMessageSquareIcon className="w-6 h-6" />
+          </NavLink>
+          <NavLink
+            to="/support"
+            className={({ isActive }) =>
+              `group relative flex items-center justify-center p-2 rounded-xl transition-all duration-200 ${
                 isActive
                   ? "bg-gray-50 text-indigo-600 shadow-sm"
                   : "text-gray-500 hover:bg-gray-50 hover:text-gray-900"
               }`
             }
-            title={item.label}
+            title="Support"
           >
-            <item.icon className="w-5 h-5" />
-            <span className="absolute left-0 w-1 h-8 rounded-r-full bg-indigo-500 opacity-0 group-[.active]:opacity-100 transition-all duration-200" />
+            <MessageCircleQuestionMarkIcon className="w-6 h-6" />
           </NavLink>
-        ))}
+        </div>
       </div>
 
       {/* Profile */}

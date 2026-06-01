@@ -13,6 +13,7 @@ const Tasks = lazy(() => import("../features/tasks/pages/Tasks"));
 const Calendar = lazy(() => import("../features/calendar/pages/Calendar"));
 const Agent = lazy(() => import("../features/agent/pages/Agent"));
 const Board = lazy(() => import("../features/board/pages/Board"));
+const Support = lazy(() => import("../features/support/pages/Support"));
 const NotFound = lazy(() => import("./NotFound"));
 
 // Type for our route configuration
@@ -59,6 +60,11 @@ const routeConfig: RouteConfig[] = [
       {
         path: "/ask-tia",
         element: <Agent />,
+        protected: true,
+      },
+      {
+        path: "/support",
+        element: <Support />,
         protected: true,
       },
     ],

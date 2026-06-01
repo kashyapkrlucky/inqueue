@@ -67,7 +67,20 @@ export const priorityConfig = {
   },
 } as const satisfies Record<ITaskPriority, { label: string; color: string }>;
 
-
+export const feedbackTypeConfig = {
+  idea: {
+    label: "Idea",
+    color: "bg-blue-400",
+  },
+  bug_report: {
+    label: "Bug Report",
+    color: "bg-red-400",
+  },
+  feature_request: {
+    label: "Feature Request",
+    color: "bg-green-400",
+  },
+} as const satisfies Record<string, { label: string; color: string }>;
 
 
 // import { TaskStatus, TaskPriority } from '../types';
