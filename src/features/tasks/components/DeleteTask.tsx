@@ -38,6 +38,7 @@ export default function DeleteTask({
           <Button
             size="xs"
             variant="ghost"
+            icon={<Trash2Icon className="h-3 w-3" />}
             onClick={() => onDeleteTask(taskId)}
           >
             Delete
