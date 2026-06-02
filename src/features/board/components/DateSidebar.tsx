@@ -1,9 +1,8 @@
 import { X } from "lucide-react";
 import { format } from "date-fns";
 import type { ITask } from "../../tasks/types";
-import { TaskCard } from "../../tasks/components/TaskCard";
-import { useState } from "react";
 import ListLoading from "../../../shared/components/ui/ListLoading";
+import { CalendarTaskCard } from "@/features/board/components/CalendarTaskCard";
 
 interface DateSidebarProps {
   date: Date | null;
@@ -11,17 +10,15 @@ interface DateSidebarProps {
   onClose: () => void;
 }
 
-export function DateSidebar({ date, tasks, onClose }: DateSidebarProps) {
-  const [expandedTask, setExpandedTask] = useState<string | null>(null);
-
-  const toggleTaskExpanded = (taskId: string) => {
-    setExpandedTask((prev) => (prev === taskId ? null : taskId));
-  };
-
+export default function DateSidebar({
+  date,
+  tasks,
+  onClose,
+}: DateSidebarProps) {
   if (!date) return null;
 
   return (
-    <div className="w-96 bg-white border-l border-gray-200 flex flex-col h-full rounded-xl">
+    <div className="w-96 bg-white border border-gray-200 flex flex-col h-full rounded-xl pb-2">
       {/* Header */}
       <div className="p-6 border-b border-gray-100">
         <div className="flex items-center justify-between mb-4">
@@ -41,7 +38,7 @@ export function DateSidebar({ date, tasks, onClose }: DateSidebarProps) {
       </div>
 
       {/* Task List */}
-      <div className="flex-1 overflow-y-auto p-4 space-y-3">
+      <div className="flex-1 overflow-y-auto p-4 space-y-3 hide-scrollbar">
         <ListLoading
           isLoading={false}
           items={tasks}
@@ -49,19 +46,7 @@ export function DateSidebar({ date, tasks, onClose }: DateSidebarProps) {
           emptyMessage="No tasks found, Try adjusting filters or create a new task."
         >
           {(task) => {
-            const key = task._id;
-            const isExpanded = expandedTask === task._id;
-            return (
-              <TaskCard
-                key={key}
-                task={task}
-                expanded={Boolean(task._id && isExpanded)}
-                onToggleExpanded={() => {
-                  if (!task._id) return;
-                  toggleTaskExpanded(task._id);
-                }}
-              />
-            );
+            return <CalendarTaskCard key={task._id} task={task} />;
           }}
         </ListLoading>
       </div>

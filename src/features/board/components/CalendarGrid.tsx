@@ -42,7 +42,7 @@ export default function CalendarGrid({
   };
 
   return (
-    <div className="flex-1 bg-white rounded-xl shadow-sm p-4 h-full flex flex-col">
+    <div className="flex-1 bg-white border border-gray-200 rounded-xl p-4 h-full flex flex-col">
       {/* Weekday Headers */}
       <div className="grid grid-cols-7 gap-2 mb-2 flex-shrink-0">
         {days.map((day) => (

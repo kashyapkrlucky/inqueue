@@ -1,59 +1,75 @@
 import CustomToast from "../../../shared/components/ui/CustomToast";
 import { useTaskStore } from "../../tasks/store/useTaskStore";
-import { BoardColumn } from "../components/BoardColumn";
-import { useEffect, useState, useCallback } from "react";
+import { useEffect, useState, useCallback, useMemo } from "react";
 import CreateTask from "../../tasks/components/CreateTask";
-import { BoardFilters } from "../components/BoardFilters";
 import { NoItems } from "../../../shared/components/content/NoItems";
-import { KanbanIcon } from "lucide-react";
+import { ChevronLeftIcon, ChevronRightIcon, KanbanIcon } from "lucide-react";
 import { PageHeader } from "../../../shared/components/ui/PageHeader";
 import InlineLoader from "../../../shared/components/loaders/InlineLoader";
 import PageLoader from "../../../shared/components/loaders/PageLoader";
+import { Button } from "@/shared/components/form/Button";
+import {
+  format,
+  startOfMonth,
+  endOfMonth,
+  isSameDay,
+  addMonths,
+  subMonths,
+} from "date-fns";
+import Text from "@/shared/components/content/Text";
+import { GridView } from "../components/GridView";
+import { CalendarView } from "../components/CalendarView";
 
 export default function Board() {
-  const { tasks, loading, error, getTaskCalendar, updateTask } =
-    useTaskStore();
-  const [draggedOverColumn, setDraggedOverColumn] = useState<string | null>(null);
-  const [currentFilter, setCurrentFilter] = useState<"today" | "week" | "month">("today");
+  const { tasks, loading, error, getTaskCalendar } = useTaskStore();
+
+  const [selectedDate, setSelectedDate] = useState<Date | null>(null);
+  type TabType = "Grid" | "Calendar";
+  const [viewMode, setViewMode] = useState<TabType>("Grid");
   const [isPageLoading, setIsPageLoading] = useState(true);
- 
 
-  const getTasksByDate = useCallback((start: string, end: string) => {
-    getTaskCalendar(start, end);
-  }, [getTaskCalendar]);
+  const [currentMonth, setCurrentMonth] = useState(new Date());
 
-  const handleDragStart = useCallback(() => {
-    // Drag start handled by BoardTaskCard
+  const handleDateClick = useCallback((date: Date) => {
+    setSelectedDate(date);
   }, []);
-
-  const handleDragEnd = useCallback(() => {
-    setDraggedOverColumn(null);
+  const handleFilterChange = useCallback((type: TabType) => {
+    setViewMode(type);
   }, []);
+  const monthStart = useMemo(() => startOfMonth(currentMonth), [currentMonth]);
+  const monthEnd = useMemo(() => endOfMonth(currentMonth), [currentMonth]);
 
-  const handleDragOver = useCallback((status: string) => {
-    setDraggedOverColumn(status);
-  }, []);
+  const monthStartString = useMemo(
+    () => monthStart.toISOString(),
+    [monthStart],
+  );
+  const monthEndString = useMemo(() => monthEnd.toISOString(), [monthEnd]);
 
-  const handleDrop = useCallback((taskId: string, newStatus: string) => {
-    const task = tasks.find(t => t._id === taskId);
-    if (task && task.status !== newStatus) {
-      updateTask(taskId, { ...task, status: newStatus as "todo" | "in_progress" | "done" });
-    }
-    setDraggedOverColumn(null);
-  }, [tasks, updateTask]);
-
-  // Load initial tasks for today
   useEffect(() => {
-    const today = new Date();
-    const startOfDay = new Date(today.getFullYear(), today.getMonth(), today.getDate());
-    const endOfDay = new Date(today.getFullYear(), today.getMonth(), today.getDate(), 23, 59, 59);
-    getTaskCalendar(startOfDay.toISOString(), endOfDay.toISOString());
+    getTaskCalendar(monthStartString, monthEndString);
     setIsPageLoading(false);
-  }, [getTaskCalendar]);
+  }, [monthStartString, monthEndString, getTaskCalendar]);
 
-  const todoTasks = tasks.filter((task) => task.status === "todo");
-  const inProgressTasks = tasks.filter((task) => task.status === "in_progress");
-  const doneTasks = tasks.filter((task) => task.status === "done");
+  const handlePreviousMonth = useCallback(() => {
+    setCurrentMonth((prev) => subMonths(prev, 1));
+  }, []);
+
+  const handleNextMonth = useCallback(() => {
+    setCurrentMonth((prev) => addMonths(prev, 1));
+  }, []);
+  const getTasksForDate = useCallback(
+    (date: Date) => {
+      return tasks.filter((task) => isSameDay(new Date(task.createdAt), date));
+    },
+    [tasks],
+  );
+  const selectedDateTasks = useMemo(
+    () => (selectedDate ? getTasksForDate(selectedDate) : []),
+    [selectedDate, getTasksForDate],
+  );
+  const handleCloseSidebar = useCallback(() => {
+    setSelectedDate(null);
+  }, []);
 
   if (error) {
     CustomToast("error", error);
@@ -71,66 +87,82 @@ export default function Board() {
         description="Manage and track your tasks across different stages"
         subContent={
           <div className="flex items-center gap-4">
-            {loading && <InlineLoader/>}
-            <CreateTask/>
-            <BoardFilters 
-              getTasksByDate={getTasksByDate} 
-              currentFilter={currentFilter}
-              onFilterChange={setCurrentFilter}
-            />
+            {loading && <InlineLoader />}
+            <div className="flex flex-row-reverse justify-center items-center gap-2">
+              <div className="flex items-center gap-2">
+                <Button variant="ghost" onClick={handlePreviousMonth}>
+                  <ChevronLeftIcon className="w-5 h-5 text-gray-600" />
+                </Button>
+                <Text variant="h1" className="text-xl">
+                  {format(currentMonth, "MMMM yyyy")}
+                </Text>
+                <Button variant="ghost" onClick={handleNextMonth}>
+                  <ChevronRightIcon className="w-5 h-5 text-gray-600" />
+                </Button>
+              </div>
+              <div className="flex items-center gap-2">
+                <CreateTask />
+                <div className="inline-flex items-center gap-1 bg-gray-100/80 backdrop-blur-sm rounded-xl py-1 md:py-1.5 px-2 border border-gray-200/50">
+                  <button
+                    onClick={() => handleFilterChange("Grid")}
+                    className={`
+          relative px-4 py-2 text-xs font-semibold rounded-lg transition-all duration-200
+          ${
+            viewMode === "Grid"
+              ? "bg-white text-indigo-600 shadow-md"
+              : "text-gray-600 hover:text-gray-900 hover:bg-white/50"
+          }
+        `}
+                  >
+                    Grid
+                  </button>
+                  <button
+                    onClick={() => handleFilterChange("Calendar")}
+                    className={`
+          relative px-4 py-2 text-xs font-semibold rounded-lg transition-all duration-200
+          ${
+            viewMode === "Calendar"
+              ? "bg-white text-indigo-600 shadow-md"
+              : "text-gray-600 hover:text-gray-900 hover:bg-white/50"
+          }
+        `}
+                  >
+                    Calendar
+                  </button>
+                </div>
+
+              </div>
+            </div>
           </div>
         }
       />
 
-      {tasks.length === 0 && !loading && (
-        <div className="flex-1 flex items-center justify-center">
-          <NoItems
-            title="No tasks found"
-            description="Create a task to get started or change the date filter"
-            icon={<KanbanIcon className="w-6 h-6" />}
-          />
-        </div>
-      )}
+      {viewMode === "Grid" && (
+        <>
+          {tasks.length === 0 && !loading && (
+            <div className="flex-1 flex items-center justify-center">
+              <NoItems
+                title="No tasks found"
+                description="Create a task to get started or change the date filter"
+                icon={<KanbanIcon className="w-6 h-6" />}
+              />
+            </div>
+          )}
 
-      {
-        tasks.length > 0 && (
-          <div className="flex-1 flex flex-row overflow-hidden divide-x divide-gray-200">
-            <BoardColumn
-              title="To Do"
-              tasks={todoTasks}
-              bgColor="bg-gray-500"
-              onDragStart={handleDragStart}
-              onDragEnd={handleDragEnd}
-              onDrop={handleDrop}
-              onDragOver={handleDragOver}
-              status="todo"
-              isDraggingOver={draggedOverColumn === "todo"}
-            />
-            <BoardColumn
-              title="In Progress"
-              tasks={inProgressTasks}
-              bgColor="bg-blue-500"
-              onDragStart={handleDragStart}
-              onDragEnd={handleDragEnd}
-              onDrop={handleDrop}
-              onDragOver={handleDragOver}
-              status="in_progress"
-              isDraggingOver={draggedOverColumn === "in_progress"}
-            />
-            <BoardColumn
-              title="Done"
-              tasks={doneTasks}
-              bgColor="bg-emerald-500"
-              onDragStart={handleDragStart}
-              onDragEnd={handleDragEnd}
-              onDrop={handleDrop}
-              onDragOver={handleDragOver}
-              status="done"
-              isDraggingOver={draggedOverColumn === "done"}
-            />
-          </div>
-        )
-      }
+          {tasks.length > 0 && <GridView tasks={tasks} />}
+        </>
+      )}
+      {viewMode === "Calendar" && (
+        <CalendarView
+          monthStart={monthStart}
+          monthEnd={monthEnd}
+          selectedDate={selectedDate}
+          handleDateClick={handleDateClick}
+          getTasksForDate={getTasksForDate}
+          selectedDateTasks={selectedDateTasks}
+          handleCloseSidebar={handleCloseSidebar}
+        />
+      )}
     </div>
   );
 }

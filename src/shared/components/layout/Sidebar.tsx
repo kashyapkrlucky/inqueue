@@ -1,7 +1,7 @@
 import { Link, NavLink, useNavigate } from "react-router-dom";
 import {
   BotMessageSquareIcon,
-  CalendarRangeIcon,
+  // CalendarRangeIcon,
   KanbanIcon,
   LayoutDashboardIcon,
   ListTodoIcon,
@@ -18,7 +18,7 @@ const navItems = [
   { to: "/", icon: LayoutDashboardIcon, label: "Home" },
   { to: "/board", icon: KanbanIcon, label: "Board" },
   { to: "/tasks", icon: ListTodoIcon, label: "Tasks" },
-  { to: "/calendar", icon: CalendarRangeIcon, label: "Calendar" },
+  // { to: "/calendar", icon: CalendarRangeIcon, label: "Calendar" },
   { to: "/notes", icon: StickyNoteIcon, label: "Notes" },
 ];
 
