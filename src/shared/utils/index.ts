@@ -1,6 +1,7 @@
 
 import { formatDistance } from "date-fns";
-export const TOKEN_KEY = "token";
+export const ACCESS_TOKEN_KEY = "access_token";
+export const REFRESH_TOKEN_KEY = "refresh_token";
 export const USER_KEY = "user";
 
 
@@ -13,7 +14,7 @@ export const getStoredToken = (key: string): string | null => {
 };
 
 export const setStoredToken = (
-  key: string = TOKEN_KEY,
+  key: string,
   data: object | string | null,
 ): void => {
   if (typeof window !== "undefined") {
