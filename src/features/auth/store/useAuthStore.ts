@@ -97,10 +97,10 @@ export const useAuthStore = create<AuthState>((set) => ({
   onGuestLogin: async () => {
     try {
       set({ isGuestLoading: true });
-      const baseUrl = import.meta.env.VITE_BASE_URL;
+      const clientId = import.meta.env.VITE_CLIENT_ID;
       const {
         data: { data },
-      } = await axios.post("/v1/modules/guest", { clientUrl: baseUrl });
+      } = await axios.post("/v1/modules/guest", { clientId });
       const { user, access_token, refresh_token } = data;
       set({ user, access_token, refresh_token, isAuthenticated: true });
       setStoredToken(USER_KEY, JSON.stringify(user));
