@@ -59,7 +59,7 @@ export default function Board() {
   }, []);
   const getTasksForDate = useCallback(
     (date: Date) => {
-      return tasks.filter((task) => isSameDay(new Date(task.createdAt), date));
+      return tasks.filter((task) => isSameDay(new Date(task.dueDate), date));
     },
     [tasks],
   );
