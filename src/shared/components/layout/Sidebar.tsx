@@ -1,7 +1,6 @@
 import { Link, NavLink, useNavigate } from "react-router-dom";
 import {
   BotMessageSquareIcon,
-  // CalendarRangeIcon,
   KanbanIcon,
   LayoutDashboardIcon,
   ListTodoIcon,
@@ -25,7 +24,6 @@ const navItems = [
 export default function Sidebar() {
   const [isProfileOpen, setIsProfileOpen] = useState(false);
   const { user, logout } = useAuthStore();
-  const hostUrl = import.meta.env.VITE_API_URL;
   const navigate = useNavigate();
   const dropdownRef = useRef<HTMLDivElement>(null);
 
@@ -46,13 +44,6 @@ export default function Sidebar() {
   const handleLogout = async () => {
     await logout();
     navigate("/login");
-  };
-
-  const getAvatarUrl = () => {
-    if (user?.avatar) {
-      return `${hostUrl}/avatars/${user.avatar}`;
-    }
-    return "/user.png";
   };
 
   return (
@@ -127,7 +118,7 @@ export default function Sidebar() {
             aria-expanded={isProfileOpen}
           >
             <img
-              src={getAvatarUrl()}
+              src={user?.avatar || "/user.png"}
               alt={"User profile"}
               className={`w-10 h-10 rounded-full object-cover ring-2 ring-transparent transition-all duration-200 ${
                 isProfileOpen
@@ -143,7 +134,7 @@ export default function Sidebar() {
               <div className="p-4 bg-gradient-to-br from-indigo-50 to-white border-b border-gray-100">
                 <div className="flex items-center gap-3">
                   <img
-                    src={getAvatarUrl()}
+                    src={user?.avatar || "/user.png"}
                     alt={user?.name || "User profile"}
                     className="w-12 h-12 rounded-full object-cover ring-2 ring-indigo-600"
                     onError={(e) => {
