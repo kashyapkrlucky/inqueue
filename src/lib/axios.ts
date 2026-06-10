@@ -1,29 +1,44 @@
-import useAuthStore from "@/features/auth/store/useAuthStore";
+import { useAuthStore } from "@/features/auth/store/useAuthStore";
 import { ACCESS_TOKEN_KEY } from "@/shared/utils";
-import axios, { type AxiosError, type InternalAxiosRequestConfig } from "axios";
+import axios, { AxiosError, type AxiosRequestConfig } from "axios";
 
-let isRefreshing = false;
-let refreshQueue: Array<(token: string | null) => void> = [];
-
-interface RetryConfig extends InternalAxiosRequestConfig {
-  _retry?: boolean;
-}
-
-const resolveRefreshQueue = (token: string | null) => {
-  refreshQueue.forEach((callback) => callback(token));
-  refreshQueue = [];
-};
-
-const isRefreshTokenExpiredError = (error: unknown) => {
-  return axios.isAxiosError(error) && error.response?.status === 401;
-};
-
-const api = axios.create({
+const axiosInstance = axios.create({
   baseURL: (import.meta.env.VITE_API_URL || "http://localhost:3000") + "/api",
+  headers: {
+    "Content-Type": "application/json",
+  },
+  withCredentials: true,
 });
 
-// Add a request interceptor to include auth token
-api.interceptors.request.use(
+type RetryableAxiosRequestConfig = AxiosRequestConfig & {
+  _retry?: boolean;
+  skipAuthRefresh?: boolean;
+};
+
+let isRefreshing = false;
+let queue: {
+  resolve: () => void;
+  reject: (error: unknown) => void;
+}[] = [];
+
+const flushQueue = (error?: unknown) => {
+  queue.forEach(({ resolve, reject }) => {
+    if (error) {
+      reject(error);
+      return;
+    }
+    resolve();
+  });
+  queue = [];
+};
+
+const shouldSkipRefresh = (url?: string) => {
+  if (!url) return true;
+
+  return ["/v1/modules/session/refresh"].some((path) => url.includes(path));
+};
+
+axiosInstance.interceptors.request.use(
   (config) => {
     const token = localStorage.getItem(ACCESS_TOKEN_KEY);
     if (token) {
@@ -36,60 +51,60 @@ api.interceptors.request.use(
   },
 );
 
-// Add a response interceptor to handle token refresh or errors
-api.interceptors.response.use(
+// Response interceptor
+axiosInstance.interceptors.response.use(
   (response) => response,
-  async (error: AxiosError) => {
-    const original = error.config as RetryConfig | undefined;
+  async (error) => {
+    // Handle errors globally
+    if (error.response) {
+      // Handle specific status codes
+      if (error.response.status === 401) {
+        const original = error.config as
+          | RetryableAxiosRequestConfig
+          | undefined;
 
-    if (error.response?.status !== 401 || !original) {
-      return Promise.reject(error);
-    }
+        if (
+          !original ||
+          original._retry ||
+          original.skipAuthRefresh ||
+          shouldSkipRefresh(original.url)
+        ) {
+          throw error;
+        }
 
-    if (original._retry || original.url?.includes("/v1/modules/session/refresh")) {
-      return Promise.reject(error);
-    }
+        original._retry = true;
 
-    original._retry = true;
+        if (isRefreshing) {
+          await new Promise<void>((resolve, reject) => {
+            queue.push({ resolve, reject });
+          });
+          return axiosInstance(original);
+        }
 
-    if (isRefreshing) {
-      return new Promise((resolve, reject) => {
-        refreshQueue.push((token) => {
-          if (!token) {
-            reject(error);
-            return;
+        isRefreshing = true;
+
+        try {
+          await useAuthStore.getState().getRefreshedTokens();
+
+          flushQueue();
+          const promise = setTimeout(() => {}, 0);
+          await promise;
+
+          return axiosInstance(original);
+        } catch (refreshError) {
+          flushQueue(refreshError);
+          if (typeof window !== "undefined") {
+            window.location.href = "/login";
           }
-
-          original.headers.Authorization = `Bearer ${token}`;
-          resolve(api(original));
-        });
-      });
-    }
-
-    isRefreshing = true;
-
-    try {
-      const tokens = await useAuthStore.getState().getRefreshedTokens();
-      const accessToken = tokens?.access_token ?? null;
-
-      if (!accessToken) {
-        resolveRefreshQueue(null);
-        return Promise.reject(error);
+          throw refreshError;
+        } finally {
+          isRefreshing = false;
+        }
       }
-
-      original.headers.Authorization = `Bearer ${accessToken}`;
-      resolveRefreshQueue(accessToken);
-      return api(original);
-    } catch (refreshError) {
-      if (isRefreshTokenExpiredError(refreshError)) {
-        useAuthStore.getState().logout();
-      }
-      resolveRefreshQueue(null);
-      return Promise.reject(refreshError);
-    } finally {
-      isRefreshing = false;
     }
+    return Promise.reject(error);
   },
 );
 
-export default api;
+export { AxiosError };
+export default axiosInstance;

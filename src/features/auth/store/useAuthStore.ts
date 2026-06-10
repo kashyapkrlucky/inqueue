@@ -13,6 +13,73 @@ import type { IUser } from "../types";
 const API_BASE_URL =
   (import.meta.env.VITE_API_URL || "http://localhost:3000") + "/api";
 
+interface AuthTokenPayload {
+  user?: IUser;
+  token?: string;
+  access_token?: string;
+  refresh_token?: string;
+  accessToken?: string;
+  refreshToken?: string;
+  [key: string]: unknown;
+}
+
+const findTokenValue = (
+  data: unknown,
+  keys: string[],
+  visited = new WeakSet<object>(),
+): string | undefined => {
+  if (!data || typeof data !== "object") {
+    return undefined;
+  }
+
+  if (visited.has(data)) {
+    return undefined;
+  }
+
+  visited.add(data);
+
+  for (const key of keys) {
+    const value = (data as Record<string, unknown>)[key];
+    if (typeof value === "string" && value.length > 0) {
+      return value;
+    }
+  }
+
+  for (const value of Object.values(data)) {
+    const token = findTokenValue(value, keys, visited);
+    if (token) {
+      return token;
+    }
+  }
+
+  return undefined;
+};
+
+const getTokensFromPayload = (
+  data: unknown,
+  fallbackRefreshToken?: string | null,
+) => {
+  const access_token = findTokenValue(data, [
+    "access_token",
+    "accessToken",
+    "token",
+  ]);
+  const refresh_token =
+    findTokenValue(data, ["refresh_token", "refreshToken"]) ??
+    fallbackRefreshToken;
+
+  if (!access_token || !refresh_token) {
+    throw new Error("Auth response is missing token data.");
+  }
+
+  return { access_token, refresh_token };
+};
+
+const persistAuthTokens = (accessToken: string, refreshToken: string) => {
+  setStoredToken(ACCESS_TOKEN_KEY, accessToken);
+  setStoredToken(REFRESH_TOKEN_KEY, refreshToken);
+};
+
 export interface AuthState {
   user: IUser | null;
   access_token: string | null;
@@ -81,11 +148,14 @@ export const useAuthStore = create<AuthState>((set) => ({
       } = await axios.post("/v1/modules/session", {
         code,
       });
-      const { user, access_token, refresh_token } = data;
+      const { user } = data as AuthTokenPayload;
+      const { access_token, refresh_token } = getTokensFromPayload(data);
+      if (!user) {
+        throw new Error("Auth response is missing user data.");
+      }
       set({ user, access_token, refresh_token, isAuthenticated: true });
       setStoredToken(USER_KEY, JSON.stringify(user));
-      setStoredToken(ACCESS_TOKEN_KEY, access_token);
-      setStoredToken(REFRESH_TOKEN_KEY, refresh_token);
+      persistAuthTokens(access_token, refresh_token);
       return { user, access_token, refresh_token };
     } catch {
       return null;
@@ -101,11 +171,14 @@ export const useAuthStore = create<AuthState>((set) => ({
       const {
         data: { data },
       } = await axios.post("/v1/modules/guest", { clientId });
-      const { user, access_token, refresh_token } = data;
+      const { user } = data as AuthTokenPayload;
+      const { access_token, refresh_token } = getTokensFromPayload(data);
+      if (!user) {
+        throw new Error("Auth response is missing user data.");
+      }
       set({ user, access_token, refresh_token, isAuthenticated: true });
       setStoredToken(USER_KEY, JSON.stringify(user));
-      setStoredToken(ACCESS_TOKEN_KEY, access_token);
-      setStoredToken(REFRESH_TOKEN_KEY, refresh_token);
+      persistAuthTokens(access_token, refresh_token);
       return { user, access_token, refresh_token };
     } catch {
       return null;
@@ -135,17 +208,22 @@ export const useAuthStore = create<AuthState>((set) => ({
   },
 
   getRefreshedTokens: async () => {
-    const current_refresh_token = localStorage.getItem(REFRESH_TOKEN_KEY);
+    const current_refresh_token = getStoredToken(REFRESH_TOKEN_KEY);
+
+    if (!current_refresh_token) {
+      throw new Error("Refresh token is missing.");
+    }
 
     const {
       data: { data },
     } = await rawAxios.post(`${API_BASE_URL}/v1/modules/session/refresh`, {
       refresh_token: current_refresh_token,
     });
+
+    console.log("Refresh response data:", data);
     const { access_token, refresh_token } = data;
     set({ access_token, refresh_token, isAuthenticated: true });
-    setStoredToken(ACCESS_TOKEN_KEY, access_token);
-    setStoredToken(REFRESH_TOKEN_KEY, refresh_token);
+    persistAuthTokens(access_token, refresh_token);
 
     return { access_token, refresh_token };
   },
