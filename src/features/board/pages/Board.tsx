@@ -84,7 +84,7 @@ export default function Board() {
       <PageHeader
         icon={<KanbanIcon className="w-5 h-5 text-indigo-600" />}
         title="Board"
-        description="Manage and track your tasks across different stages"
+        description="Manage and track your tasks across different stages as per due date"
         subContent={
           <div className="flex items-center gap-4">
             {loading && <InlineLoader />}
@@ -130,7 +130,6 @@ export default function Board() {
                     Calendar
                   </button>
                 </div>
-
               </div>
             </div>
           </div>
