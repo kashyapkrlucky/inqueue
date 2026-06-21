@@ -4,32 +4,29 @@ import { useTaskStore } from "../store/useTaskStore";
 import type { ITaskStatus, ITaskPriority } from "../types";
 import { getTaskPriority, getTaskStatus } from "../utils";
 import { TaskCard } from "../components/TaskCard";
-import CustomToast from "../../../shared/components/ui/CustomToast";
 import PageLoader from "../../../shared/components/loaders/PageLoader";
 import ListLoading from "../../../shared/components/ui/ListLoading";
 import { PageHeader } from "../../../shared/components/ui/PageHeader";
 import { TaskFilters } from "../components/TaskFilters";
 import Pagination from "../../../shared/components/ui/Pagination";
 import CreateTask from "../components/CreateTask";
+import { useLabelStore } from "../../labels/store/useLabelStore";
 
 export default function Tasks() {
-  const { tasks, getTasks, loading, error, totalPages } = useTaskStore();
+  const { tasks, getTasks, loading, totalPages, inlineLoading } = useTaskStore();
   const [currentPage, setCurrentPage] = useState(1);
-  const [itemsPerPage] = useState(8);
-  const [expandedTask, setExpandedTask] = useState<string | null>(null);
+  const [itemsPerPage] = useState(10);
   const [query, setQuery] = useState("");
+  const { getLabels } = useLabelStore();
   const [statusFilter, setStatusFilter] = useState<ITaskStatus | "all">("all");
   const [priorityFilter, setPriorityFilter] = useState<ITaskPriority | "all">(
     "all",
   );
 
-  if (error) {
-    CustomToast("error", error);
-  }
-
   useEffect(() => {
     getTasks(currentPage, itemsPerPage);
-  }, [getTasks, currentPage, itemsPerPage]);
+    getLabels()
+  }, [getTasks, currentPage, itemsPerPage, getLabels]);
 
   useEffect(() => {
     document.body.style.overflow = "hidden";
@@ -49,10 +46,6 @@ export default function Tasks() {
       return (t.content ?? "").toLowerCase().includes(q);
     });
   }, [tasks, query, statusFilter, priorityFilter]);
-
-  const toggleTaskExpanded = (taskId: string) => {
-    setExpandedTask((prev) => (prev === taskId ? null : taskId));
-  };
 
   const handleResetFilters = () => {
     setStatusFilter("all");
@@ -83,28 +76,19 @@ export default function Tasks() {
         handleResetFilters={handleResetFilters}
       />
 
-      <section className="flex-1 pt-4 overflow-y-auto">
+      <section className="flex-1 pt-4 overflow-y-auto hide-scrollbar">
         <ListLoading
-          isLoading={loading}
+          isLoading={inlineLoading}
           items={filteredTasks}
           gap="py-2"
           emptyMessage="No tasks found, Try adjusting filters or create a new task."
         >
-          {(task) => {
-            const key = task._id;
-            const isExpanded = expandedTask === task._id;
-            return (
-              <TaskCard
-                key={key}
-                task={task}
-                expanded={Boolean(task._id && isExpanded)}
-                onToggleExpanded={() => {
-                  if (!task._id) return;
-                  toggleTaskExpanded(task._id);
-                }}
-              />
-            );
-          }}
+          {(task) => (
+            <TaskCard
+              key={task._id}
+              task={task}
+            />
+          )}
         </ListLoading>
       </section>
 

@@ -11,7 +11,7 @@ export default function Pagination({
   const hasNext = currentPage < totalPages;
 
   return (
-    <div className="flex items-center justify-between px-4 py-3 border-t border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900">
+    <div className="flex items-center justify-between px-4 py-3 border-t border-gray-200 dark:border-gray-700 ">
       <div className="text-sm text-gray-700 dark:text-gray-300">
         Showing page <span className="font-medium">{currentPage}</span> of{" "}
         <span className="font-medium">{totalPages}</span>

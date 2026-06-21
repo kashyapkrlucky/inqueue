@@ -4,6 +4,7 @@ import { PRIORITY_CONFIG, type ITask } from "@/features/tasks/types";
 import { MoreMenu } from "@/shared/components/ui/MoreMenu";
 import { formatDate } from "@/shared/utils";
 import { ClockIcon } from "lucide-react";
+import { useState } from "react";
 
 interface CalendarTaskCardProps {
   task: ITask;
@@ -13,6 +14,7 @@ export const CalendarTaskCard = ({ task }: CalendarTaskCardProps) => {
   const createdAt = task.createdAt;
   const dueDate = task.dueDate;
   const isDone = task.status === "done";
+  const [moreMenuOpen, setMoreMenuOpen] = useState(false);
 
   const isOverdue =
     (dueDate ? new Date(dueDate) : new Date(createdAt)) < new Date();
@@ -52,9 +54,11 @@ export const CalendarTaskCard = ({ task }: CalendarTaskCardProps) => {
 
       <div className="flex-shrink-0">
         <MoreMenu
+          moreMenuOpen={moreMenuOpen}
+          setMoreMenuOpen={setMoreMenuOpen}
           menuItems={[
             {
-              value: <EditTask task={task} />,
+              value: <EditTask task={task} setMoreMenuOpen={() => {}} />,
             },
             {
               value: <DeleteTask buttonType="text" taskId={task._id} />,

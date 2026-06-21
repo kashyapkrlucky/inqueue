@@ -1,4 +1,3 @@
-import CustomToast from "../../../shared/components/ui/CustomToast";
 import { useTaskStore } from "../../tasks/store/useTaskStore";
 import { useEffect, useState, useCallback, useMemo } from "react";
 import CreateTask from "../../tasks/components/CreateTask";
@@ -19,14 +18,16 @@ import {
 import Text from "@/shared/components/content/Text";
 import { GridView } from "../components/GridView";
 import { CalendarView } from "../components/CalendarView";
+import { useLabelStore } from "../../labels/store/useLabelStore";
 
 export default function Board() {
-  const { tasks, loading, error, getTaskCalendar } = useTaskStore();
+  const { taskByDates, loading, getTaskCalendar } = useTaskStore();
 
+  const { getLabels } = useLabelStore();
   const [selectedDate, setSelectedDate] = useState<Date | null>(null);
   type TabType = "Grid" | "Calendar";
   const [viewMode, setViewMode] = useState<TabType>("Grid");
-  const [isPageLoading, setIsPageLoading] = useState(true);
+  const [isPageLoading] = useState(false);
 
   const [currentMonth, setCurrentMonth] = useState(new Date());
 
@@ -47,8 +48,8 @@ export default function Board() {
 
   useEffect(() => {
     getTaskCalendar(monthStartString, monthEndString);
-    setIsPageLoading(false);
-  }, [monthStartString, monthEndString, getTaskCalendar]);
+    getLabels();
+  }, [monthStartString, monthEndString, getTaskCalendar, getLabels]);
 
   const handlePreviousMonth = useCallback(() => {
     setCurrentMonth((prev) => subMonths(prev, 1));
@@ -59,9 +60,11 @@ export default function Board() {
   }, []);
   const getTasksForDate = useCallback(
     (date: Date) => {
-      return tasks.filter((task) => isSameDay(new Date(task.dueDate), date));
+      return taskByDates.filter((task) =>
+        isSameDay(new Date(task.dueDate), date),
+      );
     },
-    [tasks],
+    [taskByDates],
   );
   const selectedDateTasks = useMemo(
     () => (selectedDate ? getTasksForDate(selectedDate) : []),
@@ -70,10 +73,6 @@ export default function Board() {
   const handleCloseSidebar = useCallback(() => {
     setSelectedDate(null);
   }, []);
-
-  if (error) {
-    CustomToast("error", error);
-  }
 
   if (isPageLoading) {
     return <PageLoader />;
@@ -118,14 +117,12 @@ export default function Board() {
                   </button>
                   <button
                     onClick={() => handleFilterChange("Calendar")}
-                    className={`
-          relative px-4 py-2 text-xs font-semibold rounded-lg transition-all duration-200
+                    className={`relative px-4 py-2 text-xs font-semibold rounded-lg transition-all duration-200
           ${
             viewMode === "Calendar"
               ? "bg-white text-indigo-600 shadow-md"
               : "text-gray-600 hover:text-gray-900 hover:bg-white/50"
-          }
-        `}
+          }`}
                   >
                     Calendar
                   </button>
@@ -138,7 +135,7 @@ export default function Board() {
 
       {viewMode === "Grid" && (
         <>
-          {tasks.length === 0 && !loading && (
+          {taskByDates.length === 0 && !loading && (
             <div className="flex-1 flex items-center justify-center">
               <NoItems
                 title="No tasks found"
@@ -148,7 +145,7 @@ export default function Board() {
             </div>
           )}
 
-          {tasks.length > 0 && <GridView tasks={tasks} />}
+          {taskByDates.length > 0 && <GridView tasks={taskByDates} />}
         </>
       )}
       {viewMode === "Calendar" && (

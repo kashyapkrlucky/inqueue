@@ -1,23 +1,21 @@
 import { MoreVerticalIcon } from "lucide-react";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef } from "react";
 
 interface MoreMenuProps {
+  moreMenuOpen: boolean;
+  setMoreMenuOpen: (value: boolean) => void;
   menuItems: {
-    // label: string;
-    // icon: React.ReactNode;
-    // onClick: () => void;
     value?: React.ReactNode;
   }[];
 }
 
-export const MoreMenu = ({ menuItems }: MoreMenuProps) => {
-  const [showMenu, setShowMenu] = useState(false);
+export const MoreMenu = ({ moreMenuOpen, setMoreMenuOpen, menuItems }: MoreMenuProps) => {
   const menuRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if (menuRef.current && !menuRef.current.contains(event.target as Node)) {
-        setShowMenu(false);
+        setMoreMenuOpen(false);
       }
     };
 
@@ -30,25 +28,15 @@ export const MoreMenu = ({ menuItems }: MoreMenuProps) => {
     <div className="relative" ref={menuRef}>
       {/* more menu with edit & delete options */}
 
-      <button className="cursor-pointer" onClick={() => setShowMenu(!showMenu)}>
+      <button className="cursor-pointer" onClick={() => setMoreMenuOpen(!moreMenuOpen)}>
         <MoreVerticalIcon className="w-5 h-5 text-gray-400" />
         <span className="sr-only">More options</span>
       </button>
 
-      {showMenu && (
-        <div className="absolute top-4 right-0 bg-white rounded-lg shadow-lg border border-gray-200 p-2">
+      {moreMenuOpen && (
+        <div className="absolute top-4 right-0 z-50 bg-white rounded-lg shadow-lg border border-gray-200 p-2">
           {menuItems.map((item, index) => (
-            // <button
-            //   key={index}
-            //   className="w-full flex items-center gap-2 px-2 py-1 text-left hover:bg-gray-50"
-            //   onClick={item.onClick}
-            // >
-            //   {item.icon}
-            //   <span className="text-xs text-gray-600">{item.label}</span>
-            // </button>
-            <div key={index}>
-              {item.value}
-            </div>
+            <div key={index}>{item.value}</div>
           ))}
         </div>
       )}

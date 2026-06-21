@@ -31,6 +31,7 @@ export const GridView = ({ tasks }: GridViewProps) => {
         updateTask(taskId, {
           ...task,
           status: newStatus as "todo" | "in_progress" | "done",
+          label: task.label?._id,
         });
       }
       setDraggedOverColumn(null);

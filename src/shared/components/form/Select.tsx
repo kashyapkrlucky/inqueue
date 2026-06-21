@@ -11,6 +11,7 @@ export default function Select({
   boxClassName = "flex flex-col gap-2",
   label,
   id,
+  className,
   ...props
 }: SelectProps) {
   return (
@@ -26,7 +27,7 @@ export default function Select({
       <div className="w-full flex items-center gap-2 rounded-xl border border-gray-200 bg-white focus-within:border-gray-900 focus-within:ring-2 focus-within:ring-gray-900/10">
         <select
           id={id}
-          className="h-full w-full p-3 bg-transparent text-sm text-gray-900 outline-none placeholder:text-gray-400"
+          className={`h-full w-full p-3 bg-transparent text-sm text-gray-900 outline-none placeholder:text-gray-400 ${className}`}
           {...props}
         >
           {children}

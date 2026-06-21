@@ -1,29 +1,32 @@
 import { useState } from "react";
-import { Button } from "../../../shared/components/form/Button";
 import Modal from "../../../shared/components/ui/Modal";
 import TaskEditor from "./TaskEditor";
 import { PenBoxIcon } from "lucide-react";
 import type { ITask } from "../types";
 
-export default function EditTask({ task }: { task: ITask }) {
+export default function EditTask({ task, setMoreMenuOpen, iconOnly }: { task: ITask, setMoreMenuOpen: (value: boolean) => void, iconOnly?: boolean }) {
   const [isTaskModalOpen, setIsTaskModalOpen] = useState(false);
 
+  const onClose = () => {
+    setIsTaskModalOpen(false);
+    setMoreMenuOpen(false);
+  }
   return (
     <>
-      <Button
-        size="xs"
-        variant="ghost"
-        icon={<PenBoxIcon className="h-3 w-3" />}
+      <button
+        className={`${iconOnly ? 'h-9 w-9 justify-center items-center' : 'w-full items-start'} p-1 inline-flex rounded-xl text-gray-500 hover:bg-gray-100 hover:text-gray-700 hover:border-gray-200 transition-colors disabled:opacity-60 disabled:cursor-not-allowed`}
         onClick={() => setIsTaskModalOpen(true)}
+        aria-label="Edit"
       >
-        Edit
-      </Button>
+        <PenBoxIcon className="w-4 h-4" />
+        {!iconOnly ? <span className="text-xs ml-2">Edit</span> : null}
+      </button>
       <Modal
         title="Edit Task"
         isOpen={isTaskModalOpen}
-        onClose={() => setIsTaskModalOpen(false)}
+        onClose={onClose}
       >
-        <TaskEditor task={task} onClose={() => setIsTaskModalOpen(false)} />
+        <TaskEditor task={task} onClose={onClose} />
       </Modal>
     </>
   );

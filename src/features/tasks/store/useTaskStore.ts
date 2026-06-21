@@ -21,7 +21,9 @@ interface TaskStats {
 
 interface TaskState {
   loading: boolean;
+  inlineLoading: boolean;
   tasks: ITask[];
+  taskByDates: ITask[];
   totalPages: number;
   error: string | null;
   setTasks: (task: ITask) => void;
@@ -38,7 +40,9 @@ interface TaskState {
 
 export const useTaskStore = create<TaskState>((set) => ({
   loading: false,
+  inlineLoading: false,
   tasks: [],
+  taskByDates: [],
   totalPages: 1,
   error: null,
   stats: {
@@ -112,55 +116,74 @@ export const useTaskStore = create<TaskState>((set) => ({
       set({ loading: false });
     }
   },
-  addTask: async (task: Partial<ITask>) => {
+  addTask: async (task: CreateTaskInput, isTaskByDates = false) => {
     try {
-      set({ loading: true });
+      set({ inlineLoading: true });
       const {
         data: { data },
       } = await axios.post("/v1/modules/tasks", task);
-      set((state) => ({ tasks: [data, ...state.tasks] }));
+      if (isTaskByDates) {
+        set((state) => ({ taskByDates: [data, ...state.taskByDates] }));
+      } else {
+        set((state) => ({ tasks: [data, ...state.tasks] }));
+      }
     } catch (error) {
       set({
         error:
           error instanceof Error ? error.message : "An unknown error occurred",
       });
     } finally {
-      set({ loading: false });
+      set({ inlineLoading: false });
     }
   },
-  updateTask: async (taskId: string, task: UpdateTaskInput) => {
+  updateTask: async (taskId: string, task: UpdateTaskInput, isTaskByDates = false) => {
     try {
-      console.log("Updating task:", taskId, task);
-      set({ loading: true });
-      await axios.patch<UpdateTaskInput>(`/v1/modules/tasks/${taskId}`, task);
-      set((state) => ({
-        tasks: state.tasks.map((t) =>
-          t._id === taskId ? { ...t, ...task } : t,
-        ),
-      }));
+      set({ inlineLoading: true });
+      const {
+        data: { data },
+      } = await axios.patch(`/v1/modules/tasks/${taskId}`, task);
+      if (isTaskByDates) {
+        set((state) => ({
+          taskByDates: state.taskByDates.map((t) =>
+            t._id == taskId ? { ...t, data } : t,
+          ),
+        }));
+      } else {
+        set((state) => ({
+          tasks: state.tasks.map((t) =>
+            t._id == taskId ? { ...t, data } : t,
+          ),
+        }));
+      }
     } catch (error) {
       set({
         error:
           error instanceof Error ? error.message : "An unknown error occurred",
       });
     } finally {
-      set({ loading: false });
+      set({ inlineLoading: false });
     }
   },
-  deleteTask: async (taskId: string) => {
+  deleteTask: async (taskId: string, isTaskByDates = false) => {
     try {
-      set({ loading: true });
+      set({ inlineLoading: true });
       await axios.delete("/v1/modules/tasks/" + taskId);
-      set((state) => ({
-        tasks: state.tasks.filter((t) => t._id !== taskId),
-      }));
+      if (isTaskByDates) {
+        set((state) => ({
+          taskByDates: state.taskByDates.filter((t) => t._id !== taskId),
+        }));
+      } else {
+        set((state) => ({
+          tasks: state.tasks.filter((t) => t._id !== taskId),
+        }));
+      }
     } catch (error) {
       set({
         error:
           error instanceof Error ? error.message : "An unknown error occurred",
       });
     } finally {
-      set({ loading: false });
+      set({ inlineLoading: false });
     }
   },
   getTaskCalendar: async (startDate: string, endDate: string) => {
@@ -172,7 +195,7 @@ export const useTaskStore = create<TaskState>((set) => ({
         startDate,
         endDate,
       });
-      set({ tasks: data.tasks });
+      set({ taskByDates: data.tasks });
     } catch (error) {
       set({
         error:

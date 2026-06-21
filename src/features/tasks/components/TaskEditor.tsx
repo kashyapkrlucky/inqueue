@@ -13,6 +13,7 @@ import Select from "../../../shared/components/form/Select";
 import Input from "../../../shared/components/form/Input";
 import CustomToast from "../../../shared/components/ui/CustomToast";
 import { useTaskStore } from "../store/useTaskStore";
+import { useLabelStore } from "../../labels/store/useLabelStore";
 
 export default function TaskEditor({
   task,
@@ -22,9 +23,11 @@ export default function TaskEditor({
   onClose: () => void;
 }) {
   const { addTask, updateTask } = useTaskStore();
+  const { labels } = useLabelStore();
   const [content, setContent] = useState(task?.content || "");
   const [status, setStatus] = useState(task?.status || "todo");
   const [priority, setPriority] = useState(task?.priority || "medium");
+  const [label, setLabel] = useState(task?.label?._id || "");
   const [dueDate, setDueDate] = useState(
     task?.dueDate ? new Date(task.dueDate).toISOString().split("T")[0] : "",
   );
@@ -52,12 +55,14 @@ export default function TaskEditor({
       CustomToast("error", "Due date is required");
       return;
     }
+    
     if (task) {
       onUpdateTask(task._id, {
         content,
         status: status as ITaskStatus,
         priority: priority as ITaskPriority,
         dueDate: new Date(dueDate),
+        label: label as string,
       });
     } else {
       onAddTask({
@@ -65,6 +70,7 @@ export default function TaskEditor({
         status: status as ITaskStatus,
         priority: priority as ITaskPriority,
         dueDate: new Date(dueDate),
+        label: label as string,
       });
     }
     setContent("");
@@ -109,7 +115,6 @@ export default function TaskEditor({
             </option>
           ))}
         </Select>
-
         <Input
           type="date"
           label="Due Date"
@@ -117,12 +122,31 @@ export default function TaskEditor({
           value={dueDate}
           onChange={(e) => setDueDate(e.target.value)}
         />
+        <Select
+          id="label"
+          label="Label"
+          value={label}
+          className="uppercase"
+          onChange={(e) => setLabel(e.target.value)}
+          onClick={(e) => e.stopPropagation()}
+        >
+          <option value="">Select Label</option>
+          {labels.map((label) => (
+            <option key={label._id} value={label._id}>
+              {label.name}
+            </option>
+          ))}
+        </Select>
       </section>
       <footer className="flex items-center justify-end gap-2 mt-4">
         <Button variant="ghost" onClick={onClose}>
           Cancel
         </Button>
-        <Button type="submit" variant="primary" disabled={!content.trim() || !dueDate}>
+        <Button
+          type="submit"
+          variant="primary"
+          disabled={!content.trim() || !dueDate}
+        >
           {task ? "Update" : "Create"}
         </Button>
       </footer>

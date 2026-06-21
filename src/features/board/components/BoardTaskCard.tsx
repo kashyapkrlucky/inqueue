@@ -1,10 +1,11 @@
-import { ClockIcon } from "lucide-react";
 import type { ITask } from "../../tasks/types";
-import { formatDate } from "../../../shared/utils";
 import { MoreMenu } from "../../../shared/components/ui/MoreMenu";
-import { PRIORITY_CONFIG } from "../../tasks/types";
 import EditTask from "../../tasks/components/EditTask";
 import DeleteTask from "../../tasks/components/DeleteTask";
+import { useState } from "react";
+import TaskPriority from "@/features/tasks/components/TaskPriority";
+import TaskLabel from "@/features/tasks/components/TaskLabel";
+import TaskDueDate from "@/features/tasks/components/TaskDueDate";
 
 interface BoardTaskCardProps {
   task: ITask;
@@ -17,14 +18,7 @@ export const BoardTaskCard = ({
   onDragStart,
   onDragEnd,
 }: BoardTaskCardProps) => {
-  const createdAt = task.createdAt;
-  const dueDate = task.dueDate;
-  const isDone = task.status === "done";
-
-  const isOverdue =
-    (dueDate ? new Date(dueDate) : new Date(createdAt)) < new Date();
-  const priorityConfig =
-    PRIORITY_CONFIG[task.priority as keyof typeof PRIORITY_CONFIG];
+  const [moreMenuOpen, setMoreMenuOpen] = useState(false);
 
   const handleDragStart = (e: React.DragEvent) => {
     e.dataTransfer.effectAllowed = "move";
@@ -38,7 +32,7 @@ export const BoardTaskCard = ({
 
   return (
     <div
-      className="group w-full flex flex-row gap-1 rounded-xl bg-white shadow-sm hover:shadow-md transition-all duration-200 p-4 select-none border-2 border-white hover:border-indigo-200 cursor-move"
+      className="relative group w-full flex flex-row gap-1 rounded-lg bg-white shadow-sm hover:shadow-md transition-all duration-200 p-2 select-none border-2 border-white hover:border-indigo-200 cursor-move"
       key={task._id}
       draggable
       onDragStart={handleDragStart}
@@ -51,36 +45,33 @@ export const BoardTaskCard = ({
           </p>
         </div>
 
-        <div className="flex flex-col lg:flex-row items-start lg:items-center gap-4 text-xs text-gray-500">
-          <span
-            className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold text-white shadow-sm ${priorityConfig?.color}`}
-          >
-            {priorityConfig?.label}
-          </span>
-          <span
-            className={`inline-flex items-center gap-1.5 ${isOverdue && !isDone ? "text-red-600 font-semibold" : ""}`}
-          >
-            <ClockIcon
-              className={`h-3.5 w-3.5 ${isOverdue && !isDone ? "text-red-500" : "text-gray-400"}`}
-            />
-            <span>
-              Due on{" "}
-              {dueDate
-                ? formatDate(new Date(dueDate))
-                : formatDate(new Date(createdAt))}
-            </span>
-          </span>
+        <div className="flex flex-col lg:flex-row items-start lg:items-center gap-2 text-xs text-gray-500">
+          <TaskPriority task={task} />
+
+          <TaskDueDate task={task} />
+
+          <div className={`absolute bottom-2 right-0`}>
+            <TaskLabel task={task} />
+          </div>
         </div>
       </div>
 
       <div className="flex-shrink-0">
         <MoreMenu
+          moreMenuOpen={moreMenuOpen}
+          setMoreMenuOpen={setMoreMenuOpen}
           menuItems={[
             {
-              value: <EditTask task={task} />,
+              value: <EditTask task={task} setMoreMenuOpen={setMoreMenuOpen} />,
             },
             {
-              value: <DeleteTask buttonType="text" taskId={task._id} />,
+              value: (
+                <DeleteTask
+                  buttonType="text"
+                  taskId={task._id}
+                  setMoreMenuOpen={setMoreMenuOpen}
+                />
+              ),
             },
           ]}
         />

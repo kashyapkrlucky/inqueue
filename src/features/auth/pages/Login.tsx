@@ -11,12 +11,12 @@ import {
   TEXT_OR,
   TEXT_CONTINUE_AS_GUEST,
   TEXT_COPYRIGHT,
-  TEXT_PRIVACY,
-  TEXT_TERMS,
-  TEXT_BY_CONTINUING,
-  TEXT_AND,
+  // TEXT_PRIVACY,
+  // TEXT_TERMS,
+  // TEXT_BY_CONTINUING,
+  // TEXT_AND,
 } from "../constants";
-import PageLink from "../../../shared/components/content/PageLink";
+// import PageLink from "../../../shared/components/content/PageLink";
 import PageLoader from "../../../shared/components/loaders/PageLoader";
 
 export default function Login() {
@@ -51,8 +51,8 @@ export default function Login() {
       <div className="w-full max-w-md bg-white/95 backdrop-blur-sm p-8 rounded-2xl border border-slate-200/50 flex flex-col items-center text-center gap-8 transition-all duration-300 shadow">
         {/* Logo Section */}
         <div className="flex flex-col items-center gap-3">
-          <div className="mb-6 inline-flex items-center justify-center w-20 h-20 bg-white/20 backdrop-blur-lg rounded-3xl shadow-sm border border-black/20">
-            <span className="text-4xl font-bold text-gray-900">INQ</span>
+          <div className="mb-6 inline-flex items-center justify-center">
+            <img src="/logo.png" alt="Logo" className="w-20 h-20 rounded-3xl" />
           </div>
           <h1 className="text-2xl font-bold text-slate-900 tracking-tight">
             {TEXT_WELCOME_BACK}
@@ -97,12 +97,12 @@ export default function Login() {
 
         {/* Terms and Conditions */}
         <div className="text-center space-y-1">
-          <p className="text-xs text-slate-500 leading-relaxed">
-            {TEXT_BY_CONTINUING}
-            <PageLink url="/terms" text={TEXT_TERMS} /> {TEXT_AND}
-            <PageLink url="/privacy" text={TEXT_PRIVACY} />
-          </p>
-          <p className="text-xs text-slate-400">{TEXT_COPYRIGHT}</p>
+          {/* <p className="text-xs text-slate-500 leading-relaxed">
+            {TEXT_BY_CONTINUING}&nbsp;
+            <PageLink url="/terms" size="xs" text={TEXT_TERMS} /> {TEXT_AND}&nbsp;
+            <PageLink url="/privacy" size="xs" text={TEXT_PRIVACY} />
+          </p> */}
+          <p className="text-xs text-slate-400">&copy; {TEXT_COPYRIGHT}</p>
         </div>
       </div>
     </div>

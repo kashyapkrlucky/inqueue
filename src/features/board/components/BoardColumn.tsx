@@ -30,7 +30,7 @@ export const BoardColumn = ({ title, tasks, bgColor, onDragStart, onDragEnd, onD
 
   return (
     <div 
-      className={`w-1/3 flex flex-col gap-3 p-4 bg-gray-50/50 rounded-2xl border border-gray-200/50 transition-all duration-200 ${isDraggingOver ? 'border-indigo-400 bg-indigo-50/30' : ''}`}
+      className={`w-1/3 flex flex-col gap-3 p-4 bg-gray-50 rounded-xl border border-gray-200/50 transition-all duration-200 ${isDraggingOver ? 'border-indigo-400 bg-indigo-50/30' : ''}`}
       onDragOver={handleDragOver}
       onDrop={handleDrop}
     >

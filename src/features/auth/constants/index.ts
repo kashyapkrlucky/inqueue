@@ -8,4 +8,4 @@ export const TEXT_CONTINUE_AS_GUEST = "Continue as Guest";
 export const TEXT_BY_CONTINUING = "By continuing, you agree to our";
 export const TEXT_TERMS = "Terms of Service";
 export const TEXT_PRIVACY = "Privacy Policy";
-export const TEXT_COPYRIGHT = "&copy; 2025 InQueue. All rights reserved.";
+export const TEXT_COPYRIGHT = "2025 InQueue. All rights reserved.";

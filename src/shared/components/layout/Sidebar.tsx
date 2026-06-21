@@ -11,7 +11,6 @@ import {
 } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import useAuthStore from "../../../features/auth/store/useAuthStore";
-import { APP_NAME } from "../../constants";
 import { Button } from "../form/Button";
 
 const navItems = [
@@ -51,13 +50,9 @@ export default function Sidebar() {
   return (
     <nav className="w-16 md:w-20 bg-white border-r border-gray-200 flex flex-col p-4">
       {/* Logo */}
-      <div className="p-4 border-b border-gray-200">
-        <Link to="/" className="flex items-center justify-center">
-          <span className="text-xl font-bold text-indigo-600 tracking-tight">
-            {APP_NAME}
-          </span>
-        </Link>
-      </div>
+      <Link to="/" className="flex items-center justify-center">
+        <img src="/logo.png" alt="Logo" className="w-12 h-12 rounded-2xl" />
+      </Link>
 
       {/* Navigation */}
       <div className="flex-1 flex flex-col justify-between py-4 gap-2">

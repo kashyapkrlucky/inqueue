@@ -1,3 +1,4 @@
+import type { ITaskLabel } from "@/features/labels/types";
 import type { BaseEntity } from "../../../shared/types/index.types";
 import type { IUser } from "../../auth/types";
 
@@ -19,6 +20,8 @@ export interface ITask extends BaseEntity {
   priority?: ITaskPriority;
   /** Due date for the task */
   dueDate: Date;
+  /** Label for the task */
+  label?: ITaskLabel;
 }
 
 export type NewTask = {
@@ -33,6 +36,7 @@ export type CreateTaskInput = {
   status?: ITaskStatus | 'todo';
   priority?: ITaskPriority | 'medium';
   dueDate: Date;
+  label?: string;
 };
 
 export type UpdateTaskInput = {
@@ -40,6 +44,7 @@ export type UpdateTaskInput = {
   status?: ITaskStatus;
   priority?: ITaskPriority;
   dueDate?: Date;
+  label?: string;
 };
 
 export type TaskUpdate = Partial<Omit<ITask, '_id'>>;
