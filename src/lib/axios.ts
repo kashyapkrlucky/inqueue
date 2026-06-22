@@ -38,6 +38,17 @@ const shouldSkipRefresh = (url?: string) => {
   return ["/v1/modules/session/refresh"].some((path) => url.includes(path));
 };
 
+const expireSession = () => {
+  useAuthStore.getState().logout();
+
+  if (
+    typeof window !== "undefined" &&
+    window.location.pathname !== "/login"
+  ) {
+    window.location.replace("/login");
+  }
+};
+
 axiosInstance.interceptors.request.use(
   (config) => {
     const token = localStorage.getItem(ACCESS_TOKEN_KEY);
@@ -93,9 +104,7 @@ axiosInstance.interceptors.response.use(
           return axiosInstance(original);
         } catch (refreshError) {
           flushQueue(refreshError);
-          if (typeof window !== "undefined") {
-            window.location.href = "/login";
-          }
+          expireSession();
           throw refreshError;
         } finally {
           isRefreshing = false;

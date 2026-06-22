@@ -49,7 +49,7 @@ export default function AppLayout() {
           <Outlet />
         </main>
         {/* <ChatBot /> */}
-        <Toaster position="bottom-left" reverseOrder={false} />
+        <Toaster position="bottom-right" reverseOrder={false} />
       </div>
     </Suspense>
   );

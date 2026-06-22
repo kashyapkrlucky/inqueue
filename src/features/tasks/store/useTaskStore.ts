@@ -28,9 +28,13 @@ interface TaskState {
   error: string | null;
   setTasks: (task: ITask) => void;
   getTasks: (page: number, limit: number) => Promise<void>;
-  addTask: (task: CreateTaskInput) => Promise<void>;
-  updateTask: (taskId: string, task: UpdateTaskInput) => Promise<void>;
-  deleteTask: (taskId: string) => Promise<void>;
+  addTask: (task: CreateTaskInput, isTaskByDates?: boolean) => Promise<void>;
+  updateTask: (
+    taskId: string,
+    task: UpdateTaskInput,
+    isTaskByDates?: boolean,
+  ) => Promise<void>;
+  deleteTask: (taskId: string, isTaskByDates?: boolean) => Promise<void>;
   stats: TaskStats;
   getStats: () => Promise<void>;
   homeData: { recent: ITask[]; upcoming: ITask[] };
@@ -142,16 +146,18 @@ export const useTaskStore = create<TaskState>((set) => ({
       const {
         data: { data },
       } = await axios.patch(`/v1/modules/tasks/${taskId}`, task);
+      const updatedTask = data as ITask;
+      
       if (isTaskByDates) {
         set((state) => ({
           taskByDates: state.taskByDates.map((t) =>
-            t._id == taskId ? { ...t, data } : t,
+            t._id === taskId ? { ...t, ...updatedTask } : t,
           ),
         }));
       } else {
         set((state) => ({
           tasks: state.tasks.map((t) =>
-            t._id == taskId ? { ...t, data } : t,
+            t._id === taskId ? { ...t, ...updatedTask } : t,
           ),
         }));
       }

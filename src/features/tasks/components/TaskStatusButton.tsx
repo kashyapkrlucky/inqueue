@@ -1,11 +1,14 @@
 import { Loader2Icon } from "lucide-react";
 import { useTaskStore } from "../store/useTaskStore";
-import type { ITask } from "../types";
+import type { ITask, UpdateTaskInput } from "../types";
 import type { ITaskStatus } from "../types";
 import { getTaskStatus, statusConfig } from "../utils";
 import CustomToast from "@/shared/components/ui/CustomToast";
+import { useState } from "react";
+
 export default function TaskStatusButton({ task }: { task: ITask }) {
-  const { loading } = useTaskStore();
+  const { updateTask } = useTaskStore();
+  const [loading, setLoading] = useState(false);
   const status = getTaskStatus(task.status);
   const StatusIcon = statusConfig[status].icon;
 
@@ -14,11 +17,11 @@ export default function TaskStatusButton({ task }: { task: ITask }) {
     if (status === "in_progress") return "done";
     return "todo";
   };
-  const commitUpdate = async (id: string, partial: Partial<ITask>) => {
-    console.log(id, partial);
-
-    //   await updateTask(id, { ...task, ...partial } as ITask);
+  const commitUpdate = async (id: string, partial: UpdateTaskInput) => {
+    setLoading(true);
+    await updateTask(id, partial);
     CustomToast("success", "Task updated successfully");
+    setLoading(false);
   };
 
   const onToggleStatus = async () => {
