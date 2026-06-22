@@ -14,10 +14,37 @@ interface TaskStatisticsProps {
   loading: boolean;
 }
 
-interface dateItem {
+interface ChartItem {
   name: string;
   value: number;
   fill: string;
+}
+
+function ChartPanel({
+  title,
+  hasData,
+  data,
+}: {
+  title: string;
+  hasData: boolean;
+  data: ChartItem[];
+}) {
+  return (
+    <div className="min-w-0 rounded-xl border border-gray-100 bg-gray-50/40 p-3">
+      <div className="mb-2 flex items-center justify-between">
+        <h3 className="text-xs font-semibold uppercase tracking-wide text-gray-500">
+          {title}
+        </h3>
+      </div>
+      <div className="flex min-h-56 items-center justify-center">
+        {hasData ? (
+          <CustomActiveShapePieChart data={data} />
+        ) : (
+          <div className="text-sm text-gray-500">No tasks</div>
+        )}
+      </div>
+    </div>
+  );
 }
 
 export function TaskStatistics({ taskStats, loading }: TaskStatisticsProps) {
@@ -25,7 +52,7 @@ export function TaskStatistics({ taskStats, loading }: TaskStatisticsProps) {
     taskStats.todo > 0 || taskStats.in_progress > 0 || taskStats.done > 0;
   const isTaskPriorityData =
     taskStats.low > 0 || taskStats.medium > 0 || taskStats.high > 0;
-  const taskStatsData: dateItem[] = [
+  const taskStatsData: ChartItem[] = [
     { name: "To do", value: taskStats.todo, fill: "#9ca3af" },
     { name: "In progress", value: taskStats.in_progress, fill: "#6366f1" },
     { name: "Done", value: taskStats.done, fill: "#10b981" },
@@ -55,26 +82,13 @@ export function TaskStatistics({ taskStats, loading }: TaskStatisticsProps) {
         ) : null}
       </div>
 
-      <div className="flex flex-col md:flex-row gap-4">
-        {/* Status Chart */}
-        <div className="flex-1 flex flex-col items-center justify-center">
-          {isTaskData ? (
-            <CustomActiveShapePieChart data={taskStatsData} />
-          ) : (
-            <div className="text-sm text-gray-500">No tasks</div>
-          )}
-          <span>Status</span>
-        </div>
-
-        {/* Priority Chart */}
-        <div className="flex-1 flex flex-col items-center justify-center">
-          {isTaskPriorityData ? (
-            <CustomActiveShapePieChart data={taskPriorityData} />
-          ) : (
-            <div className="text-sm text-gray-500">No tasks</div>
-          )}
-          <span>Priority</span>
-        </div>
+      <div className="mt-4 grid grid-cols-1 gap-3 lg:grid-cols-2">
+        <ChartPanel title="Status" hasData={isTaskData} data={taskStatsData} />
+        <ChartPanel
+          title="Priority"
+          hasData={isTaskPriorityData}
+          data={taskPriorityData}
+        />
       </div>
     </div>
   );

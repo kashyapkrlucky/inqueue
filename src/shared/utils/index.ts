@@ -1,5 +1,3 @@
-
-import { formatDistance } from "date-fns";
 export const ACCESS_TOKEN_KEY = "access_token";
 export const REFRESH_TOKEN_KEY = "refresh_token";
 export const USER_KEY = "user";
@@ -62,7 +60,21 @@ export const monthYearOnly = (date: string) => {
 };
 
 export const formatRelativeTime = (date: string) => {
-  return formatDistance(new Date(date), new Date(), { addSuffix: true });
+  const diffMs = new Date(date).getTime() - Date.now();
+  const absMs = Math.abs(diffMs);
+  const units: Array<[Intl.RelativeTimeFormatUnit, number]> = [
+    ["year", 1000 * 60 * 60 * 24 * 365],
+    ["month", 1000 * 60 * 60 * 24 * 30],
+    ["week", 1000 * 60 * 60 * 24 * 7],
+    ["day", 1000 * 60 * 60 * 24],
+    ["hour", 1000 * 60 * 60],
+    ["minute", 1000 * 60],
+  ];
+  const formatter = new Intl.RelativeTimeFormat("en", { numeric: "auto" });
+  const [unit, unitMs] =
+    units.find(([, milliseconds]) => absMs >= milliseconds) ?? units.at(-1)!;
+
+  return formatter.format(Math.round(diffMs / unitMs), unit);
 };
 
 export function newId() {
@@ -92,4 +104,3 @@ export const getCodeFromURL = () => {
   }
   return code;
 };
-
