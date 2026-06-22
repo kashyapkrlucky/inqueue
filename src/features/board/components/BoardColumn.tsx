@@ -9,11 +9,27 @@ interface BoardColumnProps {
   onDragEnd: () => void;
   onDrop: (taskId: string, newStatus: string) => void;
   onDragOver: (status: string) => void;
+  onPointerDragMove: (clientX: number, clientY: number) => void;
+  onPointerDragEnd: (taskId: string, clientX: number, clientY: number) => void;
   status: string;
   isDraggingOver: boolean;
+  activeTouchTaskId: string | null;
 }
 
-export const BoardColumn = ({ title, tasks, bgColor, onDragStart, onDragEnd, onDrop, onDragOver, status, isDraggingOver }: BoardColumnProps) => {
+export const BoardColumn = ({
+  title,
+  tasks,
+  bgColor,
+  onDragStart,
+  onDragEnd,
+  onDrop,
+  onDragOver,
+  onPointerDragMove,
+  onPointerDragEnd,
+  status,
+  isDraggingOver,
+  activeTouchTaskId,
+}: BoardColumnProps) => {
   const handleDragOver = (e: React.DragEvent) => {
     e.preventDefault();
     e.dataTransfer.dropEffect = "move";
@@ -30,7 +46,8 @@ export const BoardColumn = ({ title, tasks, bgColor, onDragStart, onDragEnd, onD
 
   return (
     <div 
-      className={`w-1/3 flex flex-col gap-3 p-4 bg-gray-50 rounded-xl border border-gray-200/50 transition-all duration-200 ${isDraggingOver ? 'border-indigo-400 bg-indigo-50/30' : ''}`}
+      className={`flex min-w-[17rem] flex-1 flex-col gap-3 rounded-xl border border-gray-200/50 bg-gray-50 p-4 transition-all duration-200 md:min-w-0 ${isDraggingOver ? 'border-indigo-400 bg-indigo-50/30' : ''}`}
+      data-board-status={status}
       onDragOver={handleDragOver}
       onDrop={handleDrop}
     >
@@ -45,6 +62,9 @@ export const BoardColumn = ({ title, tasks, bgColor, onDragStart, onDragEnd, onD
             task={task} 
             onDragStart={onDragStart}
             onDragEnd={onDragEnd}
+            onPointerDragMove={onPointerDragMove}
+            onPointerDragEnd={onPointerDragEnd}
+            isTouchDragging={activeTouchTaskId === task._id}
           />
         ))}
       </div>
