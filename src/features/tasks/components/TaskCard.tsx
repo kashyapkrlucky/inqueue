@@ -20,7 +20,7 @@ export const TaskCard = ({ task }: { task: ITask }) => {
         </p>
         {task.label && <TaskLabel task={task} />}
       </div>
-      <div className="flex items-center gap-1 gap-4">
+      <div className="flex items-center gap-2">
         <TaskDueDate task={task} />
 
         <TaskPriority task={task} />

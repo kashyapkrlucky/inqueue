@@ -48,7 +48,7 @@ export default function Sidebar() {
   };
 
   return (
-    <nav className="w-16 md:w-20 bg-white border-r border-gray-200 flex flex-col p-4">
+    <nav className="w-16 md:w-20 bg-white border-r border-gray-200 flex flex-col p-2 md:p-4">
       {/* Logo */}
       <Link to="/" className="flex items-center justify-center">
         <img src="/logo.png" alt="Logo" className="w-12 h-12 rounded-2xl" />

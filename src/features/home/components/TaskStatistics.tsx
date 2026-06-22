@@ -42,7 +42,7 @@ export function TaskStatistics({ taskStats, loading }: TaskStatisticsProps) {
   ];
 
   return (
-    <div className="col-span-2 flex-1 rounded-2xl bg-white p-5 shadow-sm">
+    <div className="flex-1 rounded-2xl bg-white p-5 shadow-sm">
       <div className="flex items-start justify-between gap-3">
         <div>
           <h2 className="text-sm font-bold text-gray-900">Task Statistics</h2>
@@ -55,9 +55,9 @@ export function TaskStatistics({ taskStats, loading }: TaskStatisticsProps) {
         ) : null}
       </div>
 
-      <div className="grid grid-cols-2 gap-4">
+      <div className="flex flex-col md:flex-row gap-4">
         {/* Status Chart */}
-        <div className="mt-3 flex flex-col items-center justify-center">
+        <div className="flex-1 flex flex-col items-center justify-center">
           {isTaskData ? (
             <CustomActiveShapePieChart data={taskStatsData} />
           ) : (
@@ -67,7 +67,7 @@ export function TaskStatistics({ taskStats, loading }: TaskStatisticsProps) {
         </div>
 
         {/* Priority Chart */}
-        <div className="mt-3 flex flex-col items-center justify-center">
+        <div className="flex-1 flex flex-col items-center justify-center">
           {isTaskPriorityData ? (
             <CustomActiveShapePieChart data={taskPriorityData} />
           ) : (

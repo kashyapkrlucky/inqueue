@@ -1,12 +1,10 @@
 import { useEffect } from "react";
 import { useTaskStore } from "../../tasks/store/useTaskStore";
-import { useNoteStore } from "../../notes/store/useNoteStore";
 import { TaskStats } from "../components/TaskStats";
 import { TaskStatistics } from "../components/TaskStatistics";
 import { TaskActivity } from "../components/TaskActivity";
 import { UpcomingTasks } from "../components/UpcomingTasks";
 import { RecentTasks } from "../components/RecentTasks";
-import { RecentNotes } from "../components/RecentNotes";
 import PageLoader from "../../../shared/components/loaders/PageLoader";
 import useAuthStore from "../../auth/store/useAuthStore";
 import { formatDate } from "../../../shared/utils";
@@ -21,11 +19,6 @@ const Home = () => {
     stats,
     homeData,
   } = useTaskStore();
-  const {
-    loading: notesLoading,
-    stats: noteStats,
-    getStats: getNoteStats,
-  } = useNoteStore();
 
   const { isAuthenticated, loading: authLoading, user } = useAuthStore();
 
@@ -33,11 +26,10 @@ const Home = () => {
     if (!authLoading && isAuthenticated) {
       void getStats();
       void getRecents();
-      void getNoteStats();
     }
-  }, [getStats, getRecents, getNoteStats, authLoading, isAuthenticated]);
+  }, [getStats, getRecents, authLoading, isAuthenticated]);
 
-  const loading = tasksLoading || notesLoading || authLoading;
+  const loading = tasksLoading  || authLoading;
 
   if (loading) {
     return <PageLoader />;
@@ -57,17 +49,15 @@ const Home = () => {
 
       <TaskStats
         taskStats={stats}
-        notes={noteStats.total}
         upcomingTasks={homeData.upcoming.length}
       />
 
-      <section className="grid grid-cols-1 gap-4 lg:grid-cols-3">
+      <section className="flex flex-col md:flex-row gap-4">
         <UpcomingTasks upcomingTasks={homeData.upcoming} />
         <RecentTasks tasks={homeData.recent} />
-        <RecentNotes notes={noteStats.recent} />
       </section>
 
-      <section className="grid grid-cols-1 gap-4 lg:grid-cols-3">
+      <section className="flex flex-col md:flex-row gap-4">
         <TaskStatistics taskStats={stats} loading={loading} />
         <TaskActivity data={stats.weeklyStats} loading={loading} />
       </section>

@@ -11,7 +11,7 @@ interface RecentTasksProps {
 }
 export function RecentTasks({ tasks }: RecentTasksProps) {
   return (
-    <div className="flex-1 rounded-2xl bg-white p-4 shadow-sm">
+    <div className="w-full md:w-1/3 rounded-2xl bg-white p-4 shadow-sm">
       <InfoCard
         title="Recent tasks"
         description="Latest updated"
@@ -31,7 +31,7 @@ export function RecentTasks({ tasks }: RecentTasksProps) {
             return (
               <div
                 key={t._id ?? `${t.content}-${String(t.updatedAt)}`}
-                className="group flex items-center justify-between gap-2.5 rounded-lg border border-gray-100 bg-white p-2.5 transition-all duration-200 hover:border-gray-300 hover:bg-gray-50"
+                className="group flex flex-col md:flex-row items-start md:items-center justify-between gap-2.5 rounded-lg border border-gray-100 bg-white p-2.5 transition-all duration-200 hover:border-gray-300 hover:bg-gray-50"
               >
                 <div className="flex-1 flex flex-row items-center gap-2">
                   <span

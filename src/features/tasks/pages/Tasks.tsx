@@ -7,7 +7,7 @@ import { TaskCard } from "../components/TaskCard";
 import PageLoader from "../../../shared/components/loaders/PageLoader";
 import ListLoading from "../../../shared/components/ui/ListLoading";
 import { PageHeader } from "../../../shared/components/ui/PageHeader";
-import { TaskFilters } from "../components/TaskFilters";
+// import { TaskFilters } from "../components/TaskFilters";
 import Pagination from "../../../shared/components/ui/Pagination";
 import CreateTask from "../components/CreateTask";
 import { useLabelStore } from "../../labels/store/useLabelStore";
@@ -15,11 +15,11 @@ import { useLabelStore } from "../../labels/store/useLabelStore";
 export default function Tasks() {
   const { tasks, getTasks, loading, totalPages, inlineLoading } = useTaskStore();
   const [currentPage, setCurrentPage] = useState(1);
-  const [itemsPerPage] = useState(10);
-  const [query, setQuery] = useState("");
+  const [itemsPerPage] = useState(12);
+  const [query] = useState("");
   const { getLabels } = useLabelStore();
-  const [statusFilter, setStatusFilter] = useState<ITaskStatus | "all">("all");
-  const [priorityFilter, setPriorityFilter] = useState<ITaskPriority | "all">(
+  const [statusFilter] = useState<ITaskStatus | "all">("all");
+  const [priorityFilter] = useState<ITaskPriority | "all">(
     "all",
   );
 
@@ -47,11 +47,11 @@ export default function Tasks() {
     });
   }, [tasks, query, statusFilter, priorityFilter]);
 
-  const handleResetFilters = () => {
-    setStatusFilter("all");
-    setPriorityFilter("all");
-    setQuery("");
-  };
+  // const handleResetFilters = () => {
+  //   setStatusFilter("all");
+  //   setPriorityFilter("all");
+  //   setQuery("");
+  // };
 
   if (loading) {
     return <PageLoader />;
@@ -66,7 +66,7 @@ export default function Tasks() {
         subContent={<CreateTask />}
       />
 
-      <TaskFilters
+      {/* <TaskFilters
         query={query}
         setQuery={setQuery}
         statusFilter={statusFilter}
@@ -74,13 +74,13 @@ export default function Tasks() {
         priorityFilter={priorityFilter}
         setPriorityFilter={setPriorityFilter}
         handleResetFilters={handleResetFilters}
-      />
+      /> */}
 
       <section className="flex-1 pt-4 overflow-y-auto hide-scrollbar">
         <ListLoading
           isLoading={inlineLoading}
           items={filteredTasks}
-          gap="py-2"
+          gap="py-1"
           emptyMessage="No tasks found, Try adjusting filters or create a new task."
         >
           {(task) => (
