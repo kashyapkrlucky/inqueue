@@ -8,7 +8,6 @@ import PageLoader from "../shared/components/loaders/PageLoader";
 const AppLayout = lazy(() => import("./Layout"));
 const Home = lazy(() => import("../features/home/pages/Home"));
 const Login = lazy(() => import("../features/auth/pages/Login"));
-const Notes = lazy(() => import("../features/notes/pages/Notes"));
 const Tasks = lazy(() => import("../features/tasks/pages/Tasks"));
 const Agent = lazy(() => import("../features/agent/pages/Agent"));
 const Labels = lazy(() => import("../features/labels/pages/Labels"));
@@ -50,11 +49,6 @@ const routeConfig: RouteConfig[] = [
       {
         path: "/labels",
         element: <Labels />,
-        protected: true,
-      },
-      {
-        path: "/notes",
-        element: <Notes />,
         protected: true,
       },
       {

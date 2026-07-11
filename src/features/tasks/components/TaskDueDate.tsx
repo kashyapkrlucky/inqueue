@@ -30,7 +30,10 @@ export default function TaskDueDate({ task }: { task: ITask }) {
           <ClockIcon className="h-3.5 w-3.5 text-red-500" />
           <span>Due on {formatDate(dueDate!)}</span>
         </span>
-      ) : null}
+      ) : <span className="inline-flex items-center text-xs gap-1.5 text-gray-600 font-semibold">
+          <ClockIcon className="h-3.5 w-3.5 text-gray-500" />
+          <span>Due on {formatDate(dueDate!)}</span>
+        </span>}
     </>
   );
 }

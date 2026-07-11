@@ -6,7 +6,6 @@ import {
   ListTodoIcon,
   LogOutIcon,
   MessageCircleQuestionMarkIcon,
-  StickyNoteIcon,
   TagIcon,
 } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
@@ -18,8 +17,6 @@ const navItems = [
   { to: "/board", icon: KanbanIcon, label: "Board" },
   { to: "/tasks", icon: ListTodoIcon, label: "Tasks" },
   { to: "/labels", icon: TagIcon, label: "Labels" },
-  // { to: "/calendar", icon: CalendarRangeIcon, label: "Calendar" },
-  { to: "/notes", icon: StickyNoteIcon, label: "Notes" },
 ];
 
 export default function Sidebar() {

@@ -124,7 +124,7 @@ export const BoardTaskCard = ({
           setMoreMenuOpen={setMoreMenuOpen}
           menuItems={[
             {
-              value: <EditTask task={task} setMoreMenuOpen={setMoreMenuOpen} />,
+              value: <EditTask task={task} setMoreMenuOpen={setMoreMenuOpen} isTaskByDates={true} />,
             },
             {
               value: (

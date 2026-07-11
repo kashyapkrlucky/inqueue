@@ -18,9 +18,11 @@ import { useLabelStore } from "../../labels/store/useLabelStore";
 export default function TaskEditor({
   task,
   onClose,
+  isTaskByDates
 }: {
   task?: ITask | undefined;
   onClose: () => void;
+  isTaskByDates?: boolean;
 }) {
   const { addTask, updateTask } = useTaskStore();
   const { labels } = useLabelStore();
@@ -41,9 +43,9 @@ export default function TaskEditor({
 
   const onUpdateTask = useCallback(
     (taskId: string, task: UpdateTaskInput) => {
-      updateTask(taskId, task);
+      updateTask(taskId, task, isTaskByDates);
     },
-    [updateTask],
+    [updateTask, isTaskByDates],
   );
   const onSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
