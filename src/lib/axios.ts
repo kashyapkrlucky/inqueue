@@ -1,9 +1,24 @@
 import { useAuthStore } from "@/features/auth/store/useAuthStore";
 import { ACCESS_TOKEN_KEY } from "@/shared/utils";
-import axios, { AxiosError, type AxiosRequestConfig } from "axios";
+import axios, {
+  AxiosError,
+  type AxiosRequestConfig,
+  type InternalAxiosRequestConfig,
+} from "axios";
+
+const getApiBaseUrl = (url?: string) =>
+  `${url || "http://localhost:3000"}/api`;
+
+const authAxios = axios.create({
+  baseURL: getApiBaseUrl(import.meta.env.VITE_AUTH_URL),
+  headers: {
+    "Content-Type": "application/json",
+  },
+  withCredentials: true,
+});
 
 const axiosInstance = axios.create({
-  baseURL: (import.meta.env.VITE_API_URL || "http://localhost:3000") + "/api",
+  baseURL: getApiBaseUrl(import.meta.env.VITE_API_URL),
   headers: {
     "Content-Type": "application/json",
   },
@@ -49,15 +64,25 @@ const expireSession = () => {
   }
 };
 
-axiosInstance.interceptors.request.use(
-  (config) => {
-    const token = localStorage.getItem(ACCESS_TOKEN_KEY);
-    if (token) {
-      config.headers.Authorization = `Bearer ${token}`;
-      config.headers["x-timezone"] = Intl.DateTimeFormat().resolvedOptions().timeZone;
-    }
-    return config;
+const setAuthHeaders = (config: InternalAxiosRequestConfig) => {
+  const token = localStorage.getItem(ACCESS_TOKEN_KEY);
+  if (token) {
+    config.headers.Authorization = `Bearer ${token}`;
+    config.headers["x-timezone"] =
+      Intl.DateTimeFormat().resolvedOptions().timeZone;
+  }
+  return config;
+};
+
+authAxios.interceptors.request.use(
+  setAuthHeaders,
+  (error) => {
+    return Promise.reject(error);
   },
+);
+
+axiosInstance.interceptors.request.use(
+  setAuthHeaders,
   (error) => {
     return Promise.reject(error);
   },
@@ -116,5 +141,5 @@ axiosInstance.interceptors.response.use(
   },
 );
 
-export { AxiosError };
+export { authAxios, AxiosError };
 export default axiosInstance;

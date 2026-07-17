@@ -7,7 +7,7 @@ interface AgentMessageProps {
 }
 
 export function AgentMessage({ message }: AgentMessageProps) {
-  const hostUrl = import.meta.env.VITE_API_URL;
+  const hostUrl = import.meta.env.VITE_AUTH_URL;
   const imgSrc = `${hostUrl}/apps/tia-ai.png`;
 
   const { addManyTasks, markDone } = useAgentStore();

@@ -5,7 +5,7 @@ import { useAgentStore } from "../store/useAgentStore";
 export function AgentPageHeader() {
   const { clearMessages, messages } = useAgentStore();
   const { user } = useAuthStore();
-  const hostUrl = import.meta.env.VITE_API_URL;
+  const hostUrl = import.meta.env.VITE_AUTH_URL;
   const imgSrc = `${hostUrl}/apps/tia-ai.png`;
   return (
     <header className="border-b border-gray-200 bg-white px-6 py-4">

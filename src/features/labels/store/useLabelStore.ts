@@ -25,7 +25,7 @@ export const useLabelStore = create<ILabelStore>((set) => ({
     try {
       const {
         data: { data },
-      } = await axios.get("/v1/modules/tasks/labels");
+      } = await axios.get("/tasks/labels");
       set({ labels: data });
     } catch (error) {
       set({ error: error as string });
@@ -37,7 +37,7 @@ export const useLabelStore = create<ILabelStore>((set) => ({
     try {
       const {
         data: { data },
-      } = await axios.post("/v1/modules/tasks/labels", payload);
+      } = await axios.post("/tasks/labels", payload);
       set((state) => ({ labels: [data, ...state.labels] }));
     } catch (error) {
       set({ error: error as string });
@@ -47,7 +47,7 @@ export const useLabelStore = create<ILabelStore>((set) => ({
   },
   updateLabel: async (id: string, payload: ITaskLabelUpdateInput) => {
     try {
-      await axios.patch(`/v1/modules/tasks/labels/${id}`, payload);
+      await axios.patch(`/tasks/labels/${id}`, payload);
       set((state) => {
         const updatedLabels = state.labels.map((label) =>
           label._id === id ? { id, ...label, ...payload } : label,
@@ -62,7 +62,7 @@ export const useLabelStore = create<ILabelStore>((set) => ({
   },
   deleteLabel: async (id: string) => {
     try {
-      await axios.delete(`/v1/modules/tasks/labels/${id}`);
+      await axios.delete(`/tasks/labels/${id}`);
       set((state) => ({
         labels: state.labels.filter((label) => label._id !== id),
       }));

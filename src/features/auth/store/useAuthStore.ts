@@ -1,6 +1,5 @@
 import { create } from "zustand";
-import rawAxios from "axios";
-import axios from "../../../lib/axios";
+import { authAxios } from "../../../lib/axios";
 import {
   getStoredToken,
   setStoredToken,
@@ -9,9 +8,6 @@ import {
   USER_KEY,
 } from "../../../shared/utils";
 import type { IUser } from "../types";
-
-const API_BASE_URL =
-  (import.meta.env.VITE_API_URL || "http://localhost:3000") + "/api";
 
 interface AuthTokenPayload {
   user?: IUser;
@@ -145,7 +141,7 @@ export const useAuthStore = create<AuthState>((set) => ({
       set({ loading: true });
       const {
         data: { data },
-      } = await axios.post("/v1/modules/session", {
+      } = await authAxios.post("/v1/modules/session", {
         code,
       });
       const { user } = data as AuthTokenPayload;
@@ -170,7 +166,7 @@ export const useAuthStore = create<AuthState>((set) => ({
       const clientId = import.meta.env.VITE_CLIENT_ID;
       const {
         data: { data },
-      } = await axios.post("/v1/modules/guest", { clientId });
+      } = await authAxios.post("/v1/modules/guest", { clientId });
       const { user } = data as AuthTokenPayload;
       const { access_token, refresh_token } = getTokensFromPayload(data);
       if (!user) {
@@ -216,7 +212,7 @@ export const useAuthStore = create<AuthState>((set) => ({
 
     const {
       data: { data },
-    } = await rawAxios.post(`${API_BASE_URL}/v1/modules/session/refresh`, {
+    } = await authAxios.post("/v1/modules/session/refresh", {
       refresh_token: current_refresh_token,
     });
 

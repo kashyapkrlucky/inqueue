@@ -76,7 +76,7 @@ export const useTaskStore = create<TaskState>((set) => ({
       set({ loading: true });
       const {
         data: { data, totalPages },
-      } = await axios.get(`/v1/modules/tasks?page=${page}&limit=${limit}`);
+      } = await axios.get(`/tasks?page=${page}&limit=${limit}`);
 
       set({ tasks: data, totalPages });
     } catch (error) {
@@ -93,7 +93,7 @@ export const useTaskStore = create<TaskState>((set) => ({
       set({ loading: true });
       const {
         data: { data },
-      } = await axios.get("/v1/modules/tasks/stats");
+      } = await axios.get("/tasks/stats");
       set({ stats: data });
     } catch (error) {
       set({
@@ -109,7 +109,7 @@ export const useTaskStore = create<TaskState>((set) => ({
       set({ loading: true });
       const {
         data: { data },
-      } = await axios.get("/v1/modules/tasks/recent");
+      } = await axios.get("/tasks/recent");
       set({ homeData: data });
     } catch (error) {
       set({
@@ -125,7 +125,7 @@ export const useTaskStore = create<TaskState>((set) => ({
       set({ inlineLoading: true });
       const {
         data: { data },
-      } = await axios.post("/v1/modules/tasks", task);
+      } = await axios.post("/tasks", task);
       if (isTaskByDates) {
         set((state) => ({ taskByDates: [data, ...state.taskByDates] }));
       } else {
@@ -145,7 +145,7 @@ export const useTaskStore = create<TaskState>((set) => ({
       set({ inlineLoading: true });
       const {
         data: { data },
-      } = await axios.patch(`/v1/modules/tasks/${taskId}`, task);
+      } = await axios.patch(`/tasks/${taskId}`, task);
       const updatedTask = data as ITask;
       
       if (isTaskByDates) {
@@ -173,7 +173,7 @@ export const useTaskStore = create<TaskState>((set) => ({
   deleteTask: async (taskId: string, isTaskByDates = false) => {
     try {
       set({ inlineLoading: true });
-      await axios.delete("/v1/modules/tasks/" + taskId);
+      await axios.delete("/tasks/" + taskId);
       if (isTaskByDates) {
         set((state) => ({
           taskByDates: state.taskByDates.filter((t) => t._id !== taskId),
@@ -197,7 +197,7 @@ export const useTaskStore = create<TaskState>((set) => ({
       set({ loading: true });
       const {
         data: { data },
-      } = await axios.post("/v1/modules/tasks/calendar", {
+      } = await axios.post("/tasks/calendar", {
         startDate,
         endDate,
       });

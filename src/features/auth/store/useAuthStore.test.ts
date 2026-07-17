@@ -1,5 +1,5 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
-import axios from "../../../lib/axios";
+import { authAxios } from "../../../lib/axios";
 import {
   ACCESS_TOKEN_KEY,
   REFRESH_TOKEN_KEY,
@@ -9,6 +9,9 @@ import useAuthStore from "./useAuthStore";
 import type { IUser } from "../types";
 
 vi.mock("../../../lib/axios", () => ({
+  authAxios: {
+    post: vi.fn(),
+  },
   default: {
     post: vi.fn(),
   },
@@ -38,13 +41,13 @@ const resetAuthStore = () => {
 
 describe("useAuthStore", () => {
   beforeEach(() => {
-    vi.mocked(axios.post).mockReset();
+    vi.mocked(authAxios.post).mockReset();
     localStorage.clear();
     resetAuthStore();
   });
 
   it("persists auth data after a successful guest login", async () => {
-    vi.mocked(axios.post).mockResolvedValueOnce({
+    vi.mocked(authAxios.post).mockResolvedValueOnce({
       data: {
         data: {
           user: guestUser,
@@ -56,7 +59,7 @@ describe("useAuthStore", () => {
 
     const result = await useAuthStore.getState().onGuestLogin();
 
-    expect(axios.post).toHaveBeenCalledWith("/v1/modules/guest", {
+    expect(authAxios.post).toHaveBeenCalledWith("/v1/modules/guest", {
       clientId: expect.any(String),
     });
     expect(result).toEqual({
