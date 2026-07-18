@@ -1,6 +1,7 @@
 import { create } from "zustand";
 import type { ITask, ITaskPriority, ITaskStatus, CreateTaskInput, UpdateTaskInput } from "../types";
 import axios from "../../../lib/axios";
+import CustomToast from "@/shared/components/ui/CustomToast";
 
 export type TaskFilter = {
   query: string;
@@ -79,11 +80,8 @@ export const useTaskStore = create<TaskState>((set) => ({
       } = await axios.get(`/tasks?page=${page}&limit=${limit}`);
 
       set({ tasks: data, totalPages });
-    } catch (error) {
-      set({
-        error:
-          error instanceof Error ? error.message : "An unknown error occurred",
-      });
+    } catch {
+      CustomToast("error", "Failed to fetch tasks");
     } finally {
       set({ loading: false });
     }
@@ -95,11 +93,8 @@ export const useTaskStore = create<TaskState>((set) => ({
         data: { data },
       } = await axios.get("/tasks/stats");
       set({ stats: data });
-    } catch (error) {
-      set({
-        error:
-          error instanceof Error ? error.message : "An unknown error occurred",
-      });
+    } catch {
+      CustomToast("error", "Failed to fetch stats");
     } finally {
       set({ loading: false });
     }
@@ -111,11 +106,8 @@ export const useTaskStore = create<TaskState>((set) => ({
         data: { data },
       } = await axios.get("/tasks/recent");
       set({ homeData: data });
-    } catch (error) {
-      set({
-        error:
-          error instanceof Error ? error.message : "An unknown error occurred",
-      });
+    } catch {
+      CustomToast("error", "Failed to fetch recent tasks");
     } finally {
       set({ loading: false });
     }
@@ -131,11 +123,8 @@ export const useTaskStore = create<TaskState>((set) => ({
       } else {
         set((state) => ({ tasks: [data, ...state.tasks] }));
       }
-    } catch (error) {
-      set({
-        error:
-          error instanceof Error ? error.message : "An unknown error occurred",
-      });
+    } catch {
+      CustomToast("error", "Failed to add task");
     } finally {
       set({ inlineLoading: false });
     }
@@ -161,11 +150,8 @@ export const useTaskStore = create<TaskState>((set) => ({
           ),
         }));
       }
-    } catch (error) {
-      set({
-        error:
-          error instanceof Error ? error.message : "An unknown error occurred",
-      });
+    } catch {
+      CustomToast("error", "Failed to update task");
     } finally {
       set({ inlineLoading: false });
     }
@@ -183,11 +169,8 @@ export const useTaskStore = create<TaskState>((set) => ({
           tasks: state.tasks.filter((t) => t._id !== taskId),
         }));
       }
-    } catch (error) {
-      set({
-        error:
-          error instanceof Error ? error.message : "An unknown error occurred",
-      });
+    } catch {
+      CustomToast("error", "Failed to delete task");
     } finally {
       set({ inlineLoading: false });
     }
@@ -202,11 +185,8 @@ export const useTaskStore = create<TaskState>((set) => ({
         endDate,
       });
       set({ taskByDates: data.tasks });
-    } catch (error) {
-      set({
-        error:
-          error instanceof Error ? error.message : "An unknown error occurred",
-      });
+    } catch {
+      CustomToast("error", "Failed to fetch tasks");
     } finally {
       set({ loading: false });
     }

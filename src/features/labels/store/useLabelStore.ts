@@ -1,10 +1,12 @@
 import { create } from "zustand";
+
 import type {
   ITaskLabel,
   ITaskLabelCreateInput,
   ITaskLabelUpdateInput,
 } from "../types";
 import axios from "../../../lib/axios";
+import CustomToast from "@/shared/components/ui/CustomToast";
 interface ILabelStore {
   labelLoading: boolean;
   error: string | null;
@@ -27,8 +29,8 @@ export const useLabelStore = create<ILabelStore>((set) => ({
         data: { data },
       } = await axios.get("/tasks/labels");
       set({ labels: data });
-    } catch (error) {
-      set({ error: error as string });
+    } catch {
+      CustomToast("error", "Failed to fetch labels");
     } finally {
       set({ labelLoading: false });
     }
@@ -39,8 +41,8 @@ export const useLabelStore = create<ILabelStore>((set) => ({
         data: { data },
       } = await axios.post("/tasks/labels", payload);
       set((state) => ({ labels: [data, ...state.labels] }));
-    } catch (error) {
-      set({ error: error as string });
+    } catch {
+      CustomToast("error", "Failed to create label");
     } finally {
       set({ labelLoading: false });
     }
@@ -54,8 +56,8 @@ export const useLabelStore = create<ILabelStore>((set) => ({
         );
         return { labels: updatedLabels };
       });
-    } catch (error) {
-      set({ error: error as string });
+    } catch {
+      CustomToast("error", "Failed to update label");
     } finally {
       set({ labelLoading: false });
     }
@@ -66,8 +68,8 @@ export const useLabelStore = create<ILabelStore>((set) => ({
       set((state) => ({
         labels: state.labels.filter((label) => label._id !== id),
       }));
-    } catch (error) {
-      set({ error: error as string });
+    } catch {
+      CustomToast("error", "Failed to delete label");
     } finally {
       set({ labelLoading: false });
     }

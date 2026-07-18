@@ -8,10 +8,11 @@ import {
 import Input from "../form/Input";
 import { Button } from "../form/Button";
 import { useAgentStore, type Message } from "../../../features/agent/store/useAgentStore";
+import { AgentMarkdown } from "../../../features/agent/components/AgentMarkdown";
 
 export default function ChatBot() {
-  const {messages, sendMessage, addManyTasks, markDone} = useAgentStore();
-  const hostUrl = import.meta.env.VITE_API_URL;
+  const { messages, loading, sendMessage } = useAgentStore();
+  const hostUrl = import.meta.env.VITE_AUTH_URL;
   const imgSrc = `${hostUrl}/apps/tia-ai.png`;
   const [isOpen, setIsOpen] = useState(false);
   const [isMinimized, setIsMinimized] = useState(false);
@@ -28,7 +29,7 @@ export default function ChatBot() {
   }, [messages, isOpen]);
 
   const handleSendMessage = () => {
-    if (!inputValue.trim()) return;
+    if (!inputValue.trim() || loading) return;
 
     setInputValue("");
     sendMessage(inputValue);
@@ -39,15 +40,6 @@ export default function ChatBot() {
       e.preventDefault();
       handleSendMessage();
     }
-  };
-
-  const onAddTasks = (data: { content: string; dueDate: string }[]) => {
-    addManyTasks(
-      data.map((item) => ({
-        content: item.content,
-        dueDate: new Date(item.dueDate),
-      }))
-    );
   };
 
   return (
@@ -97,27 +89,24 @@ export default function ChatBot() {
                       : "bg-white text-gray-900 border border-gray-200 rounded-bl-md"
                   }`}
                 >
-                  <p className="text-xs leading-relaxed">{message.text}</p>
-                  {message?.actions && (
-                    <>
-                      {message.actions?.data?.map((action, index) => (
-                        <p key={index} className="text-xs mt-1 text-gray-600">
-                          {action.content} - {action.dueDate}
+                  <div className="text-xs">
+                    <AgentMarkdown
+                      content={message.text}
+                      isUser={message.isUser}
+                    />
+                  </div>
+                  {message.results && message.results.length > 0 && (
+                    <div className="mt-2 space-y-1 border-t border-gray-100 pt-2">
+                      {message.results.map((result, index) => (
+                        <p key={index} className="text-xs text-gray-600">
+                          <span className="font-semibold capitalize">
+                            {result.status}
+                          </span>
+                          {": "}
+                          {result.message}
                         </p>
                       ))}
-
-                      <Button
-                        className="mt-2"
-                        size="sm"
-                        disabled={message.actions?.isDone}
-                        onClick={() => {
-                          onAddTasks(message.actions?.data || []);
-                          markDone(message.id);
-                        }}
-                      >
-                        Add Task to my board
-                      </Button>
-                    </>
+                    </div>
                   )}
                   <p
                     className={`text-[10px] mt-1 ${
@@ -132,6 +121,13 @@ export default function ChatBot() {
                 </div>
               </div>
             ))}
+            {loading && (
+              <div className="flex justify-start">
+                <div className="max-w-[80%] rounded-2xl rounded-bl-md border border-gray-200 bg-white px-4 py-2.5 text-gray-900">
+                  <AgentMarkdown content="Working..." />
+                </div>
+              </div>
+            )}
             <div ref={messagesEndRef} />
           </div>
 
@@ -144,12 +140,14 @@ export default function ChatBot() {
                 onKeyPress={handleKeyPress}
                 placeholder="Type your message..."
                 boxClassName="flex-1"
+                disabled={loading}
               />
               <Button
                 onClick={handleSendMessage}
-                disabled={!inputValue.trim()}
+                disabled={!inputValue.trim() || loading}
                 variant="primary"
                 size="sm"
+                loading={loading}
               >
                 <SendIcon className="h-5 w-5" />
               </Button>

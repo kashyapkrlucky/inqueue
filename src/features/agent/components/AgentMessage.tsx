@@ -1,25 +1,32 @@
-import { CheckIcon, UserIcon } from "lucide-react";
-import { useAgentStore, type Message } from "../store/useAgentStore";
-import { Button } from "../../../shared/components/form/Button";
+import type { ReactNode } from "react";
+import {
+  CheckCircle2Icon,
+  CircleIcon,
+  UserIcon,
+  XCircleIcon,
+} from "lucide-react";
+import type { AgentResult, Message } from "../store/useAgentStore";
+import { AgentMarkdown } from "./AgentMarkdown";
 
 interface AgentMessageProps {
   message: Message;
 }
 
+const resultStyles: Record<AgentResult["status"], string> = {
+  executed: "bg-green-50 text-green-700 border-green-200",
+  skipped: "bg-gray-50 text-gray-600 border-gray-200",
+  failed: "bg-red-50 text-red-700 border-red-200",
+};
+
+const resultIcons: Record<AgentResult["status"], ReactNode> = {
+  executed: <CheckCircle2Icon className="h-3.5 w-3.5" />,
+  skipped: <CircleIcon className="h-3.5 w-3.5" />,
+  failed: <XCircleIcon className="h-3.5 w-3.5" />,
+};
+
 export function AgentMessage({ message }: AgentMessageProps) {
   const hostUrl = import.meta.env.VITE_AUTH_URL;
   const imgSrc = `${hostUrl}/apps/tia-ai.png`;
-
-  const { addManyTasks, markDone } = useAgentStore();
-
-  const onAddTasks = (data: { content: string; dueDate: string }[]) => {
-    addManyTasks(
-      data.map((item) => ({
-        content: item.content,
-        dueDate: new Date(item.dueDate),
-      })),
-    );
-  };
 
   return (
     <div
@@ -52,50 +59,31 @@ export function AgentMessage({ message }: AgentMessageProps) {
               : "bg-white text-gray-900 border border-gray-200 rounded-2xl rounded-tl-sm"
           }`}
         >
-          <p className="text-sm leading-relaxed whitespace-pre-wrap">
-            {message.text}
-          </p>
+          <AgentMarkdown content={message.text} isUser={message.isUser} />
 
-          {message?.actions && (
+          {message.results && message.results.length > 0 && (
             <div className="mt-4 pt-4 border-t border-gray-200">
               <p className="text-xs font-semibold text-gray-500 mb-2 uppercase tracking-wide">
-                Suggested Tasks
+                Actions
               </p>
-              <div className="space-y-2 mb-3">
-                {message.actions?.data?.map((action, index) => (
+              <div className="space-y-2">
+                {message.results.map((result, index) => (
                   <div
                     key={index}
-                    className="flex items-center justify-between text-xs py-2 px-3 bg-gray-50 rounded-lg border border-gray-100"
+                    className={`flex items-start gap-2 text-xs py-2 px-3 rounded-lg border ${resultStyles[result.status]}`}
                   >
-                    <span className="text-gray-700 font-medium">
-                      {action.content}
+                    <span className="mt-0.5 flex-shrink-0">
+                      {resultIcons[result.status]}
                     </span>
-                    <span className="text-gray-400 text-[11px]">
-                      {action.dueDate}
-                    </span>
+                    <div>
+                      <p className="font-semibold capitalize">
+                        {result.status}: {result.action}
+                      </p>
+                      <p className="mt-0.5">{result.message}</p>
+                    </div>
                   </div>
                 ))}
               </div>
-
-              <Button
-                size="sm"
-                disabled={message.actions?.isDone}
-                onClick={() => {
-                  onAddTasks(message.actions?.data || []);
-                  markDone(message.id);
-                }}
-                className="w-full"
-                variant={message.actions?.isDone ? "secondary" : "primary"}
-                icon={
-                  message.actions?.isDone ? (
-                    <CheckIcon className="h-3 w-3" />
-                  ) : undefined
-                }
-              >
-                {message.actions?.isDone
-                  ? "Tasks Added Successfully"
-                  : "Add All Tasks to Board"}
-              </Button>
             </div>
           )}
         </div>

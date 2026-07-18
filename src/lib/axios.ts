@@ -66,10 +66,10 @@ const expireSession = () => {
 
 const setAuthHeaders = (config: InternalAxiosRequestConfig) => {
   const token = localStorage.getItem(ACCESS_TOKEN_KEY);
+  config.headers["x-timezone"] =
+    Intl.DateTimeFormat().resolvedOptions().timeZone;
   if (token) {
     config.headers.Authorization = `Bearer ${token}`;
-    config.headers["x-timezone"] =
-      Intl.DateTimeFormat().resolvedOptions().timeZone;
   }
   return config;
 };

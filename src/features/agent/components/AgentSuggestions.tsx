@@ -1,10 +1,14 @@
 import { BotIcon } from "lucide-react";
+import { useAgentStore } from "../store/useAgentStore";
 
 export function AgentSuggestions() {
+  const { loading, sendMessage } = useAgentStore();
   const tryAskingSuggestions = [
-    "I am thinking of learning swimming this week, Can you plan it for me?",
-    "Can you rewrite these for me - 1. Go to the store, 2. Buy milk, 3. Come home",
-    "Plan a trip from berlin to paris",
+    "What's pending today?",
+    "Plan my day",
+    "Move all low-priority tasks to tomorrow",
+    "Create labels for my work and personal tasks",
+    "Group these tasks by project",
   ];
   
   return (
@@ -22,12 +26,15 @@ export function AgentSuggestions() {
       <div className="flex flex-wrap justify-center items-center gap-2 mt-4">
         <span className="text-sm text-gray-600">Try asking:</span>
         {tryAskingSuggestions.map((suggestion, index) => (
-          <span
+          <button
             key={index}
-            className="inline-flex text-xs bg-white text-gray-600 border border-gray-200 rounded-lg p-2"
+            type="button"
+            disabled={loading}
+            onClick={() => sendMessage(suggestion)}
+            className="inline-flex text-xs bg-white text-gray-600 border border-gray-200 rounded-lg p-2 transition-colors hover:bg-gray-100 disabled:opacity-60 disabled:cursor-not-allowed"
           >
             {suggestion}
-          </span>
+          </button>
         ))}
       </div>
     </div>

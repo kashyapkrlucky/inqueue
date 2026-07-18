@@ -5,7 +5,7 @@ import { useAgentStore } from "../store/useAgentStore";
 import { useState } from "react";
 
 export function AgentMessageForm() {
-  const { sendMessage } = useAgentStore();
+  const { loading, sendMessage } = useAgentStore();
 
   const [inputValue, setInputValue] = useState("");
   const handleKeyPress = (e: React.KeyboardEvent) => {
@@ -15,7 +15,7 @@ export function AgentMessageForm() {
     }
   };
   const handleSendMessage = () => {
-    if (!inputValue.trim()) return;
+    if (!inputValue.trim() || loading) return;
     setInputValue("");
     sendMessage(inputValue);
   };
@@ -31,15 +31,17 @@ export function AgentMessageForm() {
             value={inputValue}
             onChange={(e) => setInputValue(e.target.value)}
             onKeyPress={handleKeyPress}
+            disabled={loading}
             rows={2}
             boxClassName="flex-1"
             resize="none"
           />
           <Button
             onClick={handleSendMessage}
-            disabled={!inputValue.trim()}
+            disabled={!inputValue.trim() || loading}
             variant="primary"
             icon={<SendIcon className="h-4 w-4" />}
+            loading={loading}
             size="md"
             className="px-4 h-16"
           />

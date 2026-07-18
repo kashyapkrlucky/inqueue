@@ -1,6 +1,5 @@
 import { useEffect, useRef } from "react";
 import { useAgentStore, type Message } from "../store/useAgentStore";
-import InlineLoader from "../../../shared/components/loaders/InlineLoader";
 import { AgentPageHeader } from "../components/AgentPageHeader";
 import { AgentSuggestions } from "../components/AgentSuggestions";
 import { AgentMessage } from "../components/AgentMessage";
@@ -34,7 +33,16 @@ export default function Agent() {
                 <AgentMessage key={message.id} message={message} />
               ))}
               <div ref={messagesEndRef} />
-              {loading && <InlineLoader />}
+              {loading && (
+                <AgentMessage
+                  message={{
+                    id: "agent-working",
+                    text: "Working...",
+                    isUser: false,
+                    timestamp: new Date(),
+                  }}
+                />
+              )}
             </div>
           )}
         </div>

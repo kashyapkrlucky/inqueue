@@ -1,14 +1,11 @@
 import { create } from "zustand";
 import axios from "../../../lib/axios";
-import type { CreateTaskInput } from "../../tasks/types";
 
-export interface AgentAction {
-  type: string;
-  data: {
-    content: string;
-    dueDate: string;
-  }[];
-  isDone: boolean;
+export interface AgentResult {
+  action: string;
+  status: "executed" | "skipped" | "failed";
+  message: string;
+  data?: unknown;
 }
 
 export interface Message {
@@ -16,19 +13,19 @@ export interface Message {
   text: string;
   isUser: boolean;
   timestamp: Date;
-  actions?: AgentAction;
+  results?: AgentResult[];
 }
 
 interface AgentState {
   loading: boolean;
   error: string | null;
   messages: Message[];
-  sendMessage: (message: string) => void;
+  sendMessage: (message: string) => Promise<void>;
   clearMessages: () => void;
   addMessage: (message: Message) => void;
-  addManyTasks: (task: CreateTaskInput[]) => void;
-  markDone: (id: string) => void;
 }
+
+const getTimezone = () => Intl.DateTimeFormat().resolvedOptions().timeZone;
 
 export const useAgentStore = create<AgentState>((set, get) => ({
   loading: false,
@@ -43,20 +40,38 @@ export const useAgentStore = create<AgentState>((set, get) => ({
         isUser: true,
         timestamp: new Date(),
       });
+
+      const chatMessages = get().messages.map((item) => ({
+        role: item.isUser ? ("user" as const) : ("assistant" as const),
+        content: item.text,
+      }));
+
       const {
         data: { data },
-      } = await axios.post("/v1/modules/agent", { message });
+      } = await axios.post("/agent", {
+        messages: chatMessages,
+        timezone: getTimezone(),
+      });
 
-      const { message: aiMessage, modifications } = data;
+      const results = data.results as AgentResult[] | undefined;
+
       get().addMessage({
         id: Date.now().toString(),
-        text: aiMessage,
+        text: data.reply,
         isUser: false,
         timestamp: new Date(),
-        actions: modifications,
+        results,
       });
-    } catch {
-      set({ error: "Failed to send message" });
+    } catch (error) {
+      const message =
+        error instanceof Error ? error.message : "Agent request failed";
+      set({ error: message });
+      get().addMessage({
+        id: Date.now().toString(),
+        text: message,
+        isUser: false,
+        timestamp: new Date(),
+      });
     } finally {
       set({ loading: false });
     }
@@ -64,38 +79,4 @@ export const useAgentStore = create<AgentState>((set, get) => ({
   addMessage: (message: Message) =>
     set((state) => ({ messages: [...state.messages, message] })),
   clearMessages: () => set({ messages: [] }),
-  addManyTasks: async (task: CreateTaskInput[]) => {
-    try {
-      set({ loading: true });
-      const {
-        data: { data },
-      } = await axios.post("/v1/modules/tasks/many", task);
-      console.log(data);
-      get().addMessage({
-        id: Date.now().toString(),
-        text: "Tasks added to you board, visit /tasks or /board to view",
-        isUser: true,
-        timestamp: new Date(),
-      });
-    } catch (error) {
-      set({
-        error:
-          error instanceof Error ? error.message : "An unknown error occurred",
-      });
-    } finally {
-      set({ loading: false });
-    }
-  },
-  markDone: (id: string) => {
-    set((state) => ({
-      messages: state.messages.map((message) =>
-        message.id === id
-          ? {
-              ...message,
-              actions: { ...message.actions, isDone: true } as AgentAction,
-            }
-          : message
-      ),
-    }));
-  },
 }));
