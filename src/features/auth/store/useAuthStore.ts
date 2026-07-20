@@ -141,7 +141,7 @@ export const useAuthStore = create<AuthState>((set) => ({
       set({ loading: true });
       const {
         data: { data },
-      } = await authAxios.post("/v1/modules/session", {
+      } = await authAxios.post("/v1/public/session", {
         code,
       });
       const { user } = data as AuthTokenPayload;
@@ -166,7 +166,7 @@ export const useAuthStore = create<AuthState>((set) => ({
       const clientId = import.meta.env.VITE_CLIENT_ID;
       const {
         data: { data },
-      } = await authAxios.post("/v1/modules/guest", { clientId });
+      } = await authAxios.post("/v1/public/guest", { clientId });
       const { user } = data as AuthTokenPayload;
       const { access_token, refresh_token } = getTokensFromPayload(data);
       if (!user) {
@@ -212,7 +212,7 @@ export const useAuthStore = create<AuthState>((set) => ({
 
     const {
       data: { data },
-    } = await authAxios.post("/v1/modules/session/refresh", {
+    } = await authAxios.post("/v1/public/session/refresh", {
       refresh_token: current_refresh_token,
     });
 

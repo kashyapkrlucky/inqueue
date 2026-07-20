@@ -29,7 +29,7 @@ export const useSupportStore = create<SupportStore>((set) => ({
       set({ loading: true });
       const {
         data: { data, totalPages },
-      } = await axios.get("/v1/modules/support", {
+      } = await axios.get("/feedbacks/support", {
         params: {
           page,
           limit,
@@ -49,7 +49,7 @@ export const useSupportStore = create<SupportStore>((set) => ({
       set({ loading: true });
       const {
         data: { data },
-      } = await axios.post("/v1/modules/support", feedback);
+      } = await axios.post("/feedbacks/support", feedback);
       set((state) => ({ feedbacks: [...state.feedbacks, data] }));
     } catch (error) {
       set({
@@ -64,7 +64,7 @@ export const useSupportStore = create<SupportStore>((set) => ({
       set({ loading: true });
       const {
         data: { data },
-      } = await axios.get(`/v1/modules/support/${feedbackId}`);
+      } = await axios.get(`/feedbacks/support/${feedbackId}`);
       set({ feedback: data });
       return data;
     }  catch (error) {
@@ -78,7 +78,7 @@ export const useSupportStore = create<SupportStore>((set) => ({
 
   updateFeedback: async (feedbackId: string, feedback: FeedbackUpdateInput) => {
     try {
-      await axios.patch(`/v1/modules/support/${feedbackId}`, feedback);
+      await axios.patch(`/feedbacks/support/${feedbackId}`, feedback);
       set((state) => ({
         feedbacks: state.feedbacks.map((f) =>
           f._id === feedbackId ? { ...f, ...feedback } : f,
