@@ -158,6 +158,8 @@ interface AuthActions {
 - Implement rate limiting for auth endpoints
 - Log auth events for audit trail
 
+> **Note on "encryption":** client-side encryption of localStorage tokens doesn't meaningfully stop XSS — any script that can read the encrypted value can also reach the decryption key/routine sitting in the same bundle. The actual mitigation is moving `access_token`/`refresh_token` out of JS-readable storage entirely, i.e. httpOnly, `SameSite` cookies set by the auth backend (`authAxios` already sends `withCredentials: true`, so the backend side is the only missing piece). That's a backend change, not something fixable from this repo alone — tracked here so it isn't lost as a frontend TODO.
+
 #### 11. Testing Strategy
 
 **Unit Tests:**

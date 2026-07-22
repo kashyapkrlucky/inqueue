@@ -124,8 +124,6 @@ axiosInstance.interceptors.response.use(
           await useAuthStore.getState().getRefreshedTokens();
 
           flushQueue();
-          const promise = setTimeout(() => {}, 0);
-          await promise;
 
           return axiosInstance(original);
         } catch (refreshError) {

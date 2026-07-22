@@ -61,7 +61,7 @@ export class ErrorBoundary extends React.Component<ErrorBoundaryProps, ErrorBoun
             <AlertTitle>Something went wrong</AlertTitle>
             <AlertDescription className="space-y-4">
               <p>We apologize for the inconvenience. An error has occurred.</p>
-              {process.env.NODE_ENV === 'development' && this.state.error && (
+              {import.meta.env.DEV && this.state.error && (
                 <details className="mt-2 text-sm text-muted-foreground">
                   <summary className="cursor-pointer mb-1">Error details</summary>
                   <pre className="bg-muted p-2 rounded-md overflow-auto">

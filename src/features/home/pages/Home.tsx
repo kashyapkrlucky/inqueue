@@ -52,7 +52,7 @@ const Home = () => {
         upcomingTasks={homeData.upcoming.length}
       />
 
-      <section className="flex flex-col md:flex-row gap-4">
+      <section className="flex flex-col md:flex-row gap-4 h-72">
         <UpcomingTasks upcomingTasks={homeData.upcoming} />
         <RecentTasks tasks={homeData.recent} />
       </section>

@@ -14,30 +14,22 @@ export const ProtectedRoute = ({
   type = 'auth',
   redirectTo = type === 'auth' ? '/login' : '/',
 }: ProtectedRouteProps) => {
-  const { isAuthenticated, initialize } = useAuthStore();
+  // isAuthenticated is derived synchronously from localStorage when the
+  // store is created, so it's already correct on first render — no need
+  // to re-derive it (via initialize()) on every route mount.
+  const { isAuthenticated } = useAuthStore();
   const navigate = useNavigate();
 
   useEffect(() => {
-    const checkAuth = async () => {
-      await initialize();
-      
-      // For guest routes (login/signup), redirect if authenticated
-      if (type === 'guest' && isAuthenticated) {
-        navigate(redirectTo);
-      }
-      // For protected routes, redirect to login if not authenticated
-      else if (type === 'auth' && !isAuthenticated) {
-        navigate(redirectTo);
-      }
-    };
-
-    checkAuth();
-  }, [isAuthenticated, navigate, redirectTo, type, initialize]);
-
-  // Show loading state while checking auth
-  if (isAuthenticated === null) {
-    return <div>Loading...</div>; // Or your preferred loading component
-  }
+    // For guest routes (login/signup), redirect if authenticated
+    if (type === 'guest' && isAuthenticated) {
+      navigate(redirectTo);
+    }
+    // For protected routes, redirect to login if not authenticated
+    else if (type === 'auth' && !isAuthenticated) {
+      navigate(redirectTo);
+    }
+  }, [isAuthenticated, navigate, redirectTo, type]);
 
   // Only render children if the route is accessible
   if ((type === 'guest' && !isAuthenticated) || (type === 'auth' && isAuthenticated)) {

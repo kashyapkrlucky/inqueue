@@ -6,7 +6,7 @@ import type {
   ITaskLabelUpdateInput,
 } from "../types";
 import axios from "../../../lib/axios";
-import CustomToast from "@/shared/components/ui/CustomToast";
+import { runAsyncAction } from "@/shared/utils/asyncAction";
 interface ILabelStore {
   labelLoading: boolean;
   error: string | null;
@@ -24,54 +24,50 @@ export const useLabelStore = create<ILabelStore>((set) => ({
   labels: [],
   currentLabel: null,
   getLabels: async () => {
-    try {
-      const {
-        data: { data },
-      } = await axios.get("/tasks/labels");
-      set({ labels: data });
-    } catch {
-      CustomToast("error", "Failed to fetch labels");
-    } finally {
-      set({ labelLoading: false });
-    }
+    await runAsyncAction(
+      { set, loadingKey: "labelLoading", errorKey: "error", errorMessage: "Failed to fetch labels" },
+      async () => {
+        const {
+          data: { data },
+        } = await axios.get("/tasks/labels");
+        set({ labels: data });
+      },
+    );
   },
   createLabel: async (payload: ITaskLabelCreateInput) => {
-    try {
-      const {
-        data: { data },
-      } = await axios.post("/tasks/labels", payload);
-      set((state) => ({ labels: [data, ...state.labels] }));
-    } catch {
-      CustomToast("error", "Failed to create label");
-    } finally {
-      set({ labelLoading: false });
-    }
+    await runAsyncAction(
+      { set, loadingKey: "labelLoading", errorKey: "error", errorMessage: "Failed to create label" },
+      async () => {
+        const {
+          data: { data },
+        } = await axios.post("/tasks/labels", payload);
+        set((state) => ({ labels: [data, ...state.labels] }));
+      },
+    );
   },
   updateLabel: async (id: string, payload: ITaskLabelUpdateInput) => {
-    try {
-      await axios.patch(`/tasks/labels/${id}`, payload);
-      set((state) => {
-        const updatedLabels = state.labels.map((label) =>
-          label._id === id ? { id, ...label, ...payload } : label,
-        );
-        return { labels: updatedLabels };
-      });
-    } catch {
-      CustomToast("error", "Failed to update label");
-    } finally {
-      set({ labelLoading: false });
-    }
+    await runAsyncAction(
+      { set, loadingKey: "labelLoading", errorKey: "error", errorMessage: "Failed to update label" },
+      async () => {
+        await axios.patch(`/tasks/labels/${id}`, payload);
+        set((state) => {
+          const updatedLabels = state.labels.map((label) =>
+            label._id === id ? { id, ...label, ...payload } : label,
+          );
+          return { labels: updatedLabels };
+        });
+      },
+    );
   },
   deleteLabel: async (id: string) => {
-    try {
-      await axios.delete(`/tasks/labels/${id}`);
-      set((state) => ({
-        labels: state.labels.filter((label) => label._id !== id),
-      }));
-    } catch {
-      CustomToast("error", "Failed to delete label");
-    } finally {
-      set({ labelLoading: false });
-    }
+    await runAsyncAction(
+      { set, loadingKey: "labelLoading", errorKey: "error", errorMessage: "Failed to delete label" },
+      async () => {
+        await axios.delete(`/tasks/labels/${id}`);
+        set((state) => ({
+          labels: state.labels.filter((label) => label._id !== id),
+        }));
+      },
+    );
   },
 }));

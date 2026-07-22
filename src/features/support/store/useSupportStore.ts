@@ -1,6 +1,7 @@
 import { create } from "zustand";
 import type { IFeedback, FeedbackCreationInput, FeedbackUpdateInput } from "../types";
 import axios from "@/lib/axios";
+import { runAsyncAction } from "@/shared/utils/asyncAction";
 
 
 interface SupportStore {
@@ -25,70 +26,56 @@ export const useSupportStore = create<SupportStore>((set) => ({
   error: null,
   feedback: null,
   getFeedbacks: async (page = 1, limit = 10) => {
-    try {
-      set({ loading: true });
-      const {
-        data: { data, totalPages },
-      } = await axios.get("/feedbacks/support", {
-        params: {
-          page,
-          limit,
-        },
-      });
-      set({ feedbacks: data, totalPages });
-    }  catch (error) {
-      set({
-        error: error instanceof Error ? error.message : "Failed to add feedback",
-      });
-    } finally {
-      set({ loading: false });
-    }
+    await runAsyncAction(
+      { set, loadingKey: "loading", errorKey: "error", errorMessage: "Failed to fetch feedbacks", toast: false },
+      async () => {
+        const {
+          data: { data, totalPages },
+        } = await axios.get("/feedbacks/support", {
+          params: {
+            page,
+            limit,
+          },
+        });
+        set({ feedbacks: data, totalPages });
+      },
+    );
   },
   addFeedback: async (feedback: FeedbackCreationInput) => {
-    try {
-      set({ loading: true });
-      const {
-        data: { data },
-      } = await axios.post("/feedbacks/support", feedback);
-      set((state) => ({ feedbacks: [...state.feedbacks, data] }));
-    } catch (error) {
-      set({
-        error: error instanceof Error ? error.message : "Failed to add feedback",
-      });
-    } finally {
-      set({ loading: false });
-    }
+    await runAsyncAction(
+      { set, loadingKey: "loading", errorKey: "error", errorMessage: "Failed to add feedback", toast: false },
+      async () => {
+        const {
+          data: { data },
+        } = await axios.post("/feedbacks/support", feedback);
+        set((state) => ({ feedbacks: [...state.feedbacks, data] }));
+      },
+    );
   },
   getFeedbackById: async (feedbackId: string) => {
-    try {
-      set({ loading: true });
-      const {
-        data: { data },
-      } = await axios.get(`/feedbacks/support/${feedbackId}`);
-      set({ feedback: data });
-      return data;
-    }  catch (error) {
-      set({
-        error: error instanceof Error ? error.message : "Failed to add feedback",
-      });
-    } finally {
-      set({ loading: false });
-    }
+    return runAsyncAction(
+      { set, loadingKey: "loading", errorKey: "error", errorMessage: "Failed to fetch feedback", toast: false },
+      async () => {
+        const {
+          data: { data },
+        } = await axios.get(`/feedbacks/support/${feedbackId}`);
+        set({ feedback: data });
+        return data;
+      },
+    );
   },
 
   updateFeedback: async (feedbackId: string, feedback: FeedbackUpdateInput) => {
-    try {
-      await axios.patch(`/feedbacks/support/${feedbackId}`, feedback);
-      set((state) => ({
-        feedbacks: state.feedbacks.map((f) =>
-          f._id === feedbackId ? { ...f, ...feedback } : f,
-        ),
-      }));
-    } catch (error) {
-      set({
-        error:
-          error instanceof Error ? error.message : "Failed to update feedback",
-      });
-    }
+    await runAsyncAction(
+      { set, loadingKey: "loading", errorKey: "error", errorMessage: "Failed to update feedback", toast: false },
+      async () => {
+        await axios.patch(`/feedbacks/support/${feedbackId}`, feedback);
+        set((state) => ({
+          feedbacks: state.feedbacks.map((f) =>
+            f._id === feedbackId ? { ...f, ...feedback } : f,
+          ),
+        }));
+      },
+    );
   },
 }));

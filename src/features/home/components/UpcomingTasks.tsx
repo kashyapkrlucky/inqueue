@@ -3,7 +3,6 @@ import type { ITask } from "../../tasks/types";
 import InfoCard from "../../../shared/components/content/InfoCard";
 import { NoItems } from "../../../shared/components/content/NoItems";
 import { formatRelativeTime } from "../../../shared/utils";
-import EditTask from "@/features/tasks/components/EditTask";
 interface UpcomingTasksProps {
   upcomingTasks: ITask[];
 }
@@ -20,7 +19,7 @@ export function UpcomingTasks({ upcomingTasks }: UpcomingTasksProps) {
         iconColor="text-orange-700"
       />
 
-      <div className="mt-4 space-y-2 h-[240px] overflow-y-auto hide-scrollbar">
+      <div className="mt-4 space-y-2 h-[200px] overflow-y-auto hide-scrollbar">
         {upcomingTasks.length === 0 ? (
           <NoItems title="No upcoming due tasks" />
         ) : (
@@ -33,18 +32,13 @@ export function UpcomingTasks({ upcomingTasks }: UpcomingTasksProps) {
                 {getTaskTitle(task)}
               </div>
 
-              <div className="flex items-center gap-1.5">
-                <div className="flex items-center gap-1">
-                  <ClockIcon className="h-3 w-3 text-orange-600" />
-                  <span className="font-semibold text-orange-700 text-xs">
-                    Due {formatRelativeTime(task.dueDate.toString())}
-                  </span>
-                </div>
-                <EditTask
-                  iconOnly={true}
-                  task={task}
-                  setMoreMenuOpen={() => {}}
-                />
+              <div className="flex items-center gap-1.5 pr-4">
+
+                <ClockIcon className="h-3 w-3 text-orange-600" />
+                <span className="font-semibold text-orange-700 text-xs">
+                  Due {formatRelativeTime(task.dueDate.toString())}
+                </span>
+
               </div>
             </div>
           ))

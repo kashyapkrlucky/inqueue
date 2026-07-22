@@ -18,7 +18,7 @@ export function RecentTasks({ tasks }: RecentTasksProps) {
         icon={<FileTextIcon className="h-4 w-4" />}
       />
 
-      <div className="mt-4 space-y-2 overflow-y-auto h-[240px] scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-gray-100">
+      <div className="mt-4 space-y-2 overflow-y-auto h-[200px] scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-gray-100">
         {tasks.length === 0 ? (
           <div className="flex flex-col gap-4 justify-center h-full">
             <NoItems title="No tasks yet." />
