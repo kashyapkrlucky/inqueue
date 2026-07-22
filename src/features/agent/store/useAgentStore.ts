@@ -27,6 +27,40 @@ interface AgentState {
 
 const getTimezone = () => Intl.DateTimeFormat().resolvedOptions().timeZone;
 
+const createMessageId = () =>
+  typeof crypto !== "undefined" && "randomUUID" in crypto
+    ? crypto.randomUUID()
+    : `${Date.now()}-${Math.random().toString(36).slice(2)}`;
+
+const getAgentPayload = (responseData: unknown) => {
+  if (!responseData || typeof responseData !== "object") {
+    return {};
+  }
+
+  const response = responseData as Record<string, unknown>;
+  const nestedData = response.data;
+
+  if (nestedData && typeof nestedData === "object") {
+    return nestedData as Record<string, unknown>;
+  }
+
+  return response;
+};
+
+const getReplyText = (payload: Record<string, unknown>) => {
+  const reply = payload.reply ?? payload.message ?? payload.content;
+
+  if (typeof reply === "string") {
+    return reply;
+  }
+
+  if (reply === null || typeof reply === "undefined") {
+    return "I received a response, but it did not include a reply.";
+  }
+
+  return JSON.stringify(reply, null, 2);
+};
+
 export const useAgentStore = create<AgentState>((set, get) => ({
   loading: false,
   error: null,
@@ -35,7 +69,7 @@ export const useAgentStore = create<AgentState>((set, get) => ({
     try {
       set({ loading: true });
       get().addMessage({
-        id: Date.now().toString(),
+        id: createMessageId(),
         text: message,
         isUser: true,
         timestamp: new Date(),
@@ -46,18 +80,17 @@ export const useAgentStore = create<AgentState>((set, get) => ({
         content: item.text,
       }));
 
-      const {
-        data: { data },
-      } = await axios.post("/agent", {
+      const { data } = await axios.post("/agent", {
         messages: chatMessages,
         timezone: getTimezone(),
       });
 
-      const results = data.results as AgentResult[] | undefined;
+      const payload = getAgentPayload(data);
+      const results = payload.results as AgentResult[] | undefined;
 
       get().addMessage({
-        id: Date.now().toString(),
-        text: data.reply,
+        id: createMessageId(),
+        text: getReplyText(payload),
         isUser: false,
         timestamp: new Date(),
         results,
@@ -67,7 +100,7 @@ export const useAgentStore = create<AgentState>((set, get) => ({
         error instanceof Error ? error.message : "Agent request failed";
       set({ error: message });
       get().addMessage({
-        id: Date.now().toString(),
+        id: createMessageId(),
         text: message,
         isUser: false,
         timestamp: new Date(),
