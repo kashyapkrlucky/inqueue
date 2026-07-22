@@ -165,26 +165,31 @@ export const TASK_STATUS_CONFIG = {
   [TaskStatus.TODO]: {
     label: "To Do",
     color: "gray",
+    bgColor: "bg-gray-500",
     nextStatuses: [TaskStatus.IN_PROGRESS],
   },
   [TaskStatus.IN_PROGRESS]: {
     label: "In Progress",
     color: "blue",
+    bgColor: "bg-blue-500",
     nextStatuses: [TaskStatus.IN_REVIEW, TaskStatus.DONE, TaskStatus.BLOCKED],
   },
   [TaskStatus.IN_REVIEW]: {
     label: "In Review",
     color: "yellow",
+    bgColor: "bg-yellow-500",
     nextStatuses: [TaskStatus.DONE, TaskStatus.IN_PROGRESS],
   },
   [TaskStatus.DONE]: {
     label: "Done",
     color: "green",
+    bgColor: "bg-green-500",
     nextStatuses: [TaskStatus.TODO],
   },
   [TaskStatus.BLOCKED]: {
     label: "Blocked",
     color: "red",
+    bgColor: "bg-red-500",
     nextStatuses: [TaskStatus.TODO, TaskStatus.IN_PROGRESS],
   },
 };

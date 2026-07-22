@@ -6,7 +6,6 @@ import { Toaster } from "react-hot-toast";
 import { getCodeFromURL } from "../shared/utils";
 import PageLoader from "../shared/components/loaders/PageLoader";
 import useAuthStore from "../features/auth/store/useAuthStore";
-// import ChatBot from "../shared/components/layout/ChatBot";
 
 export default function AppLayout() {
   const navigate = useNavigate();
@@ -19,9 +18,10 @@ export default function AppLayout() {
       if (code) {
         try {
           await getUserData(code);
-          setIsOAuthChecked(true);
         } catch (error) {
           console.error("OAuth callback failed:", error);
+        } finally {
+          setIsOAuthChecked(true);
         }
       } else {
         setIsOAuthChecked(true);
@@ -36,8 +36,12 @@ export default function AppLayout() {
       navigate("/login");
     }
   }, [isAuthenticated, loading, isOAuthChecked, navigate]);
-  
-  if (loading && !isOAuthChecked) {
+
+  // Outlet (and the ProtectedRoute it renders) must not mount until we know
+  // whether there's an OAuth code to exchange — otherwise ProtectedRoute's
+  // own effect (which fires before this one) sees isAuthenticated=false and
+  // redirects to /login before the code is ever read from the URL.
+  if (!isOAuthChecked) {
     return <PageLoader />;
   }
 
@@ -48,7 +52,6 @@ export default function AppLayout() {
         <main className="flex-1 overflow-y-auto">
           <Outlet />
         </main>
-        {/* <ChatBot /> */}
         <Toaster position="bottom-right" reverseOrder={false} />
       </div>
     </Suspense>

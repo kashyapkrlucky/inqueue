@@ -3,9 +3,9 @@ import { MoreMenu } from "../../../shared/components/ui/MoreMenu";
 import EditTask from "../../tasks/components/EditTask";
 import DeleteTask from "../../tasks/components/DeleteTask";
 import { useRef, useState } from "react";
-import TaskPriority from "@/features/tasks/components/TaskPriority";
 import TaskLabel from "@/features/tasks/components/TaskLabel";
 import TaskDueDate from "@/features/tasks/components/TaskDueDate";
+import { getTaskPriority, priorityConfig } from "@/features/tasks/utils";
 
 interface BoardTaskCardProps {
   task: ITask;
@@ -84,14 +84,15 @@ export const BoardTaskCard = ({
     onPointerDragEnd(task._id, e.clientX, e.clientY);
   };
 
+  const priority = getTaskPriority(task.priority);
+
   return (
     <div
-      className={`relative group w-full flex flex-row gap-1 rounded-lg bg-white shadow-sm hover:shadow-md transition-all duration-200 p-2 select-none border-2 hover:border-indigo-200 cursor-move touch-none ${
+      className={`relative group w-full flex flex-row rounded-lg bg-white shadow-sm hover:shadow-md transition-all duration-200 pl-3 pr-2.5 py-2.5 select-none border-2 hover:border-indigo-200 cursor-move touch-none ${
         isTouchDragging
           ? "scale-[1.02] border-indigo-300 opacity-80 shadow-lg"
           : "border-white"
       }`}
-      key={task._id}
       draggable
       onDragStart={handleDragStart}
       onDragEnd={handleDragEnd}
@@ -100,43 +101,44 @@ export const BoardTaskCard = ({
       onPointerUp={stopPointerDrag}
       onPointerCancel={stopPointerDrag}
     >
-      <div className="flex-1 flex flex-col gap-3 min-w-0">
-        <div className="flex flex-col items-start gap-2">
-          <p className="text-sm font-semibold text-gray-900 leading-tight">
+      <span
+        className={`absolute inset-y-1.5 left-1 w-1 rounded-full ${priorityConfig[priority].color}`}
+        aria-hidden="true"
+      />
+
+      <div className="flex-1 flex flex-col gap-2 min-w-0 pl-2">
+        <div className="flex items-start justify-between gap-2">
+          <p className="text-sm font-semibold text-gray-900 leading-snug line-clamp-2 min-w-0">
             {task.content || "Untitled task"}
           </p>
-        </div>
 
-        <div className="flex flex-col lg:flex-row items-start lg:items-center gap-2 text-xs text-gray-500">
-          <TaskPriority task={task} />
-
-          <TaskDueDate task={task} />
-
-          <div className={`absolute bottom-2 right-0`}>
-            <TaskLabel task={task} />
+          <div className="flex-shrink-0 -mt-1 -mr-1 opacity-60 group-hover:opacity-100 focus-within:opacity-100 transition-opacity">
+            <MoreMenu
+              moreMenuOpen={moreMenuOpen}
+              setMoreMenuOpen={setMoreMenuOpen}
+              menuItems={[
+                {
+                  value: <EditTask task={task} setMoreMenuOpen={setMoreMenuOpen} isTaskByDates={true} />,
+                },
+                {
+                  value: (
+                    <DeleteTask
+                      buttonType="text"
+                      taskId={task._id}
+                      setMoreMenuOpen={setMoreMenuOpen}
+                    />
+                  ),
+                },
+              ]}
+            />
           </div>
         </div>
-      </div>
 
-      <div className="flex-shrink-0">
-        <MoreMenu
-          moreMenuOpen={moreMenuOpen}
-          setMoreMenuOpen={setMoreMenuOpen}
-          menuItems={[
-            {
-              value: <EditTask task={task} setMoreMenuOpen={setMoreMenuOpen} isTaskByDates={true} />,
-            },
-            {
-              value: (
-                <DeleteTask
-                  buttonType="text"
-                  taskId={task._id}
-                  setMoreMenuOpen={setMoreMenuOpen}
-                />
-              ),
-            },
-          ]}
-        />
+        <div className="flex flex-wrap items-center gap-x-2.5 gap-y-1.5 text-xs text-gray-500">
+          {/* <TaskPriority task={task} /> */}
+          <TaskDueDate task={task} />
+          <TaskLabel task={task} />
+        </div>
       </div>
     </div>
   );

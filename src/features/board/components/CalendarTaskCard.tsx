@@ -1,6 +1,6 @@
 import DeleteTask from "@/features/tasks/components/DeleteTask";
 import EditTask from "@/features/tasks/components/EditTask";
-import { PRIORITY_CONFIG, type ITask } from "@/features/tasks/types";
+import { PRIORITY_CONFIG, TASK_STATUS_CONFIG, type ITask } from "@/features/tasks/types";
 import { MoreMenu } from "@/shared/components/ui/MoreMenu";
 import { formatDate } from "@/shared/utils";
 import { ClockIcon } from "lucide-react";
@@ -20,10 +20,16 @@ export const CalendarTaskCard = ({ task }: CalendarTaskCardProps) => {
     (dueDate ? new Date(dueDate) : new Date(createdAt)) < new Date();
   const priorityConfig =
     PRIORITY_CONFIG[task.priority as keyof typeof PRIORITY_CONFIG];
+  const statusConfig =
+    TASK_STATUS_CONFIG[task.status as keyof typeof TASK_STATUS_CONFIG];
 
   return (
     <div className="group w-full flex flex-row gap-1 rounded-xl bg-white shadow-sm hover:shadow-md transition-all duration-200 p-4 select-none border-2 border-white hover:border-indigo-200 cursor-move">
-      <div className="flex-1 flex flex-col gap-3 min-w-0">
+      <div className="flex-1 flex flex-col gap-3 min-w-0 relative">
+        <span
+          className={`absolute inset-y-1.5 -left-4 w-1 h-full rounded-full ${statusConfig?.bgColor}`}
+          aria-hidden="true"
+        />
         <div className="flex flex-col items-start gap-2">
           <p className="text-sm font-semibold text-gray-900 leading-tight">
             {task.content || "Untitled task"}
