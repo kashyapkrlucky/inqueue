@@ -1,6 +1,6 @@
 import { Link, NavLink, useNavigate } from "react-router-dom";
 import {
-  BotMessageSquareIcon,
+  // BotMessageSquareIcon,
   KanbanIcon,
   LayoutDashboardIcon,
   ListTodoIcon,
@@ -11,6 +11,7 @@ import {
 import { useEffect, useRef, useState } from "react";
 import useAuthStore from "../../../features/auth/store/useAuthStore";
 import { Button } from "../form/Button";
+import { SettingsModal } from "@/features/settings/components/SettingsModal";
 
 const navItems = [
   { to: "/", icon: LayoutDashboardIcon, label: "Home" },
@@ -73,19 +74,19 @@ export default function Sidebar() {
           ))}
         </div>
         <div className="flex flex-col gap-4">
-          <NavLink
+          {/* <NavLink
             to="/ask-tia"
             className={({ isActive }) =>
               `group relative flex items-center justify-center p-2 border-2 rounded-xl transition-all duration-200 ${
                 isActive
                   ? "bg-indigo-600 border-indigo-600 text-white"
-                  : "text-indigo-500 border-indigo-500 hover:text-indigo-600"
+                  : "bg-indigo-200 border-indigo-200 hover:bg-indigo-300"
               }`
             }
             title="Agent"
           >
             <BotMessageSquareIcon className="w-6 h-6" />
-          </NavLink>
+          </NavLink> */}
           <NavLink
             to="/support"
             className={({ isActive }) =>
@@ -99,6 +100,7 @@ export default function Sidebar() {
           >
             <MessageCircleQuestionMarkIcon className="w-6 h-6" />
           </NavLink>
+          <SettingsModal />
         </div>
       </div>
 
@@ -125,7 +127,7 @@ export default function Sidebar() {
           {/* Dropdown */}
           {isProfileOpen && (
             <div className="absolute left-full ml-2 bottom-0 w-64 bg-white rounded-2xl shadow-xl border border-gray-100/50 overflow-hidden z-50 animate-in slide-in-from-left-2 fade-in duration-200">
-              <div className="p-4 bg-gradient-to-br from-indigo-50 to-white border-b border-gray-100">
+              <div className="p-4 bg-linear-to-br from-indigo-50 to-white border-b border-gray-100">
                 <div className="flex items-center gap-3">
                   <img
                     src={user?.avatar || "/user.png"}

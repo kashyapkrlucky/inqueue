@@ -47,7 +47,7 @@ export const Button: React.FC<ButtonProps> = ({
   const renderIcon = () => {
     if (loading) {
       return (
-        <div className="w-4 h-4 border-2 border-2 border-gray-900 border-t-white rounded-full animate-spin" />
+        <div className="w-4 h-4 border-2 border-gray-900 border-t-white rounded-full animate-spin" />
       );
     }
     return icon;
@@ -66,9 +66,9 @@ export const Button: React.FC<ButtonProps> = ({
       disabled={disabled || loading}
       {...props}
     >
-      {showLeftIcon && <span className="flex-shrink-0">{iconElement}</span>}
+      {showLeftIcon && <span className="shrink-0">{iconElement}</span>}
       {children}
-      {showRightIcon && <span className="flex-shrink-0">{iconElement}</span>}
+      {showRightIcon && <span className="shrink-0">{iconElement}</span>}
     </button>
   );
 };

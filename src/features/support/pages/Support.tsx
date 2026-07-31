@@ -14,7 +14,6 @@ export default function Support() {
     useSupportStore();
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage] = useState(8);
-
   if (error) {
     CustomToast("error", error);
   }
@@ -91,7 +90,6 @@ export default function Support() {
           }}
         </ListLoading>
       </section>
-
       <Pagination
         currentPage={currentPage}
         totalPages={totalPages}

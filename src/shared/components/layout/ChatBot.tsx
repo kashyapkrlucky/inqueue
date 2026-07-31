@@ -48,7 +48,7 @@ export default function ChatBot() {
       {isOpen && !isMinimized && (
         <div className="mb-4 w-96 rounded-2xl bg-white shadow-2xl border border-gray-200 overflow-hidden">
           {/* Header */}
-          <div className="flex items-center justify-between bg-gradient-to-r from-indigo-500 to-indigo-600 px-4 py-3">
+          <div className="flex items-center justify-between bg-linear-to-r from-indigo-500 to-indigo-600 px-4 py-3">
             <div className="flex items-center gap-3">
               <img
                 src={imgSrc}
@@ -182,7 +182,7 @@ export default function ChatBot() {
       {!isOpen && (
         <button
           onClick={() => setIsOpen(true)}
-          className="group relative flex h-30 w-30 items-center justify-center rounded-full bg-gradient-to-r from-indigo-500 to-indigo-600 shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105"
+          className="group relative flex h-30 w-30 items-center justify-center rounded-full bg-linear-to-r from-indigo-500 to-indigo-600 shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105"
         >
           <img
             src={imgSrc}

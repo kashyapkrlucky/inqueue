@@ -46,9 +46,9 @@ export default function Modal({
   if (!isMounted || !isOpen) return null;
 
   return (
-    <div className="fixed inset-0 z-50 grid place-items-center p-4">
+    <div className="fixed inset-0 z-50 flex items-start justify-center pt-[15vh] animate-fade-in">
       <div 
-        className="absolute inset-0 bg-black/50 backdrop-blur-sm"
+        className="absolute inset-0 bg-black/40 backdrop-blur-sm"
         onClick={onClose}
       />
       <div className={`relative bg-white dark:bg-gray-900 rounded-lg shadow-2xl w-full ${sizeClasses[size]} h-auto border border-gray-200 dark:border-gray-700`}>
