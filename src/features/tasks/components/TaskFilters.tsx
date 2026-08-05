@@ -40,6 +40,7 @@ export function TaskFilters({
         boxClassName="flex flex-col gap-2 sm:col-span-2"
         onChange={(e) => setStatusFilter(e.target.value as ITaskStatus | "all")}
       >
+        <option value="all">All Statuses</option>
         {Object.entries(statusConfig).map(([key, config]) => (
           <option key={key} value={key}>
             {config.label}
@@ -55,6 +56,7 @@ export function TaskFilters({
           setPriorityFilter(e.target.value as ITaskPriority | "all")
         }
       >
+        <option value="all">All Priorities</option>
         {Object.entries(priorityConfig).map(([key, config]) => (
           <option key={key} value={key}>
             {config.label}

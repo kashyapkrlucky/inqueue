@@ -2,12 +2,11 @@ import { useEffect, useMemo, useState } from "react";
 import { ListTodoIcon } from "lucide-react";
 import { useTaskStore } from "../store/useTaskStore";
 import type { ITaskStatus, ITaskPriority } from "../types";
-import { getTaskPriority, getTaskStatus } from "../utils";
 import { TaskCard } from "../components/TaskCard";
 import PageLoader from "../../../shared/components/loaders/PageLoader";
 import ListLoading from "../../../shared/components/ui/ListLoading";
 import { PageHeader } from "../../../shared/components/ui/PageHeader";
-// import { TaskFilters } from "../components/TaskFilters";
+import { TaskFilters } from "../components/TaskFilters";
 import Pagination from "../../../shared/components/ui/Pagination";
 import CreateTask from "../components/CreateTask";
 import { useLabelStore } from "../../labels/store/useLabelStore";
@@ -16,17 +15,24 @@ export default function Tasks() {
   const { tasks, getTasks, loading, totalPages } = useTaskStore();
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage] = useState(12);
-  const [query] = useState("");
+  const [query, setQuery] = useState("");
   const { getLabels } = useLabelStore();
-  const [statusFilter] = useState<ITaskStatus | "all">("all");
-  const [priorityFilter] = useState<ITaskPriority | "all">(
+  const [statusFilter, setStatusFilter] = useState<ITaskStatus | "all">("all");
+  const [priorityFilter, setPriorityFilter] = useState<ITaskPriority | "all">(
     "all",
   );
 
   useEffect(() => {
-    getTasks(currentPage, itemsPerPage);
+    getTasks(currentPage, itemsPerPage, {
+      status: statusFilter,
+      priority: priorityFilter,
+    });
     getLabels()
-  }, [getTasks, currentPage, itemsPerPage, getLabels]);
+  }, [getTasks, currentPage, itemsPerPage, statusFilter, priorityFilter, getLabels]);
+
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [statusFilter, priorityFilter]);
 
   useEffect(() => {
     document.body.style.overflow = "hidden";
@@ -37,21 +43,15 @@ export default function Tasks() {
 
   const filteredTasks = useMemo(() => {
     const q = query.trim().toLowerCase();
-    return tasks.filter((t) => {
-      const st = getTaskStatus(t.status);
-      const pr = getTaskPriority(t.priority);
-      if (statusFilter !== "all" && st !== statusFilter) return false;
-      if (priorityFilter !== "all" && pr !== priorityFilter) return false;
-      if (!q) return true;
-      return (t.content ?? "").toLowerCase().includes(q);
-    });
-  }, [tasks, query, statusFilter, priorityFilter]);
+    if (!q) return tasks;
+    return tasks.filter((t) => (t.content ?? "").toLowerCase().includes(q));
+  }, [tasks, query]);
 
-  // const handleResetFilters = () => {
-  //   setStatusFilter("all");
-  //   setPriorityFilter("all");
-  //   setQuery("");
-  // };
+  const handleResetFilters = () => {
+    setStatusFilter("all");
+    setPriorityFilter("all");
+    setQuery("");
+  };
 
   if (loading) {
     return <PageLoader />;
@@ -66,7 +66,7 @@ export default function Tasks() {
         subContent={<CreateTask />}
       />
 
-      {/* <TaskFilters
+      <TaskFilters
         query={query}
         setQuery={setQuery}
         statusFilter={statusFilter}
@@ -74,7 +74,7 @@ export default function Tasks() {
         priorityFilter={priorityFilter}
         setPriorityFilter={setPriorityFilter}
         handleResetFilters={handleResetFilters}
-      /> */}
+      />
 
       <section className="flex-1 pt-4 overflow-y-auto hide-scrollbar">
         <ListLoading

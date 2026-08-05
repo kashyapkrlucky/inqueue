@@ -28,7 +28,11 @@ interface TaskState {
   totalPages: number;
   error: string | null;
   setTasks: (task: ITask) => void;
-  getTasks: (page: number, limit: number) => Promise<void>;
+  getTasks: (
+    page: number,
+    limit: number,
+    filters?: { status?: ITaskStatus | "all"; priority?: ITaskPriority | "all" },
+  ) => Promise<void>;
   addTask: (task: CreateTaskInput, isTaskByDates?: boolean) => Promise<void>;
   updateTask: (
     taskId: string,
@@ -72,13 +76,24 @@ export const useTaskStore = create<TaskState>((set) => ({
       };
     });
   },
-  getTasks: async (page: number = 1, limit: number = 10) => {
+  getTasks: async (page: number = 1, limit: number = 10, filters) => {
     await runAsyncAction(
       { set, loadingKey: "loading", errorKey: "error", errorMessage: "Failed to fetch tasks" },
       async () => {
+        const params = new URLSearchParams({
+          page: String(page),
+          limit: String(limit),
+        });
+        if (filters?.status && filters.status !== "all") {
+          params.set("status", filters.status);
+        }
+        if (filters?.priority && filters.priority !== "all") {
+          params.set("priority", filters.priority);
+        }
+
         const {
           data: { data, totalPages },
-        } = await axios.get(`/tasks?page=${page}&limit=${limit}`);
+        } = await axios.get(`/tasks?${params.toString()}`);
 
         set({ tasks: data, totalPages });
       },
