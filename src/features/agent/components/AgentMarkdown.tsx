@@ -97,7 +97,7 @@ export function AgentMarkdown({ content, isUser = false }: AgentMarkdownProps) {
         ),
       }}
     >
-      {content}
+      {content || "Nothing to show for now."}
     </ReactMarkdown>
   );
 }

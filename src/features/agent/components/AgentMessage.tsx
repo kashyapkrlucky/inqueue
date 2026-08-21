@@ -25,8 +25,7 @@ const resultIcons: Record<AgentResult["status"], ReactNode> = {
 };
 
 export function AgentMessage({ message }: AgentMessageProps) {
-  const hostUrl = import.meta.env.VITE_AUTH_URL;
-  const imgSrc = `${hostUrl}/apps/tia-ai.png`;
+  const imgSrc = `/tia-ai.png`;
 
   return (
     <div
@@ -35,7 +34,7 @@ export function AgentMessage({ message }: AgentMessageProps) {
         message.isUser ? "flex-row-reverse" : "flex-row"
       }`}
     >
-      <div className="flex-shrink-0">
+      <div className="shrink-0">
         {message.isUser ? (
           <div className="w-8 h-8 rounded-full bg-gray-900 flex items-center justify-center">
             <UserIcon className="w-4 h-4 text-white" />
@@ -72,7 +71,7 @@ export function AgentMessage({ message }: AgentMessageProps) {
                     key={index}
                     className={`flex items-start gap-2 text-xs py-2 px-3 rounded-lg border ${resultStyles[result.status]}`}
                   >
-                    <span className="mt-0.5 flex-shrink-0">
+                    <span className="mt-0.5 shrink-0">
                       {resultIcons[result.status]}
                     </span>
                     <div>

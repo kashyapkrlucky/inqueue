@@ -1,5 +1,6 @@
 import { Link, NavLink, useNavigate } from "react-router-dom";
 import {
+  BotMessageSquareIcon,
   // BotMessageSquareIcon,
   KanbanIcon,
   LayoutDashboardIcon,
@@ -74,7 +75,7 @@ export default function Sidebar() {
           ))}
         </div>
         <div className="flex flex-col gap-4">
-          {/* <NavLink
+          <NavLink
             to="/ask-tia"
             className={({ isActive }) =>
               `group relative flex items-center justify-center p-2 border-2 rounded-xl transition-all duration-200 ${
@@ -86,7 +87,7 @@ export default function Sidebar() {
             title="Agent"
           >
             <BotMessageSquareIcon className="w-6 h-6" />
-          </NavLink> */}
+          </NavLink>
           <NavLink
             to="/support"
             className={({ isActive }) =>

@@ -13,7 +13,7 @@ import { AgentMarkdown } from "../../../features/agent/components/AgentMarkdown"
 export default function ChatBot() {
   const { messages, loading, sendMessage } = useAgentStore();
   const hostUrl = import.meta.env.VITE_AUTH_URL;
-  const imgSrc = `${hostUrl}/apps/tia-ai.png`;
+  const imgSrc = `${hostUrl}/tia-ai.png`;
   const [isOpen, setIsOpen] = useState(false);
   const [isMinimized, setIsMinimized] = useState(false);
 
