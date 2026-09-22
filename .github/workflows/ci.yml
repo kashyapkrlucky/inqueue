@@ -19,6 +19,9 @@ jobs:
 
       - run: npm ci
 
+      - name: Set up env
+        run: cp .env.example .env
+
       - name: Lint
         run: npm run lint
 

@@ -11,7 +11,7 @@ interface StatusTextProps {
 }
 
 const typeClasses = {
-  success: "text-emerald-600 dark:text-emerald-400",
+  success: "text-emerald-700 dark:text-emerald-400",
   error: "text-red-600 dark:text-red-400",
   warning: "text-amber-600 dark:text-amber-400",
   info: "text-purple-600 dark:text-purple-400",

@@ -14,7 +14,7 @@ export const TaskCard = ({ task }: { task: ITask }) => {
       <div className="flex items-center gap-3">
         <TaskStatusButton task={task} />
         <p
-          className={`truncate text-sm font-semibold ${status === "done" ? "text-gray-400 line-through" : "text-gray-900"}`}
+          className={`truncate text-sm font-semibold ${status === "done" ? "text-gray-500 line-through" : "text-gray-900"}`}
         >
           {task.content?.trim()}
         </p>

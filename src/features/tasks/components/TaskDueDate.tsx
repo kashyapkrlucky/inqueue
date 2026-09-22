@@ -17,7 +17,7 @@ export default function TaskDueDate({ task }: { task: ITask }) {
 
   if (isDone) {
     return (
-      <span className="inline-flex items-center text-xs gap-1.5 text-emerald-600">
+      <span className="inline-flex items-center text-xs gap-1.5 text-emerald-700">
         <CheckCircleIcon className="h-3.5 w-3.5" />
         <span>{formatDate(updatedAt!)}</span>
       </span>

@@ -1,11 +1,12 @@
-import type { ITask } from "../../tasks/types";
+import type { ITask, ITaskStatus } from "../../tasks/types";
 import { MoreMenu } from "../../../shared/components/ui/MoreMenu";
 import EditTask from "../../tasks/components/EditTask";
 import DeleteTask from "../../tasks/components/DeleteTask";
 import { useRef, useState } from "react";
+import { MoveRightIcon } from "lucide-react";
 import TaskLabel from "@/features/tasks/components/TaskLabel";
 import TaskDueDate from "@/features/tasks/components/TaskDueDate";
-import { getTaskPriority, priorityConfig } from "@/features/tasks/utils";
+import { getTaskPriority, priorityConfig, statusConfig } from "@/features/tasks/utils";
 
 interface BoardTaskCardProps {
   task: ITask;
@@ -13,6 +14,7 @@ interface BoardTaskCardProps {
   onDragEnd: () => void;
   onPointerDragMove: (clientX: number, clientY: number) => void;
   onPointerDragEnd: (taskId: string, clientX: number, clientY: number) => void;
+  onMoveTo: (taskId: string, status: ITaskStatus) => void;
   isTouchDragging: boolean;
 }
 
@@ -22,6 +24,7 @@ export const BoardTaskCard = ({
   onDragEnd,
   onPointerDragMove,
   onPointerDragEnd,
+  onMoveTo,
   isTouchDragging,
 }: BoardTaskCardProps) => {
   const [moreMenuOpen, setMoreMenuOpen] = useState(false);
@@ -117,6 +120,25 @@ export const BoardTaskCard = ({
               moreMenuOpen={moreMenuOpen}
               setMoreMenuOpen={setMoreMenuOpen}
               menuItems={[
+                ...(Object.keys(statusConfig) as ITaskStatus[])
+                  .filter((status) => status !== task.status)
+                  .map((status) => ({
+                    value: (
+                      <button
+                        key={status}
+                        onClick={() => {
+                          onMoveTo(task._id, status);
+                          setMoreMenuOpen(false);
+                        }}
+                        className="w-full items-start p-1 inline-flex rounded-xl text-gray-500 hover:bg-indigo-50 hover:text-indigo-700 transition-colors"
+                      >
+                        <MoveRightIcon className="w-4 h-4" />
+                        <span className="text-xs ml-2">
+                          Move to {statusConfig[status].label}
+                        </span>
+                      </button>
+                    ),
+                  })),
                 {
                   value: <EditTask task={task} setMoreMenuOpen={setMoreMenuOpen} isTaskByDates={true} />,
                 },

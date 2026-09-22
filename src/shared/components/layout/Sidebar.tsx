@@ -68,6 +68,7 @@ export default function Sidebar() {
                 }`
               }
               title={item.label}
+              aria-label={item.label}
             >
               <item.icon className="w-5 h-5" />
               <span className="absolute left-0 w-1 h-8 rounded-r-full bg-indigo-500 opacity-0 group-[.active]:opacity-100 transition-all duration-200" />
@@ -85,6 +86,7 @@ export default function Sidebar() {
               }`
             }
             title="Agent"
+            aria-label="Agent"
           >
             <BotMessageSquareIcon className="w-6 h-6" />
           </NavLink>
@@ -98,6 +100,7 @@ export default function Sidebar() {
               }`
             }
             title="Support"
+            aria-label="Support"
           >
             <MessageCircleQuestionMarkIcon className="w-6 h-6" />
           </NavLink>

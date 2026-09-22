@@ -26,6 +26,7 @@ export function TaskFilters({
   return (
     <div className="grid grid-cols-1 gap-3 sm:grid-cols-12 sm:items-end justify-end">
       <Input
+        id="task-search"
         label="Search"
         type="text"
         boxClassName="flex flex-col gap-2 sm:col-span-6"
@@ -35,6 +36,7 @@ export function TaskFilters({
       />
 
       <Select
+        id="task-status-filter"
         label="Status"
         value={statusFilter}
         boxClassName="flex flex-col gap-2 sm:col-span-2"
@@ -49,6 +51,7 @@ export function TaskFilters({
       </Select>
 
       <Select
+        id="task-priority-filter"
         label="Priority"
         value={priorityFilter}
         boxClassName="flex flex-col gap-2 sm:col-span-2"

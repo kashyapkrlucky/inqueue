@@ -2,6 +2,7 @@ import { BoardColumn } from "./BoardColumn";
 import { useTaskStore } from "@/features/tasks/store/useTaskStore";
 import { useCallback, useState } from "react";
 import type { ITask, ITaskStatus } from "@/features/tasks/types";
+import { statusConfig } from "@/features/tasks/utils";
 
 interface GridViewProps {
   tasks: ITask[];
@@ -15,6 +16,7 @@ export const GridView = ({ tasks }: GridViewProps) => {
   const [activeTouchTaskId, setActiveTouchTaskId] = useState<string | null>(
     null,
   );
+  const [announcement, setAnnouncement] = useState("");
 
   const handleDragStart = useCallback((taskId: string) => {
     setActiveTouchTaskId(taskId);
@@ -34,6 +36,10 @@ export const GridView = ({ tasks }: GridViewProps) => {
       const task = tasks.find((t) => t._id === taskId);
       if (task && task.status !== newStatus) {
         updateTask(taskId, { status: newStatus as ITaskStatus }, true);
+        const label = statusConfig[newStatus as ITaskStatus]?.label ?? newStatus;
+        setAnnouncement(
+          `Moved "${task.content || "task"}" to ${label}`,
+        );
       }
       setDraggedOverColumn(null);
       setActiveTouchTaskId(null);
@@ -72,6 +78,12 @@ export const GridView = ({ tasks }: GridViewProps) => {
   const doneTasks = tasks.filter((task) => task.status === "done");
   return (
     <div className="flex-1 flex flex-row gap-4 overflow-x-auto overflow-y-hidden pb-2 md:overflow-hidden md:divide-x md:divide-gray-200">
+      {/* Announces drag-and-drop AND keyboard-driven ("Move to...") status
+          changes to screen reader users, since neither is visually implied
+          by focus moving anywhere. */}
+      <div role="status" aria-live="polite" className="sr-only">
+        {announcement}
+      </div>
       <BoardColumn
         title="To Do"
         tasks={todoTasks}
@@ -82,6 +94,7 @@ export const GridView = ({ tasks }: GridViewProps) => {
         onDragOver={handleDragOver}
         onPointerDragMove={handlePointerDragMove}
         onPointerDragEnd={handlePointerDragEnd}
+        onMoveTo={handleDrop}
         status="todo"
         isDraggingOver={draggedOverColumn === "todo"}
         activeTouchTaskId={activeTouchTaskId}
@@ -96,6 +109,7 @@ export const GridView = ({ tasks }: GridViewProps) => {
         onDragOver={handleDragOver}
         onPointerDragMove={handlePointerDragMove}
         onPointerDragEnd={handlePointerDragEnd}
+        onMoveTo={handleDrop}
         status="in_progress"
         isDraggingOver={draggedOverColumn === "in_progress"}
         activeTouchTaskId={activeTouchTaskId}
@@ -110,6 +124,7 @@ export const GridView = ({ tasks }: GridViewProps) => {
         onDragOver={handleDragOver}
         onPointerDragMove={handlePointerDragMove}
         onPointerDragEnd={handlePointerDragEnd}
+        onMoveTo={handleDrop}
         status="done"
         isDraggingOver={draggedOverColumn === "done"}
         activeTouchTaskId={activeTouchTaskId}

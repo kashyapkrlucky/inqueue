@@ -48,7 +48,7 @@ export default function Login() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100 flex items-center justify-center p-4">
+    <main className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100 flex items-center justify-center p-4">
       <div className="w-full max-w-md bg-white/95 backdrop-blur-sm p-8 rounded-2xl border border-slate-200/50 flex flex-col items-center text-center gap-8 transition-all duration-300 shadow">
         {/* Logo Section */}
         <div className="flex flex-col items-center gap-3">
@@ -106,6 +106,6 @@ export default function Login() {
           <p className="text-xs text-slate-400">&copy; {TEXT_COPYRIGHT}</p>
         </div>
       </div>
-    </div>
+    </main>
   );
 }

@@ -1,4 +1,4 @@
-import type { ITask } from "../../tasks/types";
+import type { ITask, ITaskStatus } from "../../tasks/types";
 import { BoardTaskCard } from "./BoardTaskCard";
 
 interface BoardColumnProps {
@@ -11,6 +11,7 @@ interface BoardColumnProps {
   onDragOver: (status: string) => void;
   onPointerDragMove: (clientX: number, clientY: number) => void;
   onPointerDragEnd: (taskId: string, clientX: number, clientY: number) => void;
+  onMoveTo: (taskId: string, status: ITaskStatus) => void;
   status: string;
   isDraggingOver: boolean;
   activeTouchTaskId: string | null;
@@ -26,6 +27,7 @@ export const BoardColumn = ({
   onDragOver,
   onPointerDragMove,
   onPointerDragEnd,
+  onMoveTo,
   status,
   isDraggingOver,
   activeTouchTaskId,
@@ -64,6 +66,7 @@ export const BoardColumn = ({
             onDragEnd={onDragEnd}
             onPointerDragMove={onPointerDragMove}
             onPointerDragEnd={onPointerDragEnd}
+            onMoveTo={onMoveTo}
             isTouchDragging={activeTouchTaskId === task._id}
           />
         ))}

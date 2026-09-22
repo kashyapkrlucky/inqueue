@@ -29,7 +29,11 @@ export const SettingsModal = () => {
     };
     return (
         <>
-            <button className="flex items-center justify-center p-2  rounded-xl text-gray-500 hover:bg-gray-50 hover:text-gray-900 shadow-sm" onClick={openSettings}>
+            <button
+                className="flex items-center justify-center p-2  rounded-xl text-gray-500 hover:bg-gray-50 hover:text-gray-900 shadow-sm"
+                onClick={openSettings}
+                aria-label="Open settings"
+            >
                 <SettingsIcon />
             </button>
 
@@ -40,6 +44,7 @@ export const SettingsModal = () => {
             >
                 <form className="flex flex-col gap-4" onSubmit={onSubmit}>
                     <Select
+                        id="timezone"
                         label="Timezone"
                         value={timezone}
                         onChange={(e) => setTimezone(e.target.value)}
@@ -51,6 +56,7 @@ export const SettingsModal = () => {
                         <option value="America/Los_Angeles">America/Los_Angeles</option>
                     </Select>
                     <Select
+                        id="notificationTime"
                         label="Notification Time"
                         value={notificationTime}
                         onChange={(e) => setNotificationTime(e.target.value)}

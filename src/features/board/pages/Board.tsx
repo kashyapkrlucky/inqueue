@@ -89,13 +89,21 @@ export default function Board() {
             {loading && <InlineLoader />}
             <div className="flex flex-row-reverse justify-center items-center gap-2">
               <div className="flex items-center gap-2">
-                <Button variant="ghost" onClick={handlePreviousMonth}>
+                <Button
+                  variant="ghost"
+                  onClick={handlePreviousMonth}
+                  aria-label="Previous month"
+                >
                   <ChevronLeftIcon className="w-5 h-5 text-gray-600" />
                 </Button>
                 <Text variant="h1" className="text-xl">
                   {format(currentMonth, "MMMM yyyy")}
                 </Text>
-                <Button variant="ghost" onClick={handleNextMonth}>
+                <Button
+                  variant="ghost"
+                  onClick={handleNextMonth}
+                  aria-label="Next month"
+                >
                   <ChevronRightIcon className="w-5 h-5 text-gray-600" />
                 </Button>
               </div>
