@@ -63,6 +63,9 @@ const createDataTransfer = () => {
 describe("GridView", () => {
   beforeEach(() => {
     updateTask.mockReset();
+    // jsdom doesn't implement the Pointer Events capture APIs.
+    HTMLElement.prototype.setPointerCapture = vi.fn();
+    HTMLElement.prototype.releasePointerCapture = vi.fn();
   });
 
   it("updates calendar tasks when a task is dropped into another column", () => {
@@ -79,5 +82,84 @@ describe("GridView", () => {
       { status: "done" },
       true,
     );
+  });
+
+  it("does not call updateTask when a task is dropped back into its own column", () => {
+    render(<GridView tasks={[task]} />);
+    const dataTransfer = createDataTransfer();
+
+    fireEvent.dragStart(screen.getByText("Move me"), { dataTransfer });
+    fireEvent.drop(
+      screen.getByText("To Do").closest("[data-board-status]")!,
+      { dataTransfer },
+    );
+
+    expect(updateTask).not.toHaveBeenCalled();
+  });
+
+  it("moves a task via touch/pointer dragging into another column", () => {
+    render(<GridView tasks={[task]} />);
+    const card = screen.getByText("Move me").closest("[draggable]")! as HTMLElement;
+    const doneColumn = screen
+      .getByText("Done")
+      .closest("[data-board-status]")! as HTMLElement;
+
+    document.elementFromPoint = vi.fn().mockReturnValue(doneColumn);
+
+    fireEvent.pointerDown(card, {
+      pointerType: "touch",
+      pointerId: 1,
+      clientX: 10,
+      clientY: 10,
+    });
+    fireEvent.pointerMove(card, {
+      pointerType: "touch",
+      pointerId: 1,
+      clientX: 200,
+      clientY: 50,
+    });
+    fireEvent.pointerUp(card, {
+      pointerType: "touch",
+      pointerId: 1,
+      clientX: 200,
+      clientY: 50,
+    });
+
+    expect(updateTask).toHaveBeenCalledWith(
+      "task-1",
+      { status: "done" },
+      true,
+    );
+  });
+
+  it("ignores mouse-type pointer events so native drag-and-drop still owns them", () => {
+    render(<GridView tasks={[task]} />);
+    const card = screen.getByText("Move me").closest("[draggable]")! as HTMLElement;
+    const doneColumn = screen
+      .getByText("Done")
+      .closest("[data-board-status]")! as HTMLElement;
+
+    document.elementFromPoint = vi.fn().mockReturnValue(doneColumn);
+
+    fireEvent.pointerDown(card, {
+      pointerType: "mouse",
+      pointerId: 1,
+      clientX: 10,
+      clientY: 10,
+    });
+    fireEvent.pointerMove(card, {
+      pointerType: "mouse",
+      pointerId: 1,
+      clientX: 200,
+      clientY: 50,
+    });
+    fireEvent.pointerUp(card, {
+      pointerType: "mouse",
+      pointerId: 1,
+      clientX: 200,
+      clientY: 50,
+    });
+
+    expect(updateTask).not.toHaveBeenCalled();
   });
 });

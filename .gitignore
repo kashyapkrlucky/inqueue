@@ -135,4 +135,9 @@ dist
 .yarn/install-state.gz
 .pnp.*
 
+# Playwright
+/playwright-report/
+/test-results/
+/blob-report/
+
 .claude

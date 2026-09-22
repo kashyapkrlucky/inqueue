@@ -118,6 +118,7 @@ export default function TaskEditor({
           ))}
         </Select>
         <Input
+          id="dueDate"
           type="date"
           label="Due Date"
           name="dueDate"

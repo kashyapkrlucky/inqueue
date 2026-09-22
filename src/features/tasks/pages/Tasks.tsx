@@ -30,9 +30,15 @@ export default function Tasks() {
     getLabels()
   }, [getTasks, currentPage, itemsPerPage, statusFilter, priorityFilter, getLabels]);
 
-  useEffect(() => {
+  const handleStatusFilterChange = (status: ITaskStatus | "all") => {
+    setStatusFilter(status);
     setCurrentPage(1);
-  }, [statusFilter, priorityFilter]);
+  };
+
+  const handlePriorityFilterChange = (priority: ITaskPriority | "all") => {
+    setPriorityFilter(priority);
+    setCurrentPage(1);
+  };
 
   useEffect(() => {
     document.body.style.overflow = "hidden";
@@ -50,6 +56,7 @@ export default function Tasks() {
   const handleResetFilters = () => {
     setStatusFilter("all");
     setPriorityFilter("all");
+    setCurrentPage(1);
     setQuery("");
   };
 
@@ -70,9 +77,9 @@ export default function Tasks() {
         query={query}
         setQuery={setQuery}
         statusFilter={statusFilter}
-        setStatusFilter={setStatusFilter}
+        setStatusFilter={handleStatusFilterChange}
         priorityFilter={priorityFilter}
-        setPriorityFilter={setPriorityFilter}
+        setPriorityFilter={handlePriorityFilterChange}
         handleResetFilters={handleResetFilters}
       />
 

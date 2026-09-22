@@ -1,19 +1,25 @@
 export const USER_KEY = "user";
 
 
-// Helper functions for token management
+// Helper functions for token management. Wrapped in try/catch because
+// localStorage access can throw (Safari private browsing, storage disabled
+// by the user, or a test environment where it isn't wired up yet) — none of
+// which should crash the app, just fall back to an unauthenticated state.
 export const getStoredToken = (key: string): string | null => {
-  if (typeof window !== "undefined") {
+  if (typeof window === "undefined") return null;
+  try {
     return localStorage.getItem(key);
+  } catch {
+    return null;
   }
-  return null;
 };
 
 export const setStoredToken = (
   key: string,
   data: object | string | null,
 ): void => {
-  if (typeof window !== "undefined") {
+  if (typeof window === "undefined") return;
+  try {
     if (data) {
       localStorage.setItem(
         key,
@@ -22,6 +28,8 @@ export const setStoredToken = (
     } else {
       localStorage.removeItem(key);
     }
+  } catch {
+    // ignore — see comment above
   }
 };
 
