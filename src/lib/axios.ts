@@ -1,5 +1,4 @@
 import { useAuthStore } from "@/features/auth/store/useAuthStore";
-import { ACCESS_TOKEN_KEY } from "@/shared/utils";
 import axios, {
   AxiosError,
   type AxiosRequestConfig,
@@ -50,7 +49,7 @@ const flushQueue = (error?: unknown) => {
 const shouldSkipRefresh = (url?: string) => {
   if (!url) return true;
 
-  return ["/v1/modules/session/refresh"].some((path) => url.includes(path));
+  return ["/v1/public/session/refresh"].some((path) => url.includes(path));
 };
 
 const expireSession = () => {
@@ -64,13 +63,12 @@ const expireSession = () => {
   }
 };
 
+// Auth is carried entirely by the httpOnly access/refresh token cookies the
+// auth server sets (withCredentials: true on both instances below) — no
+// Authorization header is set from JS-readable storage.
 const setAuthHeaders = (config: InternalAxiosRequestConfig) => {
-  const token = localStorage.getItem(ACCESS_TOKEN_KEY);
   config.headers["x-timezone"] =
     Intl.DateTimeFormat().resolvedOptions().timeZone;
-  if (token) {
-    config.headers.Authorization = `Bearer ${token}`;
-  }
   return config;
 };
 

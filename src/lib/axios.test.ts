@@ -1,11 +1,7 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
-import axiosInstance from "./axios";
+import axiosInstance, { authAxios } from "./axios";
 import useAuthStore from "../features/auth/store/useAuthStore";
-import {
-  ACCESS_TOKEN_KEY,
-  REFRESH_TOKEN_KEY,
-  USER_KEY,
-} from "../shared/utils";
+import { USER_KEY } from "../shared/utils";
 import type { IUser } from "../features/auth/types";
 
 const getRefreshedTokens = useAuthStore.getState().getRefreshedTokens;
@@ -23,15 +19,14 @@ const user: IUser = {
 describe("axios refresh handling", () => {
   beforeEach(() => {
     vi.restoreAllMocks();
+    // Auth is carried by httpOnly cookies, not JS-readable storage — logout()
+    // still fires a best-effort request to clear them server-side.
+    vi.spyOn(authAxios, "post").mockResolvedValue({ data: { data: {} } });
     window.history.pushState({}, "", "/login");
     localStorage.clear();
-    localStorage.setItem(ACCESS_TOKEN_KEY, "expired-access-token");
-    localStorage.setItem(REFRESH_TOKEN_KEY, "invalid-refresh-token");
     localStorage.setItem(USER_KEY, JSON.stringify(user));
     useAuthStore.setState({
       user,
-      access_token: "expired-access-token",
-      refresh_token: "invalid-refresh-token",
       isAuthenticated: true,
       loading: false,
       isGuestLoading: false,
@@ -46,7 +41,7 @@ describe("axios refresh handling", () => {
     });
 
     await expect(
-      axiosInstance.get("/v1/modules/tasks", {
+      axiosInstance.get("/v1/tasks", {
         adapter: async (config) => {
           throw {
             config,
@@ -60,12 +55,8 @@ describe("axios refresh handling", () => {
 
     expect(useAuthStore.getState()).toMatchObject({
       user: null,
-      access_token: null,
-      refresh_token: null,
       isAuthenticated: false,
     });
-    expect(localStorage.getItem(ACCESS_TOKEN_KEY)).toBeNull();
-    expect(localStorage.getItem(REFRESH_TOKEN_KEY)).toBeNull();
     expect(localStorage.getItem(USER_KEY)).toBeNull();
   });
 });

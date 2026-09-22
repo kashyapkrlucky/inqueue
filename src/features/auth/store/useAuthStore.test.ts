@@ -1,10 +1,6 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { authAxios } from "../../../lib/axios";
-import {
-  ACCESS_TOKEN_KEY,
-  REFRESH_TOKEN_KEY,
-  USER_KEY,
-} from "../../../shared/utils";
+import { USER_KEY } from "../../../shared/utils";
 import useAuthStore from "./useAuthStore";
 import type { IUser } from "../types";
 
@@ -30,8 +26,6 @@ const guestUser: IUser = {
 const resetAuthStore = () => {
   useAuthStore.setState({
     user: null,
-    access_token: null,
-    refresh_token: null,
     isAuthenticated: false,
     loading: false,
     isGuestLoading: false,
@@ -46,7 +40,11 @@ describe("useAuthStore", () => {
     resetAuthStore();
   });
 
-  it("persists auth data after a successful guest login", async () => {
+  it("persists the user (not tokens) after a successful guest login", async () => {
+    // access_token/refresh_token are still present in the response body for
+    // backward compatibility with non-browser clients, but the browser flow
+    // relies solely on the httpOnly cookies the auth server sets alongside
+    // this response — the store never reads or stores them.
     vi.mocked(authAxios.post).mockResolvedValueOnce({
       data: {
         data: {
@@ -59,42 +57,42 @@ describe("useAuthStore", () => {
 
     const result = await useAuthStore.getState().onGuestLogin();
 
-    expect(authAxios.post).toHaveBeenCalledWith("/v1/modules/guest", {
+    expect(authAxios.post).toHaveBeenCalledWith("/v1/public/guest", {
       clientId: expect.any(String),
     });
-    expect(result).toEqual({
-      user: guestUser,
-      access_token: "access-token",
-      refresh_token: "refresh-token",
-    });
+    expect(result).toEqual({ user: guestUser });
     expect(useAuthStore.getState().isAuthenticated).toBe(true);
-    expect(localStorage.getItem(ACCESS_TOKEN_KEY)).toBe("access-token");
-    expect(localStorage.getItem(REFRESH_TOKEN_KEY)).toBe("refresh-token");
     expect(localStorage.getItem(USER_KEY)).toBe(JSON.stringify(guestUser));
   });
 
-  it("clears stored auth data on logout", () => {
-    localStorage.setItem(ACCESS_TOKEN_KEY, "access-token");
-    localStorage.setItem(REFRESH_TOKEN_KEY, "refresh-token");
+  it("sets an error and stays unauthenticated when guest login fails", async () => {
+    vi.mocked(authAxios.post).mockRejectedValueOnce(new Error("Network error"));
+
+    const result = await useAuthStore.getState().onGuestLogin();
+
+    expect(result).toBeNull();
+    expect(useAuthStore.getState()).toMatchObject({
+      isAuthenticated: false,
+      error: "Network error",
+    });
+  });
+
+  it("clears the stored user and notifies the server on logout", () => {
+    vi.mocked(authAxios.post).mockResolvedValueOnce({ data: { data: {} } });
     localStorage.setItem(USER_KEY, JSON.stringify(guestUser));
     useAuthStore.setState({
       user: guestUser,
-      access_token: "access-token",
-      refresh_token: "refresh-token",
       isAuthenticated: true,
     });
 
     useAuthStore.getState().logout();
 
+    expect(authAxios.post).toHaveBeenCalledWith("/v1/public/logout");
     expect(useAuthStore.getState()).toMatchObject({
       user: null,
-      access_token: null,
-      refresh_token: null,
       isAuthenticated: false,
       error: null,
     });
-    expect(localStorage.getItem(ACCESS_TOKEN_KEY)).toBeNull();
-    expect(localStorage.getItem(REFRESH_TOKEN_KEY)).toBeNull();
     expect(localStorage.getItem(USER_KEY)).toBeNull();
   });
 });
