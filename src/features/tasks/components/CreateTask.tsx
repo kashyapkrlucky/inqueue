@@ -10,7 +10,7 @@ export default function CreateTask() {
   return (
     <>
       <Button
-      size="sm"
+        size="sm"
         icon={<PlusIcon className="h-4 w-4" />}
         onClick={() => setIsTaskModalOpen(true)}
       >
@@ -21,10 +21,7 @@ export default function CreateTask() {
         isOpen={isTaskModalOpen}
         onClose={() => setIsTaskModalOpen(false)}
       >
-        <TaskEditor
-          task={undefined}
-          onClose={() => setIsTaskModalOpen(false)}
-        />
+        <TaskEditor task={undefined} onClose={() => setIsTaskModalOpen(false)} />
       </Modal>
     </>
   );

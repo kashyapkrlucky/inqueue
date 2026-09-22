@@ -17,7 +17,12 @@ export const useSettingsStore = create<ISettingsStore>((set) => ({
   settings: {} as Settings,
   getSettings: async () => {
     await runAsyncAction(
-      { set, loadingKey: "settingsLoading", errorKey: "error", errorMessage: "Failed to fetch settings" },
+      {
+        set,
+        loadingKey: "settingsLoading",
+        errorKey: "error",
+        errorMessage: "Failed to fetch settings",
+      },
       async () => {
         const {
           data: { data },
@@ -29,7 +34,12 @@ export const useSettingsStore = create<ISettingsStore>((set) => ({
   },
   updateSettings: async (payload: SettingsUpdateInput) => {
     await runAsyncAction(
-      { set, loadingKey: "settingsLoading", errorKey: "error", errorMessage: "Failed to update settings" },
+      {
+        set,
+        loadingKey: "settingsLoading",
+        errorKey: "error",
+        errorMessage: "Failed to update settings",
+      },
       async () => {
         const {
           data: { data },

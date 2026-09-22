@@ -1,15 +1,15 @@
 import { useAuthStore } from "@/features/auth/store/useAuthStore";
+import { env } from "@/lib/env";
 import axios, {
   AxiosError,
   type AxiosRequestConfig,
   type InternalAxiosRequestConfig,
 } from "axios";
 
-const getApiBaseUrl = (url?: string) =>
-  `${url || "http://localhost:3000"}/api`;
+const getApiBaseUrl = (url: string) => `${url}/api`;
 
 const authAxios = axios.create({
-  baseURL: getApiBaseUrl(import.meta.env.VITE_AUTH_URL),
+  baseURL: getApiBaseUrl(env.VITE_AUTH_URL),
   headers: {
     "Content-Type": "application/json",
   },
@@ -17,7 +17,7 @@ const authAxios = axios.create({
 });
 
 const axiosInstance = axios.create({
-  baseURL: getApiBaseUrl(import.meta.env.VITE_API_URL),
+  baseURL: getApiBaseUrl(env.VITE_API_URL),
   headers: {
     "Content-Type": "application/json",
   },
@@ -55,10 +55,7 @@ const shouldSkipRefresh = (url?: string) => {
 const expireSession = () => {
   useAuthStore.getState().logout();
 
-  if (
-    typeof window !== "undefined" &&
-    window.location.pathname !== "/login"
-  ) {
+  if (typeof window !== "undefined" && window.location.pathname !== "/login") {
     window.location.replace("/login");
   }
 };
@@ -67,24 +64,17 @@ const expireSession = () => {
 // auth server sets (withCredentials: true on both instances below) — no
 // Authorization header is set from JS-readable storage.
 const setAuthHeaders = (config: InternalAxiosRequestConfig) => {
-  config.headers["x-timezone"] =
-    Intl.DateTimeFormat().resolvedOptions().timeZone;
+  config.headers["x-timezone"] = Intl.DateTimeFormat().resolvedOptions().timeZone;
   return config;
 };
 
-authAxios.interceptors.request.use(
-  setAuthHeaders,
-  (error) => {
-    return Promise.reject(error);
-  },
-);
+authAxios.interceptors.request.use(setAuthHeaders, (error) => {
+  return Promise.reject(error);
+});
 
-axiosInstance.interceptors.request.use(
-  setAuthHeaders,
-  (error) => {
-    return Promise.reject(error);
-  },
-);
+axiosInstance.interceptors.request.use(setAuthHeaders, (error) => {
+  return Promise.reject(error);
+});
 
 // Response interceptor
 axiosInstance.interceptors.response.use(
@@ -94,9 +84,7 @@ axiosInstance.interceptors.response.use(
     if (error.response) {
       // Handle specific status codes
       if (error.response.status === 401) {
-        const original = error.config as
-          | RetryableAxiosRequestConfig
-          | undefined;
+        const original = error.config as RetryableAxiosRequestConfig | undefined;
 
         if (
           !original ||

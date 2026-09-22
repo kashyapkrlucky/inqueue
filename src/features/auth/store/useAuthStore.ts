@@ -1,5 +1,6 @@
 import { create } from "zustand";
 import { authAxios } from "../../../lib/axios";
+import { env } from "../../../lib/env";
 import { getStoredToken, setStoredToken, USER_KEY } from "../../../shared/utils";
 import type { IUser } from "../types";
 
@@ -87,7 +88,7 @@ export const useAuthStore = create<AuthState>((set) => ({
   onGuestLogin: async () => {
     try {
       set({ isGuestLoading: true, error: null });
-      const clientId = import.meta.env.VITE_CLIENT_ID;
+      const clientId = env.VITE_CLIENT_ID;
       const {
         data: { data },
       } = await authAxios.post("/v1/public/guest", { clientId });

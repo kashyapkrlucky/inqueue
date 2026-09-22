@@ -13,9 +13,7 @@ export function NoItems({ title, description, icon }: NoItemsProps) {
         {icon || <InboxIcon className="h-6 w-6" />}
       </div>
       <h3 className="text-sm font-semibold text-gray-900">{title}</h3>
-      {description && (
-        <p className="mt-1 text-xs text-gray-500">{description}</p>
-      )}
+      {description && <p className="mt-1 text-xs text-gray-500">{description}</p>}
     </div>
   );
 }

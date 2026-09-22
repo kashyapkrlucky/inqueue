@@ -24,9 +24,8 @@ vi.mock("../store/useAuthStore", () => ({
 }));
 
 vi.mock("react-router-dom", async () => {
-  const actual = await vi.importActual<typeof import("react-router-dom")>(
-    "react-router-dom",
-  );
+  const actual =
+    await vi.importActual<typeof import("react-router-dom")>("react-router-dom");
 
   return {
     ...actual,
@@ -48,9 +47,13 @@ describe("Login", () => {
 
     expect(screen.getByRole("heading", { name: TEXT_WELCOME_BACK })).toBeInTheDocument();
     expect(screen.getByText(TEXT_DESCRIPTION)).toBeInTheDocument();
-    expect(screen.getByRole("button", { name: TEXT_SIGN_IN_WITH_ATLAS_ID })).toBeInTheDocument();
+    expect(
+      screen.getByRole("button", { name: TEXT_SIGN_IN_WITH_ATLAS_ID }),
+    ).toBeInTheDocument();
     expect(screen.getByText(TEXT_ATLAS_ID_DESCRIPTION)).toBeInTheDocument();
-    expect(screen.getByRole("button", { name: TEXT_CONTINUE_AS_GUEST })).toBeInTheDocument();
+    expect(
+      screen.getByRole("button", { name: TEXT_CONTINUE_AS_GUEST }),
+    ).toBeInTheDocument();
   });
 
   it("redirects an already authenticated user away from login", async () => {

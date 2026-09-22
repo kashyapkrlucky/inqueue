@@ -77,11 +77,7 @@ describe("GridView", () => {
       dataTransfer,
     });
 
-    expect(updateTask).toHaveBeenCalledWith(
-      "task-1",
-      { status: "done" },
-      true,
-    );
+    expect(updateTask).toHaveBeenCalledWith("task-1", { status: "done" }, true);
   });
 
   it("does not call updateTask when a task is dropped back into its own column", () => {
@@ -89,10 +85,9 @@ describe("GridView", () => {
     const dataTransfer = createDataTransfer();
 
     fireEvent.dragStart(screen.getByText("Move me"), { dataTransfer });
-    fireEvent.drop(
-      screen.getByText("To Do").closest("[data-board-status]")!,
-      { dataTransfer },
-    );
+    fireEvent.drop(screen.getByText("To Do").closest("[data-board-status]")!, {
+      dataTransfer,
+    });
 
     expect(updateTask).not.toHaveBeenCalled();
   });
@@ -125,11 +120,7 @@ describe("GridView", () => {
       clientY: 50,
     });
 
-    expect(updateTask).toHaveBeenCalledWith(
-      "task-1",
-      { status: "done" },
-      true,
-    );
+    expect(updateTask).toHaveBeenCalledWith("task-1", { status: "done" }, true);
   });
 
   it("ignores mouse-type pointer events so native drag-and-drop still owns them", () => {

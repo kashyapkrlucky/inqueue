@@ -1,19 +1,14 @@
 import { useState, useRef, useEffect } from "react";
-import {
-  XIcon,
-  SendIcon,
-  Minimize2Icon,
-  MessageSquareIcon,
-} from "lucide-react";
+import { XIcon, SendIcon, Minimize2Icon, MessageSquareIcon } from "lucide-react";
 import Input from "../form/Input";
 import { Button } from "../form/Button";
 import { useAgentStore, type Message } from "../../../features/agent/store/useAgentStore";
 import { AgentMarkdown } from "../../../features/agent/components/AgentMarkdown";
+import { env } from "../../../lib/env";
 
 export default function ChatBot() {
   const { messages, loading, sendMessage } = useAgentStore();
-  const hostUrl = import.meta.env.VITE_AUTH_URL;
-  const imgSrc = `${hostUrl}/tia-ai.png`;
+  const imgSrc = `${env.VITE_AUTH_URL}/tia-ai.png`;
   const [isOpen, setIsOpen] = useState(false);
   const [isMinimized, setIsMinimized] = useState(false);
 
@@ -90,10 +85,7 @@ export default function ChatBot() {
                   }`}
                 >
                   <div className="text-xs">
-                    <AgentMarkdown
-                      content={message.text}
-                      isUser={message.isUser}
-                    />
+                    <AgentMarkdown content={message.text} isUser={message.isUser} />
                   </div>
                   {message.results && message.results.length > 0 && (
                     <div className="mt-2 space-y-1 border-t border-gray-100 pt-2">
@@ -160,9 +152,7 @@ export default function ChatBot() {
       {isOpen && isMinimized && (
         <div className="mb-4 flex items-center gap-3 rounded-2xl bg-white shadow-lg border border-gray-200 px-4 py-3">
           <img src={imgSrc} alt="Ask Tia" className="h-8 w-8 rounded-full" />
-          <span className="text-sm font-medium text-gray-900">
-            Ask Tia Chat
-          </span>
+          <span className="text-sm font-medium text-gray-900">Ask Tia Chat</span>
           <button
             onClick={() => setIsMinimized(false)}
             className="ml-auto rounded-lg p-1.5 text-gray-500 hover:bg-gray-100 transition"
@@ -184,11 +174,7 @@ export default function ChatBot() {
           onClick={() => setIsOpen(true)}
           className="group relative flex h-30 w-30 items-center justify-center rounded-full bg-linear-to-r from-indigo-500 to-indigo-600 shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105"
         >
-          <img
-            src={imgSrc}
-            alt="Ask Tia"
-            className="h-28 w-28 rounded-full bg-white"
-          />
+          <img src={imgSrc} alt="Ask Tia" className="h-28 w-28 rounded-full bg-white" />
           <span className="absolute -top-1 -right-1 flex h-4 w-4 items-center justify-center rounded-full bg-green-500 border-2 border-white">
             <span className="sr-only">Online</span>
           </span>

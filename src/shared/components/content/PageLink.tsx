@@ -9,12 +9,12 @@ interface PageLinkProps {
   external?: boolean;
 }
 
-export default function PageLink({ 
-  url, 
-  text, 
-  size = "sm", 
+export default function PageLink({
+  url,
+  text,
+  size = "sm",
   className,
-  external = false 
+  external = false,
 }: PageLinkProps) {
   const sizeClasses = {
     xs: "text-xs",
@@ -26,17 +26,12 @@ export default function PageLink({
   const classes = cn(
     "text-purple-600 dark:text-purple-400 hover:text-purple-700 dark:hover:text-purple-300 visited:text-purple-600 dark:visited:text-purple-400 transition-colors duration-200",
     sizeClasses[size],
-    className
+    className,
   );
 
   if (external) {
     return (
-      <a 
-        href={url} 
-        className={classes}
-        target="_blank"
-        rel="noopener noreferrer"
-      >
+      <a href={url} className={classes} target="_blank" rel="noopener noreferrer">
         {text}
       </a>
     );

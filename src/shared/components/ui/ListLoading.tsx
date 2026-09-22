@@ -26,9 +26,7 @@ export default function ListLoading<T extends { _id: string }>({
   if (!items.length) {
     return (
       <div className="text-center py-12">
-        <p className="text-sm text-gray-500 dark:text-gray-400">
-          {emptyMessage}
-        </p>
+        <p className="text-sm text-gray-500 dark:text-gray-400">{emptyMessage}</p>
       </div>
     );
   }
@@ -36,10 +34,7 @@ export default function ListLoading<T extends { _id: string }>({
   return (
     <div>
       {items.map((item) => (
-        <div
-          key={item._id.toString()}
-          className={`${gap} first:pt-0 last:pb-0`}
-        >
+        <div key={item._id.toString()} className={`${gap} first:pt-0 last:pb-0`}>
           {children(item)}
         </div>
       ))}

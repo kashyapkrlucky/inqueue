@@ -16,12 +16,7 @@ export function AgentMarkdown({ content, isUser = false }: AgentMarkdownProps) {
       remarkPlugins={[remarkGfm]}
       components={{
         a: ({ children, ...props }) => (
-          <a
-            {...props}
-            className={linkClassName}
-            target="_blank"
-            rel="noreferrer"
-          >
+          <a {...props} className={linkClassName} target="_blank" rel="noreferrer">
             {children}
           </a>
         ),
@@ -29,18 +24,12 @@ export function AgentMarkdown({ content, isUser = false }: AgentMarkdownProps) {
           <p className="mb-2 last:mb-0 text-sm leading-relaxed">{children}</p>
         ),
         ul: ({ children }) => (
-          <ul className="mb-2 ml-4 list-disc space-y-1 last:mb-0">
-            {children}
-          </ul>
+          <ul className="mb-2 ml-4 list-disc space-y-1 last:mb-0">{children}</ul>
         ),
         ol: ({ children }) => (
-          <ol className="mb-2 ml-4 list-decimal space-y-1 last:mb-0">
-            {children}
-          </ol>
+          <ol className="mb-2 ml-4 list-decimal space-y-1 last:mb-0">{children}</ol>
         ),
-        li: ({ children }) => (
-          <li className="text-sm leading-relaxed">{children}</li>
-        ),
+        li: ({ children }) => <li className="text-sm leading-relaxed">{children}</li>,
         code: ({ children, className }) => {
           const isBlock = className?.includes("language-");
 
@@ -82,9 +71,7 @@ export function AgentMarkdown({ content, isUser = false }: AgentMarkdownProps) {
         ),
         table: ({ children }) => (
           <div className="mb-2 overflow-x-auto last:mb-0">
-            <table className="min-w-full border-collapse text-xs">
-              {children}
-            </table>
+            <table className="min-w-full border-collapse text-xs">{children}</table>
           </div>
         ),
         th: ({ children }) => (

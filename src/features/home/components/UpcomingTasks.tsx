@@ -33,12 +33,10 @@ export function UpcomingTasks({ upcomingTasks }: UpcomingTasksProps) {
               </div>
 
               <div className="flex items-center gap-1.5 pr-4">
-
                 <ClockIcon className="h-3 w-3 text-orange-600" />
                 <span className="font-semibold text-orange-700 text-xs">
                   Due {formatRelativeTime(task.dueDate.toString())}
                 </span>
-
               </div>
             </div>
           ))

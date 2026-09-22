@@ -18,16 +18,14 @@ export default function Tasks() {
   const [query, setQuery] = useState("");
   const { getLabels } = useLabelStore();
   const [statusFilter, setStatusFilter] = useState<ITaskStatus | "all">("all");
-  const [priorityFilter, setPriorityFilter] = useState<ITaskPriority | "all">(
-    "all",
-  );
+  const [priorityFilter, setPriorityFilter] = useState<ITaskPriority | "all">("all");
 
   useEffect(() => {
     getTasks(currentPage, itemsPerPage, {
       status: statusFilter,
       priority: priorityFilter,
     });
-    getLabels()
+    getLabels();
   }, [getTasks, currentPage, itemsPerPage, statusFilter, priorityFilter, getLabels]);
 
   const handleStatusFilterChange = (status: ITaskStatus | "all") => {
@@ -90,12 +88,7 @@ export default function Tasks() {
           gap="py-1"
           emptyMessage="No tasks found, Try adjusting filters or create a new task."
         >
-          {(task) => (
-            <TaskCard
-              key={task._id}
-              task={task}
-            />
-          )}
+          {(task) => <TaskCard key={task._id} task={task} />}
         </ListLoading>
       </section>
 

@@ -96,8 +96,7 @@ export const useAgentStore = create<AgentState>((set, get) => ({
         results,
       });
     } catch (error) {
-      const message =
-        error instanceof Error ? error.message : "Agent request failed";
+      const message = error instanceof Error ? error.message : "Agent request failed";
       set({ error: message });
       get().addMessage({
         id: createMessageId(),

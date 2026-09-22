@@ -1,7 +1,6 @@
 import { CheckCircle2Icon, CircleIcon, ClockIcon } from "lucide-react";
 import type { ITask, ITaskPriority, ITaskStatus } from "../types";
 
-
 export const getTaskStatus = (status: ITask["status"]): ITaskStatus => {
   if (status === "todo" || status === "in_progress" || status === "done") {
     return status;
@@ -15,9 +14,6 @@ export const getTaskPriority = (priority: ITask["priority"]): ITaskPriority => {
   }
   return "medium";
 };
-
-
-
 
 export const statusConfig = {
   todo: {
@@ -82,7 +78,6 @@ export const feedbackTypeConfig = {
   },
 } as const satisfies Record<string, { label: string; color: string }>;
 
-
 // import { TaskStatus, TaskPriority } from '../types';
 // import type { Task, TaskFilterFn, TaskSortFn, TaskStatusType, TaskPriorityType } from '../types';
 
@@ -113,12 +108,12 @@ export const feedbackTypeConfig = {
 //   return (a: Task, b: Task): number => {
 //     const aVal = a[key];
 //     const bVal = b[key];
-    
+
 //     // Handle undefined values
 //     if (aVal === undefined && bVal === undefined) return 0;
 //     if (aVal === undefined) return direction === 'asc' ? 1 : -1;
 //     if (bVal === undefined) return direction === 'asc' ? -1 : 1;
-    
+
 //     if (aVal < bVal) return direction === 'asc' ? -1 : 1;
 //     if (aVal > bVal) return direction === 'asc' ? 1 : -1;
 //     return 0;
@@ -156,7 +151,7 @@ export const feedbackTypeConfig = {
 //     [TaskStatus.DONE]: [TaskStatus.TODO],
 //     [TaskStatus.BLOCKED]: [TaskStatus.TODO, TaskStatus.IN_PROGRESS],
 //   };
-  
+
 //   return transitions[from]?.includes(to) ?? false;
 // };
 
@@ -182,7 +177,7 @@ export const feedbackTypeConfig = {
 //   return tasks.filter(task =>
 //     fields.some(field => {
 //       const value = task[field];
-//       return typeof value === 'string' && 
+//       return typeof value === 'string' &&
 //              value.toLowerCase().includes(lowercaseQuery);
 //     })
 //   );

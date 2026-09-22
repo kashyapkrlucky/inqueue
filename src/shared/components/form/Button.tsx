@@ -20,16 +20,12 @@ const sizeClasses = {
 };
 
 const variantClasses = {
-  primary:
-    "bg-gray-900 text-white hover:bg-gray-800 focus:ring-2 focus:ring-gray-500",
-  secondary:
-    "bg-gray-600 text-white hover:bg-gray-700 focus:ring-2 focus:ring-gray-500",
+  primary: "bg-gray-900 text-white hover:bg-gray-800 focus:ring-2 focus:ring-gray-500",
+  secondary: "bg-gray-600 text-white hover:bg-gray-700 focus:ring-2 focus:ring-gray-500",
   outline:
     "border border-gray-400 bg-transparent text-gray-500 focus:ring-2 focus:ring-gray-500",
-  ghost:
-    "border-transparent bg-transparent text-gray-500",
-  danger:
-    "border-transparent bg-transparent text-red-600 hover:text-red-700",
+  ghost: "border-transparent bg-transparent text-gray-500",
+  danger: "border-transparent bg-transparent text-red-600 hover:text-red-700",
 };
 
 export const Button: React.FC<ButtonProps> = ({

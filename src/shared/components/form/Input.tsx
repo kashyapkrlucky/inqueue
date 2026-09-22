@@ -19,7 +19,10 @@ export default function Input({
   return (
     <div className={`relative ${boxClassName}`}>
       {label && (
-        <label htmlFor={id} className="block text-xs font-semibold uppercase tracking-wide text-gray-500">
+        <label
+          htmlFor={id}
+          className="block text-xs font-semibold uppercase tracking-wide text-gray-500"
+        >
           {label}
         </label>
       )}

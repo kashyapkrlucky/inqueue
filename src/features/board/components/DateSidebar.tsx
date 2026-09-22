@@ -10,11 +10,7 @@ interface DateSidebarProps {
   onClose: () => void;
 }
 
-export default function DateSidebar({
-  date,
-  tasks,
-  onClose,
-}: DateSidebarProps) {
+export default function DateSidebar({ date, tasks, onClose }: DateSidebarProps) {
   if (!date) return null;
 
   return (

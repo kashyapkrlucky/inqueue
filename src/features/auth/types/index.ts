@@ -20,5 +20,4 @@ export interface IUser extends BaseEntity {
   status: "active" | "inactive";
 }
 
-
-export type UserFormData = Omit<IUser, 'id'>;
+export type UserFormData = Omit<IUser, "id">;

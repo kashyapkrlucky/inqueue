@@ -21,10 +21,7 @@ export default function CreateLabel() {
         isOpen={isTaskModalOpen}
         onClose={() => setIsTaskModalOpen(false)}
       >
-        <LabelEditor
-          label={undefined}
-          onClose={() => setIsTaskModalOpen(false)}
-        />
+        <LabelEditor label={undefined} onClose={() => setIsTaskModalOpen(false)} />
       </Modal>
     </>
   );

@@ -12,7 +12,8 @@ interface MetaTextProps {
 
 const variantClasses = {
   timestamp: "text-xs text-gray-500 dark:text-gray-400",
-  username: "text-xs text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300 transition-colors duration-200",
+  username:
+    "text-xs text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300 transition-colors duration-200",
   count: "text-xs font-medium text-gray-600 dark:text-gray-400",
   topic: "text-xs font-medium text-purple-600 dark:text-purple-400",
   custom: "text-xs text-gray-500 dark:text-gray-400",
@@ -36,7 +37,7 @@ export default function MetaText({
   const classes = cn(
     "inline-flex items-center gap-1",
     variantClasses[variant],
-    className
+    className,
   );
 
   const iconToRender = icon || defaultIcons[variant];

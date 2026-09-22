@@ -5,9 +5,7 @@ test.beforeEach(async ({ page }) => {
   await mockBackend(page);
 });
 
-test("guest can log in, land on the dashboard, and create a task", async ({
-  page,
-}) => {
+test("guest can log in, land on the dashboard, and create a task", async ({ page }) => {
   await page.goto("/login");
 
   await page.getByText("Continue as Guest").click();

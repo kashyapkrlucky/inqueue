@@ -13,10 +13,13 @@ interface LinkTextProps extends React.AnchorHTMLAttributes<HTMLAnchorElement> {
 }
 
 const variantClasses = {
-  primary: "text-purple-600 dark:text-purple-400 hover:text-purple-700 dark:hover:text-purple-300 visited:text-purple-600 dark:visited:text-purple-400",
-  secondary: "text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-gray-100",
+  primary:
+    "text-purple-600 dark:text-purple-400 hover:text-purple-700 dark:hover:text-purple-300 visited:text-purple-600 dark:visited:text-purple-400",
+  secondary:
+    "text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-gray-100",
   muted: "text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300",
-  accent: "text-emerald-700 dark:text-emerald-400 hover:text-emerald-800 dark:hover:text-emerald-300",
+  accent:
+    "text-emerald-700 dark:text-emerald-400 hover:text-emerald-800 dark:hover:text-emerald-300",
 };
 
 const sizeClasses = {
@@ -54,7 +57,7 @@ export default function LinkText({
     sizeClasses[size],
     weightClasses[weight],
     underlineClasses[underline],
-    className
+    className,
   );
 
   const linkProps = {
@@ -71,5 +74,9 @@ export default function LinkText({
     );
   }
 
-  return <Link to={href} {...(linkProps as React.AnchorHTMLAttributes<HTMLAnchorElement>)}>{children}</Link>;
+  return (
+    <Link to={href} {...(linkProps as React.AnchorHTMLAttributes<HTMLAnchorElement>)}>
+      {children}
+    </Link>
+  );
 }

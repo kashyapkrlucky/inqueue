@@ -1,32 +1,32 @@
-import { defineConfig } from 'vitest/config'
-import react from '@vitejs/plugin-react'
-import tailwindcss from '@tailwindcss/vite'
-import path from 'path'
+import { defineConfig } from "vitest/config";
+import react from "@vitejs/plugin-react";
+import tailwindcss from "@tailwindcss/vite";
+import path from "path";
 
 export default defineConfig({
   plugins: [react(), tailwindcss()],
   resolve: {
     alias: {
-      '@': path.resolve(__dirname, './src')
-    }
+      "@": path.resolve(__dirname, "./src"),
+    },
   },
   test: {
     globals: true,
-    environment: 'jsdom',
-    setupFiles: './vitest.setup.ts',
+    environment: "jsdom",
+    setupFiles: "./vitest.setup.ts",
     css: true,
     // e2e/**: Playwright specs, run via `npm run test:e2e`, not vitest.
-    exclude: ['**/node_modules/**', 'e2e/**'],
+    exclude: ["**/node_modules/**", "e2e/**"],
     coverage: {
-      provider: 'v8',
-      reporter: ['text', 'html', 'lcov'],
-      reportsDirectory: './coverage',
-      include: ['src/**/*.{ts,tsx}'],
+      provider: "v8",
+      reporter: ["text", "html", "lcov"],
+      reportsDirectory: "./coverage",
+      include: ["src/**/*.{ts,tsx}"],
       exclude: [
-        'src/**/*.test.{ts,tsx}',
-        'src/main.tsx',
-        'src/vite-env.d.ts',
-        'src/test/**',
+        "src/**/*.test.{ts,tsx}",
+        "src/main.tsx",
+        "src/vite-env.d.ts",
+        "src/test/**",
       ],
       // Floor, not a target: set just under the current measured coverage so
       // CI fails on regressions rather than on the (large) pre-existing gap.
@@ -40,4 +40,4 @@ export default defineConfig({
       },
     },
   },
-})
+});

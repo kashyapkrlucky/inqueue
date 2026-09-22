@@ -97,9 +97,7 @@ describe("useTaskStore updateTask", () => {
       data: { data: updatedTask },
     });
 
-    await useTaskStore
-      .getState()
-      .updateTask(task._id, { status: "in_progress" }, true);
+    await useTaskStore.getState().updateTask(task._id, { status: "in_progress" }, true);
 
     expect(useTaskStore.getState().taskByDates[0]).toMatchObject({
       _id: task._id,

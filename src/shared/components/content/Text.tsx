@@ -2,7 +2,17 @@ import React from "react";
 import { cn } from "../../utils";
 
 interface TextProps extends React.HTMLAttributes<HTMLElement> {
-  variant?: "h1" | "h2" | "h3" | "h4" | "body-lg" | "body-md" | "body-sm" | "body-xs" | "caption" | "overline";
+  variant?:
+    | "h1"
+    | "h2"
+    | "h3"
+    | "h4"
+    | "body-lg"
+    | "body-md"
+    | "body-sm"
+    | "body-xs"
+    | "caption"
+    | "overline";
   color?: "primary" | "secondary" | "muted" | "accent" | "success" | "error" | "warning";
   weight?: "light" | "normal" | "medium" | "semibold" | "bold";
   as?: "h1" | "h2" | "h3" | "h4" | "p" | "span" | "div";
@@ -53,27 +63,55 @@ export default function Text({
     variantClasses[variant as keyof typeof variantClasses],
     colorClasses[color as keyof typeof colorClasses],
     weightClasses[weight as keyof typeof weightClasses],
-    className
+    className,
   );
 
   if (Component === "h1") {
-    return <h1 className={classes} {...props}>{children}</h1>;
+    return (
+      <h1 className={classes} {...props}>
+        {children}
+      </h1>
+    );
   }
   if (Component === "h2") {
-    return <h2 className={classes} {...props}>{children}</h2>;
+    return (
+      <h2 className={classes} {...props}>
+        {children}
+      </h2>
+    );
   }
   if (Component === "h3") {
-    return <h3 className={classes} {...props}>{children}</h3>;
+    return (
+      <h3 className={classes} {...props}>
+        {children}
+      </h3>
+    );
   }
   if (Component === "h4") {
-    return <h4 className={classes} {...props}>{children}</h4>;
+    return (
+      <h4 className={classes} {...props}>
+        {children}
+      </h4>
+    );
   }
   if (Component === "p") {
-    return <p className={classes} {...props}>{children}</p>;
+    return (
+      <p className={classes} {...props}>
+        {children}
+      </p>
+    );
   }
   if (Component === "div") {
-    return <div className={classes} {...props}>{children}</div>;
+    return (
+      <div className={classes} {...props}>
+        {children}
+      </div>
+    );
   }
 
-  return <p className={classes} {...props}>{children}</p>;
+  return (
+    <p className={classes} {...props}>
+      {children}
+    </p>
+  );
 }

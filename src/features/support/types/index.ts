@@ -10,9 +10,8 @@ export interface IFeedback extends BaseEntity {
   /** Optional comment from the user */
   comment?: string;
   /** Status of the feedback */
-  status?: 'open' | 'closed';
+  status?: "open" | "closed";
 }
-
 
 export interface FeedbackCreationInput {
   feedbackType: string;

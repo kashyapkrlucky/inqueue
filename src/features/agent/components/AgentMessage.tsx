@@ -1,10 +1,5 @@
 import type { ReactNode } from "react";
-import {
-  CheckCircle2Icon,
-  CircleIcon,
-  UserIcon,
-  XCircleIcon,
-} from "lucide-react";
+import { CheckCircle2Icon, CircleIcon, UserIcon, XCircleIcon } from "lucide-react";
 import type { AgentResult, Message } from "../store/useAgentStore";
 import { AgentMarkdown } from "./AgentMarkdown";
 
@@ -30,9 +25,7 @@ export function AgentMessage({ message }: AgentMessageProps) {
   return (
     <div
       key={message.id}
-      className={`flex gap-4 ${
-        message.isUser ? "flex-row-reverse" : "flex-row"
-      }`}
+      className={`flex gap-4 ${message.isUser ? "flex-row-reverse" : "flex-row"}`}
     >
       <div className="shrink-0">
         {message.isUser ? (
@@ -71,9 +64,7 @@ export function AgentMessage({ message }: AgentMessageProps) {
                     key={index}
                     className={`flex items-start gap-2 text-xs py-2 px-3 rounded-lg border ${resultStyles[result.status]}`}
                   >
-                    <span className="mt-0.5 shrink-0">
-                      {resultIcons[result.status]}
-                    </span>
+                    <span className="mt-0.5 shrink-0">{resultIcons[result.status]}</span>
                     <div>
                       <p className="font-semibold capitalize">
                         {result.status}: {result.action}

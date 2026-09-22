@@ -47,21 +47,27 @@ export const BoardColumn = ({
   };
 
   return (
-    <div 
-      className={`flex min-w-[17rem] flex-1 flex-col gap-3 rounded-xl border border-gray-200/50 bg-gray-50 p-4 transition-all duration-200 md:min-w-0 ${isDraggingOver ? 'border-indigo-400 bg-indigo-50/30' : ''}`}
+    <div
+      className={`flex min-w-[17rem] flex-1 flex-col gap-3 rounded-xl border border-gray-200/50 bg-gray-50 p-4 transition-all duration-200 md:min-w-0 ${isDraggingOver ? "border-indigo-400 bg-indigo-50/30" : ""}`}
       data-board-status={status}
       onDragOver={handleDragOver}
       onDrop={handleDrop}
     >
       <header className="flex flex-row justify-between items-center">
-        <h1 className="uppercase text-xs font-bold text-gray-600 tracking-wider">{title}</h1>
-        <span className={`text-xs font-semibold ${bgColor} px-2.5 py-1 rounded-full text-white shadow-sm`}>{tasks.length}</span>
+        <h1 className="uppercase text-xs font-bold text-gray-600 tracking-wider">
+          {title}
+        </h1>
+        <span
+          className={`text-xs font-semibold ${bgColor} px-2.5 py-1 rounded-full text-white shadow-sm`}
+        >
+          {tasks.length}
+        </span>
       </header>
       <div className="flex flex-col gap-3 flex-1 overflow-y-auto hide-scrollbar pr-1">
         {tasks.map((task) => (
-          <BoardTaskCard 
-            key={task._id} 
-            task={task} 
+          <BoardTaskCard
+            key={task._id}
+            task={task}
             onDragStart={onDragStart}
             onDragEnd={onDragEnd}
             onPointerDragMove={onPointerDragMove}

@@ -1,4 +1,4 @@
-import '@testing-library/jest-dom'
+import "@testing-library/jest-dom";
 
 // Node 22+ defines its own global `localStorage`/`sessionStorage` accessors
 // that throw/warn unless run with --localstorage-file, and they shadow
@@ -34,7 +34,7 @@ class MemoryStorage implements Storage {
   }
 }
 
-for (const key of ['localStorage', 'sessionStorage'] as const) {
+for (const key of ["localStorage", "sessionStorage"] as const) {
   const storage = new MemoryStorage();
   Object.defineProperty(globalThis, key, {
     value: storage,

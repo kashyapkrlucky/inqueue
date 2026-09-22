@@ -1,5 +1,11 @@
 import { create } from "zustand";
-import type { ITask, ITaskPriority, ITaskStatus, CreateTaskInput, UpdateTaskInput } from "../types";
+import type {
+  ITask,
+  ITaskPriority,
+  ITaskStatus,
+  CreateTaskInput,
+  UpdateTaskInput,
+} from "../types";
 import axios from "../../../lib/axios";
 import { runAsyncAction } from "@/shared/utils/asyncAction";
 
@@ -78,7 +84,12 @@ export const useTaskStore = create<TaskState>((set) => ({
   },
   getTasks: async (page: number = 1, limit: number = 10, filters) => {
     await runAsyncAction(
-      { set, loadingKey: "loading", errorKey: "error", errorMessage: "Failed to fetch tasks" },
+      {
+        set,
+        loadingKey: "loading",
+        errorKey: "error",
+        errorMessage: "Failed to fetch tasks",
+      },
       async () => {
         const params = new URLSearchParams({
           page: String(page),
@@ -101,7 +112,12 @@ export const useTaskStore = create<TaskState>((set) => ({
   },
   getStats: async () => {
     await runAsyncAction(
-      { set, loadingKey: "loading", errorKey: "error", errorMessage: "Failed to fetch stats" },
+      {
+        set,
+        loadingKey: "loading",
+        errorKey: "error",
+        errorMessage: "Failed to fetch stats",
+      },
       async () => {
         const {
           data: { data },
@@ -112,7 +128,12 @@ export const useTaskStore = create<TaskState>((set) => ({
   },
   getRecents: async () => {
     await runAsyncAction(
-      { set, loadingKey: "loading", errorKey: "error", errorMessage: "Failed to fetch recent tasks" },
+      {
+        set,
+        loadingKey: "loading",
+        errorKey: "error",
+        errorMessage: "Failed to fetch recent tasks",
+      },
       async () => {
         const {
           data: { data },
@@ -123,7 +144,12 @@ export const useTaskStore = create<TaskState>((set) => ({
   },
   addTask: async (task: CreateTaskInput, isTaskByDates = false) => {
     await runAsyncAction(
-      { set, loadingKey: "inlineLoading", errorKey: "error", errorMessage: "Failed to add task" },
+      {
+        set,
+        loadingKey: "inlineLoading",
+        errorKey: "error",
+        errorMessage: "Failed to add task",
+      },
       async () => {
         const {
           data: { data },
@@ -138,7 +164,12 @@ export const useTaskStore = create<TaskState>((set) => ({
   },
   updateTask: async (taskId: string, task: UpdateTaskInput, isTaskByDates = false) => {
     await runAsyncAction(
-      { set, loadingKey: "inlineLoading", errorKey: "error", errorMessage: "Failed to update task" },
+      {
+        set,
+        loadingKey: "inlineLoading",
+        errorKey: "error",
+        errorMessage: "Failed to update task",
+      },
       async () => {
         const {
           data: { data },
@@ -163,7 +194,12 @@ export const useTaskStore = create<TaskState>((set) => ({
   },
   deleteTask: async (taskId: string, isTaskByDates = false) => {
     await runAsyncAction(
-      { set, loadingKey: "inlineLoading", errorKey: "error", errorMessage: "Failed to delete task" },
+      {
+        set,
+        loadingKey: "inlineLoading",
+        errorKey: "error",
+        errorMessage: "Failed to delete task",
+      },
       async () => {
         await axios.delete("/tasks/" + taskId);
         if (isTaskByDates) {
@@ -180,7 +216,12 @@ export const useTaskStore = create<TaskState>((set) => ({
   },
   getTaskCalendar: async (startDate: string, endDate: string) => {
     await runAsyncAction(
-      { set, loadingKey: "loading", errorKey: "error", errorMessage: "Failed to fetch tasks" },
+      {
+        set,
+        loadingKey: "loading",
+        errorKey: "error",
+        errorMessage: "Failed to fetch tasks",
+      },
       async () => {
         const {
           data: { data },

@@ -31,7 +31,7 @@ export default function DeleteTask({
     <>
       <button
         onClick={() => setIsTaskModalOpen(true)}
-        className={`${iconOnly ? 'h-9 w-9 justify-center items-center' : 'w-full items-start'} p-1 inline-flex rounded-xl text-gray-500 hover:bg-red-50 hover:text-red-700 hover:border-red-200 transition-colors disabled:opacity-60 disabled:cursor-not-allowed`}
+        className={`${iconOnly ? "h-9 w-9 justify-center items-center" : "w-full items-start"} p-1 inline-flex rounded-xl text-gray-500 hover:bg-red-50 hover:text-red-700 hover:border-red-200 transition-colors disabled:opacity-60 disabled:cursor-not-allowed`}
         aria-label="Delete"
       >
         <Trash2Icon className="w-4 h-4" />

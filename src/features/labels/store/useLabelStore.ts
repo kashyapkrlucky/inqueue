@@ -1,10 +1,6 @@
 import { create } from "zustand";
 
-import type {
-  ITaskLabel,
-  ITaskLabelCreateInput,
-  ITaskLabelUpdateInput,
-} from "../types";
+import type { ITaskLabel, ITaskLabelCreateInput, ITaskLabelUpdateInput } from "../types";
 import axios from "../../../lib/axios";
 import { runAsyncAction } from "@/shared/utils/asyncAction";
 interface ILabelStore {
@@ -25,7 +21,12 @@ export const useLabelStore = create<ILabelStore>((set) => ({
   currentLabel: null,
   getLabels: async () => {
     await runAsyncAction(
-      { set, loadingKey: "labelLoading", errorKey: "error", errorMessage: "Failed to fetch labels" },
+      {
+        set,
+        loadingKey: "labelLoading",
+        errorKey: "error",
+        errorMessage: "Failed to fetch labels",
+      },
       async () => {
         const {
           data: { data },
@@ -36,7 +37,12 @@ export const useLabelStore = create<ILabelStore>((set) => ({
   },
   createLabel: async (payload: ITaskLabelCreateInput) => {
     await runAsyncAction(
-      { set, loadingKey: "labelLoading", errorKey: "error", errorMessage: "Failed to create label" },
+      {
+        set,
+        loadingKey: "labelLoading",
+        errorKey: "error",
+        errorMessage: "Failed to create label",
+      },
       async () => {
         const {
           data: { data },
@@ -47,7 +53,12 @@ export const useLabelStore = create<ILabelStore>((set) => ({
   },
   updateLabel: async (id: string, payload: ITaskLabelUpdateInput) => {
     await runAsyncAction(
-      { set, loadingKey: "labelLoading", errorKey: "error", errorMessage: "Failed to update label" },
+      {
+        set,
+        loadingKey: "labelLoading",
+        errorKey: "error",
+        errorMessage: "Failed to update label",
+      },
       async () => {
         await axios.patch(`/tasks/labels/${id}`, payload);
         set((state) => {
@@ -61,7 +72,12 @@ export const useLabelStore = create<ILabelStore>((set) => ({
   },
   deleteLabel: async (id: string) => {
     await runAsyncAction(
-      { set, loadingKey: "labelLoading", errorKey: "error", errorMessage: "Failed to delete label" },
+      {
+        set,
+        loadingKey: "labelLoading",
+        errorKey: "error",
+        errorMessage: "Failed to delete label",
+      },
       async () => {
         await axios.delete(`/tasks/labels/${id}`);
         set((state) => ({

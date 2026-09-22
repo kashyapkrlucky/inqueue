@@ -17,8 +17,7 @@ export default function EditLabel({ label }: { label: ITaskLabel }) {
         onClick={() => setIsTaskModalOpen(true)}
         aria-label="Edit label"
         className="text-gray-500 hover:text-blue-600"
-      >
-      </Button>
+      ></Button>
       <Modal
         title="Edit Label"
         isOpen={isTaskModalOpen}

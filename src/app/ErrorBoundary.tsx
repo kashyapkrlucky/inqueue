@@ -1,7 +1,7 @@
-import React from 'react';
-import { Alert, AlertDescription, AlertTitle } from '../shared/components/ui/Alert';
-import { AlertCircle } from 'lucide-react';
-import { Button } from '../shared/components/form/Button';
+import React from "react";
+import { Alert, AlertDescription, AlertTitle } from "../shared/components/ui/Alert";
+import { AlertCircle } from "lucide-react";
+import { Button } from "../shared/components/form/Button";
 
 interface ErrorBoundaryProps {
   children: React.ReactNode;
@@ -14,26 +14,29 @@ interface ErrorBoundaryState {
   error: Error | null;
 }
 
-export class ErrorBoundary extends React.Component<ErrorBoundaryProps, ErrorBoundaryState> {
+export class ErrorBoundary extends React.Component<
+  ErrorBoundaryProps,
+  ErrorBoundaryState
+> {
   constructor(props: ErrorBoundaryProps) {
     super(props);
-    this.state = { 
-      hasError: false, 
-      error: null 
+    this.state = {
+      hasError: false,
+      error: null,
     };
   }
 
   static getDerivedStateFromError(error: Error): ErrorBoundaryState {
-    return { 
-      hasError: true, 
-      error 
+    return {
+      hasError: true,
+      error,
     };
   }
 
   componentDidCatch(error: Error, errorInfo: React.ErrorInfo): void {
     // Log error to an error reporting service
-    console.error('ErrorBoundary caught an error:', error, errorInfo);
-    
+    console.error("ErrorBoundary caught an error:", error, errorInfo);
+
     // Call the onError handler if provided
     if (this.props.onError) {
       this.props.onError(error, errorInfo);
@@ -41,9 +44,9 @@ export class ErrorBoundary extends React.Component<ErrorBoundaryProps, ErrorBoun
   }
 
   handleReset = (): void => {
-    this.setState({ 
-      hasError: false, 
-      error: null 
+    this.setState({
+      hasError: false,
+      error: null,
     });
   };
 
@@ -69,9 +72,9 @@ export class ErrorBoundary extends React.Component<ErrorBoundaryProps, ErrorBoun
                   </pre>
                 </details>
               )}
-              <Button 
-                variant="outline" 
-                size="sm" 
+              <Button
+                variant="outline"
+                size="sm"
                 onClick={this.handleReset}
                 className="mt-2"
               >
@@ -90,7 +93,7 @@ export class ErrorBoundary extends React.Component<ErrorBoundaryProps, ErrorBoun
 // Helper component for function components
 export const withErrorBoundary = <T extends object>(
   Component: React.ComponentType<T>,
-  errorBoundaryProps?: Omit<ErrorBoundaryProps, 'children'>
+  errorBoundaryProps?: Omit<ErrorBoundaryProps, "children">,
 ) => {
   return (props: T) => (
     <ErrorBoundary {...errorBoundaryProps}>

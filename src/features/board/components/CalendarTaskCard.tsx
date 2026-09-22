@@ -16,12 +16,9 @@ export const CalendarTaskCard = ({ task }: CalendarTaskCardProps) => {
   const isDone = task.status === "done";
   const [moreMenuOpen, setMoreMenuOpen] = useState(false);
 
-  const isOverdue =
-    (dueDate ? new Date(dueDate) : new Date(createdAt)) < new Date();
-  const priorityConfig =
-    PRIORITY_CONFIG[task.priority as keyof typeof PRIORITY_CONFIG];
-  const statusConfig =
-    TASK_STATUS_CONFIG[task.status as keyof typeof TASK_STATUS_CONFIG];
+  const isOverdue = (dueDate ? new Date(dueDate) : new Date(createdAt)) < new Date();
+  const priorityConfig = PRIORITY_CONFIG[task.priority as keyof typeof PRIORITY_CONFIG];
+  const statusConfig = TASK_STATUS_CONFIG[task.status as keyof typeof TASK_STATUS_CONFIG];
 
   return (
     <div className="group w-full flex flex-row gap-1 rounded-xl bg-white shadow-sm hover:shadow-md transition-all duration-200 p-4 select-none border-2 border-white hover:border-indigo-200 cursor-move">
@@ -50,9 +47,7 @@ export const CalendarTaskCard = ({ task }: CalendarTaskCardProps) => {
             />
             <span>
               Due on{" "}
-              {dueDate
-                ? formatDate(new Date(dueDate))
-                : formatDate(new Date(createdAt))}
+              {dueDate ? formatDate(new Date(dueDate)) : formatDate(new Date(createdAt))}
             </span>
           </span>
         </div>

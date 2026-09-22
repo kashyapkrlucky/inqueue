@@ -1,6 +1,7 @@
 import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import useAuthStore from "../store/useAuthStore";
+import { env } from "../../../lib/env";
 import { Button } from "../../../shared/components/form/Button";
 import { CircleUserRoundIcon, Loader2Icon, LogInIcon } from "lucide-react";
 import {
@@ -39,12 +40,11 @@ export default function Login() {
   };
 
   const onAtlasLogin = () => {
-    const authUrl = import.meta.env.VITE_AUTH_URL || "http://localhost:3000";
-    window.location.href = `${authUrl}/login?client_id=${import.meta.env.VITE_CLIENT_ID}`;
+    window.location.href = `${env.VITE_AUTH_URL}/login?client_id=${env.VITE_CLIENT_ID}`;
   };
 
-  if(loading) {
-    return <PageLoader/>
+  if (loading) {
+    return <PageLoader />;
   }
 
   return (
@@ -80,11 +80,7 @@ export default function Login() {
             </div>
           </div>
 
-          <Button
-            disabled={isGuestLoading}
-            variant="outline"
-            onClick={handleGuestLogin}
-          >
+          <Button disabled={isGuestLoading} variant="outline" onClick={handleGuestLogin}>
             <span className="flex items-center justify-center gap-2">
               {isGuestLoading ? (
                 <Loader2Icon className="h-4 w-4 animate-spin" />

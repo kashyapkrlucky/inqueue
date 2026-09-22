@@ -78,9 +78,7 @@ const createRouteElement = (route: RouteConfig) => {
   // Create the element with Suspense and ErrorBoundary
   const element = (
     <Suspense fallback={<PageLoader />}>
-      <ErrorBoundary>
-        {route.element}
-      </ErrorBoundary>
+      <ErrorBoundary>{route.element}</ErrorBoundary>
     </Suspense>
   );
 
@@ -94,20 +92,20 @@ const createRouteElement = (route: RouteConfig) => {
 
 // Create route elements with proper error boundaries and suspense
 // Create routes from config with proper nesting
-const routes = routeConfig.map(route => {
+const routes = routeConfig.map((route) => {
   if (route.children) {
     return {
       ...route,
       element: createRouteElement(route),
-      children: route.children.map(child => ({
+      children: route.children.map((child) => ({
         ...child,
-        element: createRouteElement(child)
-      }))
+        element: createRouteElement(child),
+      })),
     };
   }
   return {
     ...route,
-    element: createRouteElement(route)
+    element: createRouteElement(route),
   };
 });
 

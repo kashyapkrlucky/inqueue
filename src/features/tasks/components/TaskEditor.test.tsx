@@ -104,9 +104,7 @@ describe("TaskEditor", () => {
   });
 
   it("updates an existing task and preserves the isTaskByDates flag", () => {
-    render(
-      <TaskEditor task={existingTask} onClose={onClose} isTaskByDates />,
-    );
+    render(<TaskEditor task={existingTask} onClose={onClose} isTaskByDates />);
 
     fireEvent.change(screen.getByLabelText("Content"), {
       target: { value: "Updated content" },

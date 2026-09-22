@@ -83,7 +83,12 @@ export default function Modal({
           <div className="grid grid-cols-[1fr_auto] items-center gap-3">
             <div className="inline-flex items-center gap-3">
               {icon && <div className="inline-block">{icon}</div>}
-              <h2 id={titleId} className="text-lg font-semibold text-gray-900 dark:text-gray-100">{title}</h2>
+              <h2
+                id={titleId}
+                className="text-lg font-semibold text-gray-900 dark:text-gray-100"
+              >
+                {title}
+              </h2>
             </div>
             <button
               onClick={onClose}

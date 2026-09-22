@@ -47,7 +47,7 @@ export default function CustomAreaChart({ data }: { data: AreaChartPoint[] }) {
   const [activeIndex, setActiveIndex] = useState<number | null>(null);
   const points = getPoints(data);
   const activePoint =
-    activeIndex === null ? undefined : points[activeIndex] ?? undefined;
+    activeIndex === null ? undefined : (points[activeIndex] ?? undefined);
   const linePath = createSmoothPath(points);
   const chartBottom = HEIGHT - PADDING.bottom;
   const firstPoint = points[0];

@@ -10,18 +10,16 @@ export function AgentSuggestions() {
     "Create labels for my work and personal tasks",
     "Group these tasks by project",
   ];
-  
+
   return (
     <div className="flex flex-col items-center justify-center h-full text-center py-20">
       <div className="w-16 h-16 bg-gray-100 rounded-2xl flex items-center justify-center mb-4">
         <BotIcon className="w-8 h-8 text-gray-400" />
       </div>
-      <h2 className="text-xl font-semibold text-gray-900 mb-2">
-        Start a conversation
-      </h2>
+      <h2 className="text-xl font-semibold text-gray-900 mb-2">Start a conversation</h2>
       <p className="text-gray-500 max-w-md">
-        Ask Tia AI anything about your tasks, schedule, or get help with
-        productivity tips.
+        Ask Tia AI anything about your tasks, schedule, or get help with productivity
+        tips.
       </p>
       <div className="flex flex-wrap justify-center items-center gap-2 mt-4">
         <span className="text-sm text-gray-600">Try asking:</span>

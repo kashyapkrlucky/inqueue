@@ -10,8 +10,7 @@ import { feedbackTypeConfig } from "@/features/tasks/utils";
 import { formatDate } from "@/shared/utils";
 
 export default function Support() {
-  const { feedbacks, getFeedbacks, loading, error, totalPages } =
-    useSupportStore();
+  const { feedbacks, getFeedbacks, loading, error, totalPages } = useSupportStore();
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage] = useState(8);
   if (error) {
@@ -24,9 +23,7 @@ export default function Support() {
   return (
     <div className="max-w-7xl mx-auto p-6 pb-0 h-screen flex flex-col gap-4 overflow-hidden">
       <PageHeader
-        icon={
-          <MessageCircleQuestionMarkIcon className="w-5 h-5 text-indigo-600" />
-        }
+        icon={<MessageCircleQuestionMarkIcon className="w-5 h-5 text-indigo-600" />}
         title="My Open Requests"
         description="Track your support requests and updates."
         subContent={<FeedbackForm />}
@@ -51,9 +48,7 @@ export default function Support() {
                 className="grid grid-cols-11 gap-4 bg-white border border-gray-200 rounded-lg p-4 items-center text-sm"
                 key={feedback._id}
               >
-                <p className="col-span-4 text-gray-800">
-                  {feedback.description}
-                </p>
+                <p className="col-span-4 text-gray-800">{feedback.description}</p>
                 <p className="col-span-1 text-xs">
                   <span
                     className={`px-2 py-1 rounded-lg uppercase font-bold tracking-wide ${feedback.status === "closed" ? "bg-green-100 text-green-600" : "bg-gray-100 text-gray-600"}`}
@@ -82,9 +77,7 @@ export default function Support() {
                   {formatDate(new Date(feedback.createdAt))}
                 </p>
 
-                <p className="col-span-3 text-gray-800">
-                  {feedback.comment || "--"}
-                </p>
+                <p className="col-span-3 text-gray-800">{feedback.comment || "--"}</p>
               </div>
             );
           }}

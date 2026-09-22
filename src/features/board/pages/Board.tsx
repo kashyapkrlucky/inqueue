@@ -40,10 +40,7 @@ export default function Board() {
   const monthStart = useMemo(() => startOfMonth(currentMonth), [currentMonth]);
   const monthEnd = useMemo(() => endOfMonth(currentMonth), [currentMonth]);
 
-  const monthStartString = useMemo(
-    () => monthStart.toISOString(),
-    [monthStart],
-  );
+  const monthStartString = useMemo(() => monthStart.toISOString(), [monthStart]);
   const monthEndString = useMemo(() => monthEnd.toISOString(), [monthEnd]);
 
   useEffect(() => {
@@ -60,9 +57,7 @@ export default function Board() {
   }, []);
   const getTasksForDate = useCallback(
     (date: Date) => {
-      return taskByDates.filter((task) =>
-        isSameDay(new Date(task.dueDate), date),
-      );
+      return taskByDates.filter((task) => isSameDay(new Date(task.dueDate), date));
     },
     [taskByDates],
   );
@@ -99,11 +94,7 @@ export default function Board() {
                 <Text variant="h1" className="text-xl">
                   {format(currentMonth, "MMMM yyyy")}
                 </Text>
-                <Button
-                  variant="ghost"
-                  onClick={handleNextMonth}
-                  aria-label="Next month"
-                >
+                <Button variant="ghost" onClick={handleNextMonth} aria-label="Next month">
                   <ChevronRightIcon className="w-5 h-5 text-gray-600" />
                 </Button>
               </div>

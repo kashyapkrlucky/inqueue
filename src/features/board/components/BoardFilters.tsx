@@ -8,15 +8,25 @@ interface BoardFiltersProps {
 
 type FilterType = "today" | "week" | "month";
 
-export const BoardFilters = ({ getTasksByDate, currentFilter, onFilterChange }: BoardFiltersProps) => {
-
+export const BoardFilters = ({
+  getTasksByDate,
+  currentFilter,
+  onFilterChange,
+}: BoardFiltersProps) => {
   const getDateRange = useCallback((filterType: FilterType) => {
     const today = new Date();
     const startOfDay = new Date(today.getFullYear(), today.getMonth(), today.getDate());
-    
+
     switch (filterType) {
       case "today": {
-        const endOfDay = new Date(today.getFullYear(), today.getMonth(), today.getDate(), 23, 59, 59);
+        const endOfDay = new Date(
+          today.getFullYear(),
+          today.getMonth(),
+          today.getDate(),
+          23,
+          59,
+          59,
+        );
         return { start: startOfDay.toISOString(), end: endOfDay.toISOString() };
       }
       case "week": {
@@ -46,7 +56,7 @@ export const BoardFilters = ({ getTasksByDate, currentFilter, onFilterChange }: 
       const dateRange = getDateRange(filterType);
       getTasksByDate(dateRange.start, dateRange.end);
     },
-    [getTasksByDate, getDateRange, onFilterChange]
+    [getTasksByDate, getDateRange, onFilterChange],
   );
 
   return (
@@ -55,9 +65,10 @@ export const BoardFilters = ({ getTasksByDate, currentFilter, onFilterChange }: 
         onClick={() => handleFilterChange("today")}
         className={`
           relative px-4 py-2 text-xs font-semibold rounded-lg transition-all duration-200
-          ${currentFilter === "today"
-            ? "bg-white text-indigo-600 shadow-md"
-            : "text-gray-600 hover:text-gray-900 hover:bg-white/50"
+          ${
+            currentFilter === "today"
+              ? "bg-white text-indigo-600 shadow-md"
+              : "text-gray-600 hover:text-gray-900 hover:bg-white/50"
           }
         `}
       >
@@ -67,9 +78,10 @@ export const BoardFilters = ({ getTasksByDate, currentFilter, onFilterChange }: 
         onClick={() => handleFilterChange("week")}
         className={`
           relative px-4 py-2 text-xs font-semibold rounded-lg transition-all duration-200
-          ${currentFilter === "week"
-            ? "bg-white text-indigo-600 shadow-md"
-            : "text-gray-600 hover:text-gray-900 hover:bg-white/50"
+          ${
+            currentFilter === "week"
+              ? "bg-white text-indigo-600 shadow-md"
+              : "text-gray-600 hover:text-gray-900 hover:bg-white/50"
           }
         `}
       >
@@ -79,9 +91,10 @@ export const BoardFilters = ({ getTasksByDate, currentFilter, onFilterChange }: 
         onClick={() => handleFilterChange("month")}
         className={`
           relative px-4 py-2 text-xs font-semibold rounded-lg transition-all duration-200
-          ${currentFilter === "month"
-            ? "bg-white text-indigo-600 shadow-md"
-            : "text-gray-600 hover:text-gray-900 hover:bg-white/50"
+          ${
+            currentFilter === "month"
+              ? "bg-white text-indigo-600 shadow-md"
+              : "text-gray-600 hover:text-gray-900 hover:bg-white/50"
           }
         `}
       >

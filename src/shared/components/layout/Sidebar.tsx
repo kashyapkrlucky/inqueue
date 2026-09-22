@@ -29,10 +29,7 @@ export default function Sidebar() {
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
-      if (
-        dropdownRef.current &&
-        !dropdownRef.current.contains(event.target as Node)
-      ) {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
         setIsProfileOpen(false);
       }
     };
@@ -145,9 +142,7 @@ export default function Sidebar() {
                     <p className="text-sm font-semibold text-gray-900 truncate">
                       {user?.name || user?.username}
                     </p>
-                    <p className="text-xs text-gray-500 truncate">
-                      @{user?.username}
-                    </p>
+                    <p className="text-xs text-gray-500 truncate">@{user?.username}</p>
                   </div>
                 </div>
               </div>

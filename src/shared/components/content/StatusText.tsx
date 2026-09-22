@@ -1,6 +1,11 @@
 import React from "react";
 import { cn } from "../../utils";
-import { CheckCircleIcon, AlertCircleIcon, AlertTriangleIcon, InfoIcon } from "lucide-react";
+import {
+  CheckCircleIcon,
+  AlertCircleIcon,
+  AlertTriangleIcon,
+  InfoIcon,
+} from "lucide-react";
 
 interface StatusTextProps {
   type: "success" | "error" | "warning" | "info";
@@ -41,7 +46,7 @@ export default function StatusText({
     "inline-flex items-center gap-2 font-medium",
     typeClasses[type],
     sizeClasses[size],
-    className
+    className,
   );
 
   return (

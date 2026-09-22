@@ -47,9 +47,7 @@ describe("useSupportStore", () => {
       return {};
     });
 
-    await useSupportStore
-      .getState()
-      .updateFeedback(feedback._id, { status: "closed" });
+    await useSupportStore.getState().updateFeedback(feedback._id, { status: "closed" });
 
     expect(loadingDuringRequest).toBe(true);
     expect(useSupportStore.getState().loading).toBe(false);

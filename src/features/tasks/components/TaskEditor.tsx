@@ -18,7 +18,7 @@ import { useLabelStore } from "../../labels/store/useLabelStore";
 export default function TaskEditor({
   task,
   onClose,
-  isTaskByDates
+  isTaskByDates,
 }: {
   task?: ITask | undefined;
   onClose: () => void;
@@ -57,7 +57,7 @@ export default function TaskEditor({
       CustomToast("error", "Due date is required");
       return;
     }
-    
+
     if (task) {
       onUpdateTask(task._id, {
         content,
@@ -145,11 +145,7 @@ export default function TaskEditor({
         <Button variant="ghost" onClick={onClose}>
           Cancel
         </Button>
-        <Button
-          type="submit"
-          variant="primary"
-          disabled={!content.trim() || !dueDate}
-        >
+        <Button type="submit" variant="primary" disabled={!content.trim() || !dueDate}>
           {task ? "Update" : "Create"}
         </Button>
       </footer>

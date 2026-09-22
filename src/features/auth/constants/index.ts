@@ -1,6 +1,8 @@
 export const TEXT_WELCOME_BACK = "Welcome Back";
-export const TEXT_DESCRIPTION = "InQueue is your professional task and notes manager, helping you stay organized and productive.";
-export const TEXT_ATLAS_ID_DESCRIPTION = "Atlas ID is your unified identity across all Atlas services";
+export const TEXT_DESCRIPTION =
+  "InQueue is your professional task and notes manager, helping you stay organized and productive.";
+export const TEXT_ATLAS_ID_DESCRIPTION =
+  "Atlas ID is your unified identity across all Atlas services";
 export const TEXT_SIGN_IN_WITH_ATLAS_ID = "Sign in with Atlas ID";
 export const TEXT_OR = "or";
 export const TEXT_AND = "and";

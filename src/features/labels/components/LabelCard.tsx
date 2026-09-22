@@ -16,7 +16,9 @@ export default function LabelCard({ label }: LabelCardProps) {
         <div className={`h-4 w-4 rounded-full ${color.class}`} />
 
         <div>
-          <h3 className="font-medium text-gray-700 uppercase text-sm tracking-wider">{label.name}</h3>
+          <h3 className="font-medium text-gray-700 uppercase text-sm tracking-wider">
+            {label.name}
+          </h3>
         </div>
       </div>
 

@@ -1,6 +1,5 @@
 export const USER_KEY = "user";
 
-
 // Helper functions for token management. Wrapped in try/catch because
 // localStorage access can throw (Safari private browsing, storage disabled
 // by the user, or a test environment where it isn't wired up yet) — none of
@@ -14,17 +13,11 @@ export const getStoredToken = (key: string): string | null => {
   }
 };
 
-export const setStoredToken = (
-  key: string,
-  data: object | string | null,
-): void => {
+export const setStoredToken = (key: string, data: object | string | null): void => {
   if (typeof window === "undefined") return;
   try {
     if (data) {
-      localStorage.setItem(
-        key,
-        typeof data === "string" ? data : JSON.stringify(data),
-      );
+      localStorage.setItem(key, typeof data === "string" ? data : JSON.stringify(data));
     } else {
       localStorage.removeItem(key);
     }
@@ -36,7 +29,6 @@ export const setStoredToken = (
 export function cn(...classes: (string | undefined | null | false)[]): string {
   return classes.filter(Boolean).join(" ");
 }
-
 
 export const STORAGE_KEYS = {
   tasks: "tasks",

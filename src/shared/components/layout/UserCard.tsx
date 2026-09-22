@@ -1,4 +1,3 @@
-
 import { Link } from "react-router-dom";
 import type { IUser } from "../../../features/auth/types";
 
@@ -12,7 +11,9 @@ export default function UserCard({ user }: { user: IUser }) {
       />
       <figcaption>
         <p className="font-medium text-gray-900">{user.name}</p>
-        <Link to={`/profile/${user.username}`} className="text-xs text-gray-500">@{user.username}</Link>
+        <Link to={`/profile/${user.username}`} className="text-xs text-gray-500">
+          @{user.username}
+        </Link>
       </figcaption>
     </figure>
   );

@@ -10,12 +10,8 @@ interface GridViewProps {
 
 export const GridView = ({ tasks }: GridViewProps) => {
   const { updateTask } = useTaskStore();
-  const [draggedOverColumn, setDraggedOverColumn] = useState<string | null>(
-    null,
-  );
-  const [activeTouchTaskId, setActiveTouchTaskId] = useState<string | null>(
-    null,
-  );
+  const [draggedOverColumn, setDraggedOverColumn] = useState<string | null>(null);
+  const [activeTouchTaskId, setActiveTouchTaskId] = useState<string | null>(null);
   const [announcement, setAnnouncement] = useState("");
 
   const handleDragStart = useCallback((taskId: string) => {
@@ -37,9 +33,7 @@ export const GridView = ({ tasks }: GridViewProps) => {
       if (task && task.status !== newStatus) {
         updateTask(taskId, { status: newStatus as ITaskStatus }, true);
         const label = statusConfig[newStatus as ITaskStatus]?.label ?? newStatus;
-        setAnnouncement(
-          `Moved "${task.content || "task"}" to ${label}`,
-        );
+        setAnnouncement(`Moved "${task.content || "task"}" to ${label}`);
       }
       setDraggedOverColumn(null);
       setActiveTouchTaskId(null);

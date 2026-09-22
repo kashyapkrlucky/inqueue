@@ -32,4 +32,3 @@ export const colorConfig = {
     class: "bg-gray-500",
   },
 };
-

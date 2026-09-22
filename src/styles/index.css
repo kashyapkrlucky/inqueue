@@ -39,11 +39,9 @@
 
   /* Font families */
   --font-family-code:
-    "Roboto Mono", Consolas, "Liberation Mono", "Courier New", Courier,
-    monospace;
+    "Roboto Mono", Consolas, "Liberation Mono", "Courier New", Courier, monospace;
   --font-family-base: "Source Sans Pro", "Hiragino Sans GB", Arial, sans-serif;
-  --font-family-logo:
-    "Oswald", "Source Sans Pro", "Helvetica Neue", Arial, sans-serif;
+  --font-family-logo: "Oswald", "Source Sans Pro", "Helvetica Neue", Arial, sans-serif;
 
   /* Z-index values */
   --z-index-sidebar-content: 1020;

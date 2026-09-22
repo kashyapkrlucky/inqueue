@@ -4,11 +4,7 @@ interface TooltipProps {
   label?: string;
 }
 
-export default function CustomTooltip({
-  active,
-  payload,
-  label,
-}: TooltipProps) {
+export default function CustomTooltip({ active, payload, label }: TooltipProps) {
   if (active && payload && payload[0]) {
     return (
       <div className="bg-white p-3 border border-gray-200 rounded-lg shadow-lg">

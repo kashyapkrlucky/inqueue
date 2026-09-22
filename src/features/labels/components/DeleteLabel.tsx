@@ -10,10 +10,7 @@ interface DeleteLabelProps {
   buttonType?: "icon" | "text";
 }
 
-export default function DeleteLabel({
-  labelId,
-  buttonType = "icon",
-}: DeleteLabelProps) {
+export default function DeleteLabel({ labelId, buttonType = "icon" }: DeleteLabelProps) {
   const { deleteLabel } = useLabelStore();
   const [isLabelModalOpen, setIsLabelModalOpen] = useState(false);
 

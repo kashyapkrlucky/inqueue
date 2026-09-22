@@ -12,13 +12,7 @@ import { PageHeader } from "../../../shared/components/ui/PageHeader";
 import { LayoutDashboardIcon } from "lucide-react";
 
 const Home = () => {
-  const {
-    loading: tasksLoading,
-    getStats,
-    getRecents,
-    stats,
-    homeData,
-  } = useTaskStore();
+  const { loading: tasksLoading, getStats, getRecents, stats, homeData } = useTaskStore();
 
   const { isAuthenticated, loading: authLoading, user } = useAuthStore();
 
@@ -29,7 +23,7 @@ const Home = () => {
     }
   }, [getStats, getRecents, authLoading, isAuthenticated]);
 
-  const loading = tasksLoading  || authLoading;
+  const loading = tasksLoading || authLoading;
 
   if (loading) {
     return <PageLoader />;
@@ -41,16 +35,11 @@ const Home = () => {
         title={`Welcome, ${user?.name || user?.username}`}
         description="Overview of your notes, tasks, and what’s coming up."
         subContent={
-          <p className="text-2xl font-semibold text-gray-600">
-            {formatDate(new Date())}
-          </p>
+          <p className="text-2xl font-semibold text-gray-600">{formatDate(new Date())}</p>
         }
       />
 
-      <TaskStats
-        taskStats={stats}
-        upcomingTasks={homeData.upcoming.length}
-      />
+      <TaskStats taskStats={stats} upcomingTasks={homeData.upcoming.length} />
 
       <section className="flex flex-col md:flex-row gap-4 h-72">
         <UpcomingTasks upcomingTasks={homeData.upcoming} />

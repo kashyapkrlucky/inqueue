@@ -9,16 +9,24 @@ export function Skeleton({
     <div className={`space-y-3 ${className}`} {...props}>
       {[...Array(lines)].map((_, i) => (
         <div key={i} className="animate-pulse">
-          <div className={`h-4 bg-gray-200 dark:bg-gray-700 rounded ${i === lines - 1 ? 'w-3/4' : 'w-full'}`}></div>
+          <div
+            className={`h-4 bg-gray-200 dark:bg-gray-700 rounded ${i === lines - 1 ? "w-3/4" : "w-full"}`}
+          ></div>
         </div>
       ))}
     </div>
   );
 }
 
-export function CardSkeleton({ className = "", ...props }: React.HTMLAttributes<HTMLDivElement>) {
+export function CardSkeleton({
+  className = "",
+  ...props
+}: React.HTMLAttributes<HTMLDivElement>) {
   return (
-    <div className={`bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-lg p-4 ${className}`} {...props}>
+    <div
+      className={`bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-lg p-4 ${className}`}
+      {...props}
+    >
       <div className="animate-pulse">
         <div className="flex items-start justify-between">
           <div className="flex-1">
@@ -39,7 +47,11 @@ export function CardSkeleton({ className = "", ...props }: React.HTMLAttributes<
   );
 }
 
-export function ListSkeleton({ items = 3, className = "", ...props }: React.HTMLAttributes<HTMLDivElement> & { items?: number }) {
+export function ListSkeleton({
+  items = 3,
+  className = "",
+  ...props
+}: React.HTMLAttributes<HTMLDivElement> & { items?: number }) {
   return (
     <div className={`space-y-3 ${className}`} {...props}>
       {[...Array(items)].map((_, i) => (

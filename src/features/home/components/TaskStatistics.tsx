@@ -73,13 +73,9 @@ export function TaskStatistics({ taskStats, loading }: TaskStatisticsProps) {
       <div className="flex items-start justify-between gap-3">
         <div>
           <h2 className="text-sm font-bold text-gray-900">Task Statistics</h2>
-          <p className="mt-1 text-xs text-gray-500">
-            Status &amp; Priority strength
-          </p>
+          <p className="mt-1 text-xs text-gray-500">Status &amp; Priority strength</p>
         </div>
-        {loading ? (
-          <Loader2Icon className="h-4 w-4 animate-spin text-gray-400" />
-        ) : null}
+        {loading ? <Loader2Icon className="h-4 w-4 animate-spin text-gray-400" /> : null}
       </div>
 
       <div className="mt-4 grid grid-cols-1 gap-3 lg:grid-cols-2">

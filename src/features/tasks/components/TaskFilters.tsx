@@ -55,9 +55,7 @@ export function TaskFilters({
         label="Priority"
         value={priorityFilter}
         boxClassName="flex flex-col gap-2 sm:col-span-2"
-        onChange={(e) =>
-          setPriorityFilter(e.target.value as ITaskPriority | "all")
-        }
+        onChange={(e) => setPriorityFilter(e.target.value as ITaskPriority | "all")}
       >
         <option value="all">All Priorities</option>
         {Object.entries(priorityConfig).map(([key, config]) => (

@@ -14,22 +14,24 @@ export default function CustomPieChart({ data }: { data: DateItem[] }) {
   const total = data.reduce((sum, item) => sum + item.value, 0);
   const segments = useMemo(
     () =>
-      data.filter((item) => item.value > 0).map((item, index, visibleItems) => {
-        const previousTotal = data
-          .filter((previous) => previous.value > 0)
-          .slice(0, index)
-          .reduce((sum, previous) => sum + previous.value, 0);
-        const percent = total > 0 ? item.value / total : 0;
+      data
+        .filter((item) => item.value > 0)
+        .map((item, index, visibleItems) => {
+          const previousTotal = data
+            .filter((previous) => previous.value > 0)
+            .slice(0, index)
+            .reduce((sum, previous) => sum + previous.value, 0);
+          const percent = total > 0 ? item.value / total : 0;
 
-        return {
-          ...item,
-          index,
-          isOnlySegment: visibleItems.length === 1,
-          percent,
-          dash: `${percent * CIRCLE_CIRCUMFERENCE} ${CIRCLE_CIRCUMFERENCE}`,
-          offset: -(previousTotal / Math.max(total, 1)) * CIRCLE_CIRCUMFERENCE,
-        };
-      }),
+          return {
+            ...item,
+            index,
+            isOnlySegment: visibleItems.length === 1,
+            percent,
+            dash: `${percent * CIRCLE_CIRCUMFERENCE} ${CIRCLE_CIRCUMFERENCE}`,
+            offset: -(previousTotal / Math.max(total, 1)) * CIRCLE_CIRCUMFERENCE,
+          };
+        }),
     [data, total],
   );
   const active = segments[activeIndex] ?? segments[0];

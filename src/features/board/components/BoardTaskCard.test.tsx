@@ -60,9 +60,7 @@ describe("BoardTaskCard", () => {
     expect(
       screen.getByRole("button", { name: "Move to In Progress" }),
     ).toBeInTheDocument();
-    expect(
-      screen.getByRole("button", { name: "Move to Done" }),
-    ).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "Move to Done" })).toBeInTheDocument();
     // The task is already "todo" — moving it "to" its own column isn't offered.
     expect(
       screen.queryByRole("button", { name: "Move to To Do" }),

@@ -19,15 +19,11 @@ export function AgentPageHeader() {
             <h1 className="text-3xl font-semibold text-gray-900">
               Welcome {user?.name}!
             </h1>
-            <p className="text-sm text-gray-500">
-              I am Tia, how can I help you today?
-            </p>
+            <p className="text-sm text-gray-500">I am Tia, how can I help you today?</p>
           </div>
         </div>
 
-        {messages.length > 0 && (
-          <Button onClick={clearMessages}>Clear Chat</Button>
-        )}
+        {messages.length > 0 && <Button onClick={clearMessages}>Clear Chat</Button>}
       </div>
     </header>
   );
