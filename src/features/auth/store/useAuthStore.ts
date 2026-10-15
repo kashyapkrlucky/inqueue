@@ -1,7 +1,15 @@
 import { create } from "zustand";
 import { authAxios } from "../../../lib/axios";
 import { env } from "../../../lib/env";
-import { getStoredToken, setStoredToken, USER_KEY } from "../../../shared/utils";
+import {
+  getAccessToken,
+  getRefreshToken,
+  getStoredToken,
+  setAuthTokens,
+  setStoredToken,
+  USER_KEY,
+  type AuthTokens,
+} from "../../../shared/utils";
 import type { IUser } from "../types";
 
 export interface AuthState {
@@ -68,10 +76,11 @@ export const useAuthStore = create<AuthState>((set) => ({
       const {
         data: { data },
       } = await authAxios.post("/v1/public/session", { code });
-      const { user } = data as { user?: IUser };
+      const { user, ...tokens } = data as { user?: IUser } & AuthTokens;
       if (!user) {
         throw new Error("Auth response is missing user data.");
       }
+      setAuthTokens(tokens);
       set({ user, isAuthenticated: true });
       persistUser(user);
       return { user };
@@ -92,10 +101,11 @@ export const useAuthStore = create<AuthState>((set) => ({
       const {
         data: { data },
       } = await authAxios.post("/v1/public/guest", { clientId });
-      const { user } = data as { user?: IUser };
+      const { user, ...tokens } = data as { user?: IUser } & AuthTokens;
       if (!user) {
         throw new Error("Auth response is missing user data.");
       }
+      setAuthTokens(tokens);
       set({ user, isAuthenticated: true });
       persistUser(user);
       return { user };
@@ -114,10 +124,20 @@ export const useAuthStore = create<AuthState>((set) => ({
   },
 
   logout: () => {
-    // Best-effort: clears the httpOnly auth cookies server-side. Fire and
-    // forget so a network failure never blocks the local sign-out.
-    authAxios.post("/v1/public/logout").catch(() => {});
+    // Best-effort: revokes the session and clears the auth cookies
+    // server-side. The token is captured up front because request
+    // interceptors run async — after the local tokens below are cleared.
+    // Fire and forget so a network failure never blocks the local sign-out.
+    const accessToken = getAccessToken();
+    authAxios
+      .post(
+        "/v1/public/logout",
+        undefined,
+        accessToken ? { headers: { Authorization: `Bearer ${accessToken}` } } : undefined,
+      )
+      .catch(() => {});
 
+    setAuthTokens(null);
     setStoredToken(USER_KEY, null);
     set({
       user: null,
@@ -127,9 +147,19 @@ export const useAuthStore = create<AuthState>((set) => ({
   },
 
   getRefreshedTokens: async () => {
-    // No body needed: the refresh token lives in an httpOnly cookie that the
-    // browser attaches automatically (authAxios sends withCredentials: true).
-    await authAxios.post("/v1/public/session/refresh");
+    // The refresh token is sent in the body because atlas-id's cookie isn't
+    // available cross-site in production; atlas-id still falls back to its
+    // cookie when the body is empty (e.g. same-site localhost).
+    const refresh_token = getRefreshToken();
+    const {
+      data: { data },
+    } = await authAxios.post(
+      "/v1/public/session/refresh",
+      refresh_token ? { refresh_token } : {},
+    );
+    // atlas-id rotates both tokens on every refresh; the old refresh token
+    // is now invalid, so the new pair must be stored.
+    setAuthTokens(data as AuthTokens);
     set({ isAuthenticated: true });
   },
 }));

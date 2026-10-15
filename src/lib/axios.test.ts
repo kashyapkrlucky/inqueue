@@ -1,7 +1,7 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import axiosInstance, { authAxios } from "./axios";
 import useAuthStore from "../features/auth/store/useAuthStore";
-import { USER_KEY } from "../shared/utils";
+import { ACCESS_TOKEN_KEY, USER_KEY } from "../shared/utils";
 import type { IUser } from "../features/auth/types";
 
 const getRefreshedTokens = useAuthStore.getState().getRefreshedTokens;
@@ -19,8 +19,7 @@ const user: IUser = {
 describe("axios refresh handling", () => {
   beforeEach(() => {
     vi.restoreAllMocks();
-    // Auth is carried by httpOnly cookies, not JS-readable storage — logout()
-    // still fires a best-effort request to clear them server-side.
+    // logout() fires a best-effort request to revoke the session server-side.
     vi.spyOn(authAxios, "post").mockResolvedValue({ data: { data: {} } });
     window.history.pushState({}, "", "/login");
     localStorage.clear();
@@ -33,6 +32,20 @@ describe("axios refresh handling", () => {
       error: null,
       getRefreshedTokens,
     });
+  });
+
+  it("sends the stored access token as a Bearer header", async () => {
+    localStorage.setItem(ACCESS_TOKEN_KEY, "access-token");
+    let authorization: unknown;
+
+    await axiosInstance.get("/v1/tasks", {
+      adapter: async (config) => {
+        authorization = config.headers.Authorization;
+        return { data: {}, status: 200, statusText: "OK", headers: {}, config };
+      },
+    });
+
+    expect(authorization).toBe("Bearer access-token");
   });
 
   it("logs out when refreshing tokens fails after a 401", async () => {

@@ -1,5 +1,6 @@
 import { useAuthStore } from "@/features/auth/store/useAuthStore";
 import { env } from "@/lib/env";
+import { getAccessToken } from "@/shared/utils";
 import axios, {
   AxiosError,
   type AxiosRequestConfig,
@@ -60,11 +61,19 @@ const expireSession = () => {
   }
 };
 
-// Auth is carried entirely by the httpOnly access/refresh token cookies the
-// auth server sets (withCredentials: true on both instances below) — no
-// Authorization header is set from JS-readable storage.
+// atlas-id sets its auth cookies on its own domain, so in production (where
+// inqueue, atlas-id and atlas-apps are on different sites) the browser never
+// sends them to atlas-apps. The access token is therefore sent as a Bearer
+// header; both servers prefer it over the cookie. withCredentials stays on so
+// same-site setups (localhost) keep working via cookies as a fallback.
 const setAuthHeaders = (config: InternalAxiosRequestConfig) => {
   config.headers["x-timezone"] = Intl.DateTimeFormat().resolvedOptions().timeZone;
+  const token = getAccessToken();
+  // Always overwrite when a token exists: a request retried after a refresh
+  // must carry the new token, not the one from its first attempt.
+  if (token) {
+    config.headers.Authorization = `Bearer ${token}`;
+  }
   return config;
 };
 

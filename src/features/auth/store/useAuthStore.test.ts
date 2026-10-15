@@ -1,6 +1,6 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { authAxios } from "../../../lib/axios";
-import { USER_KEY } from "../../../shared/utils";
+import { ACCESS_TOKEN_KEY, REFRESH_TOKEN_KEY, USER_KEY } from "../../../shared/utils";
 import useAuthStore from "./useAuthStore";
 import type { IUser } from "../types";
 
@@ -40,11 +40,9 @@ describe("useAuthStore", () => {
     resetAuthStore();
   });
 
-  it("persists the user (not tokens) after a successful guest login", async () => {
-    // access_token/refresh_token are still present in the response body for
-    // backward compatibility with non-browser clients, but the browser flow
-    // relies solely on the httpOnly cookies the auth server sets alongside
-    // this response — the store never reads or stores them.
+  it("persists the user and tokens after a successful guest login", async () => {
+    // Tokens are stored because atlas-id's cookies aren't sent cross-site to
+    // atlas-apps in production; they go out as a Bearer header instead.
     vi.mocked(authAxios.post).mockResolvedValueOnce({
       data: {
         data: {
@@ -63,6 +61,23 @@ describe("useAuthStore", () => {
     expect(result).toEqual({ user: guestUser });
     expect(useAuthStore.getState().isAuthenticated).toBe(true);
     expect(localStorage.getItem(USER_KEY)).toBe(JSON.stringify(guestUser));
+    expect(localStorage.getItem(ACCESS_TOKEN_KEY)).toBe("access-token");
+    expect(localStorage.getItem(REFRESH_TOKEN_KEY)).toBe("refresh-token");
+  });
+
+  it("sends the stored refresh token and stores the rotated pair", async () => {
+    localStorage.setItem(REFRESH_TOKEN_KEY, "old-refresh");
+    vi.mocked(authAxios.post).mockResolvedValueOnce({
+      data: { data: { access_token: "new-access", refresh_token: "new-refresh" } },
+    });
+
+    await useAuthStore.getState().getRefreshedTokens();
+
+    expect(authAxios.post).toHaveBeenCalledWith("/v1/public/session/refresh", {
+      refresh_token: "old-refresh",
+    });
+    expect(localStorage.getItem(ACCESS_TOKEN_KEY)).toBe("new-access");
+    expect(localStorage.getItem(REFRESH_TOKEN_KEY)).toBe("new-refresh");
   });
 
   it("sets an error and stays unauthenticated when guest login fails", async () => {
@@ -77,9 +92,11 @@ describe("useAuthStore", () => {
     });
   });
 
-  it("clears the stored user and notifies the server on logout", () => {
+  it("clears the stored user and tokens and notifies the server on logout", () => {
     vi.mocked(authAxios.post).mockResolvedValueOnce({ data: { data: {} } });
     localStorage.setItem(USER_KEY, JSON.stringify(guestUser));
+    localStorage.setItem(ACCESS_TOKEN_KEY, "access-token");
+    localStorage.setItem(REFRESH_TOKEN_KEY, "refresh-token");
     useAuthStore.setState({
       user: guestUser,
       isAuthenticated: true,
@@ -87,12 +104,16 @@ describe("useAuthStore", () => {
 
     useAuthStore.getState().logout();
 
-    expect(authAxios.post).toHaveBeenCalledWith("/v1/public/logout");
+    expect(authAxios.post).toHaveBeenCalledWith("/v1/public/logout", undefined, {
+      headers: { Authorization: "Bearer access-token" },
+    });
     expect(useAuthStore.getState()).toMatchObject({
       user: null,
       isAuthenticated: false,
       error: null,
     });
     expect(localStorage.getItem(USER_KEY)).toBeNull();
+    expect(localStorage.getItem(ACCESS_TOKEN_KEY)).toBeNull();
+    expect(localStorage.getItem(REFRESH_TOKEN_KEY)).toBeNull();
   });
 });

@@ -22,44 +22,48 @@ with the user profile. No credentials involved.
 atlas-id redirects back with an authorization code in the URL, which the app
 exchanges via `POST /v1/public/session`.
 
-Both flows return the user profile in the response body — but the **tokens
-never touch the response body's usable half**. See below.
+Both flows return the user profile **and** the access/refresh tokens in the
+response body. atlas-id also sets them as cookies, but see below for why the
+frontend can't rely on those.
 
-## Token strategy: httpOnly cookies, not localStorage
+## Token strategy: Bearer header (cookies as same-site fallback)
 
-Both endpoints above (and the refresh endpoint) set the access and refresh
-tokens as `httpOnly`, `SameSite=Lax` cookies via `Set-Cookie`, scoped to the
-`localhost` host (or the real domain in production) — not to `inqueue`
-specifically. Because cookie scoping is host-based, not origin-based, the
-same cookies are sent automatically on requests to the api server on a
-different port/subdomain, as long as it's the same host.
+atlas-id sets its `httpOnly` cookies on **its own** domain. On localhost
+everything shares one host, so the cookies reach atlas-apps too and cookie
+auth "just works". In production the three apps live on different sites
+(e.g. separate `*.vercel.app` subdomains, which are on the Public Suffix
+List and so count as separate sites), so the browser never sends atlas-id's
+cookies to atlas-apps — requests arrive unauthenticated.
 
-The frontend (`src/lib/axios.ts`) never reads or stores an access or refresh
-token. Every request just sets `withCredentials: true` and lets the browser
-attach the cookie. `useAuthStore` only persists the non-sensitive user
-profile (name/avatar/etc.) to `localStorage`, purely so the UI can render an
-optimistic "logged in" state on reload without waiting on a network
-round-trip — the cookie, not that cached profile, is what actually gates any
-real request.
+So the frontend stores the tokens itself (`src/shared/utils` →
+`setAuthTokens`) and:
 
-**Why this matters:** a token sitting in `localStorage` is readable by any
-script that runs on the page — meaning a single XSS bug anywhere in the app
-(or in a dependency) can exfiltrate it. Client-side "encryption" of a
-localStorage token doesn't fix this: any script that can read the encrypted
-value can also reach the decryption routine sitting in the same bundle.
-`httpOnly` cookies remove the token from JS-reachable memory entirely; the
-worst an XSS bug can do is act as the logged-in user _while the page is
-open_, not exfiltrate a credential that keeps working after the tab closes.
+- sends `Authorization: Bearer <access_token>` on every request
+  (`src/lib/axios.ts`). atlas-apps and atlas-id both check that header first
+  and only fall back to their cookie;
+- sends `{ refresh_token }` in the body of `POST /v1/public/session/refresh`,
+  which atlas-id also accepts in place of its cookie.
+
+`withCredentials: true` stays on, so same-site setups still get the cookie
+as a fallback.
+
+**Trade-off:** tokens in `localStorage` are readable by any script on the
+page, so an XSS bug could exfiltrate them. Refresh-token rotation (below)
+limits how long a stolen refresh token stays useful. The alternative that
+keeps `httpOnly` cookies is to serve all three apps from subdomains of one
+custom domain (e.g. `app.example.com`, `id.example.com`,
+`api.example.com`) and have atlas-id set the cookie with
+`Domain=.example.com`.
 
 ### Refresh
 
 `axios.ts` installs a response interceptor on the api-server axios instance:
-on a `401`, it calls `POST /v1/public/session/refresh` (no body — the
-refresh cookie carries itself), and on success retries the original request.
-Concurrent requests that 401 at the same time share a single in-flight
-refresh via a small queue, so a burst of requests never triggers a burst of
-refresh calls. If refresh itself fails, the store logs out and redirects to
-`/login`.
+on a `401`, it calls `POST /v1/public/session/refresh` with the stored
+refresh token, stores the rotated pair, and retries the original request
+with the new access token. Concurrent requests that 401 at the same time
+share a single in-flight refresh via a small queue, so a burst of requests
+never triggers a burst of refresh calls. If refresh itself fails, the store
+logs out and redirects to `/login`.
 
 `atlas-id`'s refresh endpoint rotates both tokens on every use and hashes the
 refresh token before storing it, so a stolen refresh token stops working the
@@ -68,9 +72,8 @@ detectable and the session is revoked (`logoutReason: "security_breach"`).
 
 ### Logout
 
-`logout()` POSTs to `/v1/public/logout`, which clears both cookies
-server-side (the frontend can't clear an `httpOnly` cookie itself) and
-revokes the session for that user+client pair specifically — not every
+`logout()` POSTs to `/v1/public/logout` with the Bearer token, clears the
+locally stored tokens, and atlas-id clears its cookies and revokes the session for that user+client pair specifically — not every
 session the user has across every Atlas-connected app.
 
 ## State management

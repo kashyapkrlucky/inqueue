@@ -1,4 +1,6 @@
 export const USER_KEY = "user";
+export const ACCESS_TOKEN_KEY = "access_token";
+export const REFRESH_TOKEN_KEY = "refresh_token";
 
 // Helper functions for token management. Wrapped in try/catch because
 // localStorage access can throw (Safari private browsing, storage disabled
@@ -24,6 +26,24 @@ export const setStoredToken = (key: string, data: object | string | null): void 
   } catch {
     // ignore — see comment above
   }
+};
+
+export interface AuthTokens {
+  access_token?: string;
+  refresh_token?: string;
+}
+
+export const getAccessToken = () => getStoredToken(ACCESS_TOKEN_KEY);
+export const getRefreshToken = () => getStoredToken(REFRESH_TOKEN_KEY);
+
+export const setAuthTokens = (tokens: AuthTokens | null) => {
+  if (!tokens) {
+    setStoredToken(ACCESS_TOKEN_KEY, null);
+    setStoredToken(REFRESH_TOKEN_KEY, null);
+    return;
+  }
+  if (tokens.access_token) setStoredToken(ACCESS_TOKEN_KEY, tokens.access_token);
+  if (tokens.refresh_token) setStoredToken(REFRESH_TOKEN_KEY, tokens.refresh_token);
 };
 
 export function cn(...classes: (string | undefined | null | false)[]): string {
