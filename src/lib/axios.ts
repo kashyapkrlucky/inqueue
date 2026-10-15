@@ -65,10 +65,6 @@ const expireSession = () => {
 // Authorization header is set from JS-readable storage.
 const setAuthHeaders = (config: InternalAxiosRequestConfig) => {
   config.headers["x-timezone"] = Intl.DateTimeFormat().resolvedOptions().timeZone;
-  const token = localStorage.getItem("access_token");
-  if (token) {
-    config.headers["Authorization"] = `Bearer ${token}`;
-  }
   return config;
 };
 
